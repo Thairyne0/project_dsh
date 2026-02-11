@@ -17,6 +17,7 @@ import '../../../ui/cl_theme.dart';
 import '../../store/modules/location/models/location.model.dart';
 import '../../store/models/store.model.dart' as StoreModel;
 import '../modules/event_category/models/event_category.model.dart';
+import '../modules/event_category/pages/new_event_category.page.dart';
 import '../viewmodels/event.viewmodel.dart';
 
 class NewEventPage extends StatefulWidget {
@@ -83,6 +84,54 @@ class _NewEventPageState extends State<NewEventPage> {
                                 lg: 50,
                                 xs: 100,
                                 child: CLDropdown<EventCategory>.singleAsync(
+                                  onAddNew: () {
+                                    // Mostra un dialog con la pagina di creazione categoria
+                                    showDialog(
+                                      context: context,
+                                      barrierDismissible: false,
+                                      builder: (BuildContext dialogContext) {
+                                        return Dialog(
+                                          backgroundColor: Colors.transparent,
+                                          insetPadding: const EdgeInsets.all(Sizes.padding),
+                                          child: Container(
+                                            constraints: BoxConstraints(
+                                              maxWidth: 800,
+                                              maxHeight: MediaQuery.of(context).size.height * 0.8,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              color: CLTheme.of(context).secondaryBackground,
+                                              borderRadius: BorderRadius.circular(Sizes.borderRadius),
+                                            ),
+                                            child: Stack(
+                                              children: [
+                                                const NewEventCategoryPage(),
+                                                Positioned(
+                                                  top: 8,
+                                                  right: 8,
+                                                  child: Material(
+                                                    color: Colors.transparent,
+                                                    child: IconButton(
+                                                      icon: Icon(
+                                                        Icons.close,
+                                                        color: CLTheme.of(context).primaryText,
+                                                        size: 24,
+                                                      ),
+                                                      onPressed: () {
+                                                        Navigator.of(dialogContext).pop();
+                                                      },
+                                                      tooltip: 'Chiudi',
+                                                      splashRadius: 20,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  },
+                                  addNewLabel: 'Aggiungi categoria',
                                   validators: [Validators.required],
                                   searchCallback: vm.getAllEventCategory,
                                   searchColumn: "name",

@@ -30,6 +30,8 @@ class DropdownState<T extends Object> extends ChangeNotifier {
   final FocusNode focusNode;
   final String? searchColumn;
   bool isOverlayOpen = false;
+  final VoidCallback? onAddNew;
+  final String addNewLabel;
 
   DropdownState({
     this.items = const [],
@@ -45,6 +47,8 @@ class DropdownState<T extends Object> extends ChangeNotifier {
     required this.focusNode,
     required this.perPage,
     required this.searchColumn,
+    this.onAddNew,
+    this.addNewLabel = 'Aggiungi',
   }) {
     if (isMultiple) {
       assert(onSelectItems != null);
@@ -155,24 +159,71 @@ class DropdownState<T extends Object> extends ChangeNotifier {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        // Campo di ricerca nell'overlay
+                        // Campo di ricerca e pulsante aggiungi nell'overlay
                         if (syncSearchCallback != null || asyncSearchCallback != null)
                           Padding(
                             padding: const EdgeInsets.all(Sizes.padding / 2),
                             child: Material(
                               type: MaterialType.transparency,
-                              child: CLTextField(
-                                controller: searchController,
-                                labelText: 'Cerca...',
-                                prefixIcon: HugeIcon(
-                                  icon: HugeIcons.strokeRoundedSearch01,
-                                  color: CLTheme.of(context).secondaryText,
-                                  size: Sizes.medium,
-                                ),
-                                prefixIconConstraints: BoxConstraints(minWidth: Sizes.medium + 16, minHeight: Sizes.medium + 16),
-                                onChanged: (value) async {
-                                  await onSearch(searchColumn, value);
-                                },
+                              child: Row(
+                                children: [
+                                  // Pulsante Aggiungi a sinistra
+                                  if (onAddNew != null) ...[
+                                    Material(
+                                      color: CLTheme.of(context).primary,
+                                      borderRadius: BorderRadius.circular(Sizes.borderRadius),
+                                      child: InkWell(
+                                        onTap: () {
+                                          closeOverlay();
+                                          onAddNew!();
+                                        },
+                                        borderRadius: BorderRadius.circular(Sizes.borderRadius),
+                                        child: Container(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 12,
+                                            vertical: 10,
+                                          ),
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              HugeIcon(
+                                                icon: HugeIcons.strokeRoundedAdd01,
+                                                size: Sizes.small,
+                                                color: Colors.white,
+                                              ),
+                                              const SizedBox(width: 6),
+                                              Text(
+                                                addNewLabel,
+                                                style: CLTheme.of(context).bodyText.copyWith(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.w600,
+                                                  fontSize: 13,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                  ],
+                                  // Campo di ricerca
+                                  Expanded(
+                                    child: CLTextField(
+                                      controller: searchController,
+                                      labelText: 'Cerca...',
+                                      prefixIcon: HugeIcon(
+                                        icon: HugeIcons.strokeRoundedSearch01,
+                                        color: CLTheme.of(context).secondaryText,
+                                        size: Sizes.medium,
+                                      ),
+                                      prefixIconConstraints: BoxConstraints(minWidth: Sizes.medium + 16, minHeight: Sizes.medium + 16),
+                                      onChanged: (value) async {
+                                        await onSearch(searchColumn, value);
+                                      },
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),

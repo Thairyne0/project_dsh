@@ -25,6 +25,8 @@ class CLDropdown<T extends Object> extends StatefulWidget {
     this.validators,
     this.isEnabled = true,
     this.onSelectItems,
+    this.onAddNew,
+    this.addNewLabel = 'Aggiungi',
   });
 
   final TextEditingController controller;
@@ -43,6 +45,8 @@ class CLDropdown<T extends Object> extends StatefulWidget {
   final Function(List<T>)? onSelectItems;
   final List<FormFieldValidator<String>>? validators;
   final bool isEnabled;
+  final VoidCallback? onAddNew;
+  final String addNewLabel;
 
   @override
   State<CLDropdown<T>> createState() => _CLDropdownState<T>();
@@ -58,6 +62,8 @@ class CLDropdown<T extends Object> extends StatefulWidget {
     final List<FormFieldValidator<String>>? validators,
     int length = 5,
     T? selectedValues,
+    VoidCallback? onAddNew,
+    String addNewLabel = 'Aggiungi',
   }) {
     List<T> previousvalueToShows = [];
     if (selectedValues != null) {
@@ -75,6 +81,8 @@ class CLDropdown<T extends Object> extends StatefulWidget {
       length: length,
       onSelectItem: onSelectItem,
       syncSearchCallback: searchCallback,
+      onAddNew: onAddNew,
+      addNewLabel: addNewLabel,
     );
   }
 
@@ -91,6 +99,8 @@ class CLDropdown<T extends Object> extends StatefulWidget {
     int length = 5,
     T? selectedValues,
     required Function(T?)? onSelectItem,
+    VoidCallback? onAddNew,
+    String addNewLabel = 'Aggiungi',
   }) {
     List<T> previousvalueToShows = [];
     if (selectedValues != null) {
@@ -110,6 +120,8 @@ class CLDropdown<T extends Object> extends StatefulWidget {
       onSelectItem: onSelectItem,
       validators: validators,
       length: length,
+      onAddNew: onAddNew,
+      addNewLabel: addNewLabel,
     );
   }
 
@@ -124,6 +136,8 @@ class CLDropdown<T extends Object> extends StatefulWidget {
     final List<FormFieldValidator<String>>? validators,
     List<T> selectedValues = const [],
     int length = 5,
+    VoidCallback? onAddNew,
+    String addNewLabel = 'Aggiungi',
   }) {
     return CLDropdown(
       key: key,
@@ -138,6 +152,8 @@ class CLDropdown<T extends Object> extends StatefulWidget {
       length: length,
       syncSearchCallback: searchCallback,
       validators: validators,
+      onAddNew: onAddNew,
+      addNewLabel: addNewLabel,
     );
   }
 
@@ -153,6 +169,8 @@ class CLDropdown<T extends Object> extends StatefulWidget {
     final List<FormFieldValidator<String>>? validators,
     List<T> selectedValues = const [],
     int length = 5,
+    VoidCallback? onAddNew,
+    String addNewLabel = 'Aggiungi',
   }) {
     return CLDropdown(
       key: key,
@@ -167,6 +185,8 @@ class CLDropdown<T extends Object> extends StatefulWidget {
       onSelectItems: onSelectItems,
       length: length,
       validators: validators,
+      onAddNew: onAddNew,
+      addNewLabel: addNewLabel,
     );
   }
 }
@@ -196,6 +216,8 @@ class _CLDropdownState<T extends Object> extends State<CLDropdown<T>> {
             previousSelectedItems: widget.selectedValues,
             perPage: widget.length,
             searchColumn: widget.searchColumn,
+            onAddNew: widget.onAddNew,
+            addNewLabel: widget.addNewLabel,
           ),
       builder: (context, child) {
         var state = context.watch<DropdownState<T>>();
