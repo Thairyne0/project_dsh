@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:project_dsh/modules/store/pages/new_store.page.dart';
 import 'package:provider/provider.dart';
 import 'package:stacked/stacked.dart';
 import 'package:project_dsh/ui/widgets/cl_file_picker.widget.dart';
@@ -104,7 +105,13 @@ class _NewEventPageState extends State<NewEventPage> {
                                             ),
                                             child: Stack(
                                               children: [
-                                                const NewEventCategoryPage(),
+                                                ClipRRect(
+                                                  borderRadius: BorderRadius.circular(Sizes.borderRadius),
+                                                  child: SingleChildScrollView(
+                                                    padding: const EdgeInsets.only(top: 48),
+                                                    child: const NewEventCategoryPage(),
+                                                  ),
+                                                ),
                                                 Positioned(
                                                   top: 8,
                                                   right: 8,
@@ -189,6 +196,60 @@ class _NewEventPageState extends State<NewEventPage> {
                                 child: Column(
                                   children: [
                                     CLDropdown<StoreModel.Store>.singleAsync(
+                                      onAddNew: (){
+
+                                        // Mostra un dialog con la pagina di creazione categoria
+                                        showDialog(
+                                          context: context,
+                                          barrierDismissible: false,
+                                          builder: (BuildContext dialogContext) {
+                                            return Dialog(
+                                              backgroundColor: Colors.transparent,
+                                              insetPadding: const EdgeInsets.all(Sizes.padding),
+                                              child: Container(
+                                                constraints: BoxConstraints(
+                                                  maxWidth: 800,
+                                                  maxHeight: MediaQuery.of(context).size.height * 0.8,
+                                                ),
+                                                decoration: BoxDecoration(
+                                                  color: CLTheme.of(context).secondaryBackground,
+                                                  borderRadius: BorderRadius.circular(Sizes.borderRadius),
+                                                ),
+                                                child: Stack(
+                                                  children: [
+                                                    ClipRRect(
+                                                      borderRadius: BorderRadius.circular(Sizes.borderRadius),
+                                                      child: SingleChildScrollView(
+                                                        padding: const EdgeInsets.only(top: 48),
+                                                        child: const NewStorePage(),
+                                                      ),
+                                                    ),
+                                                    Positioned(
+                                                      top: 8,
+                                                      right: 8,
+                                                      child: Material(
+                                                        color: Colors.transparent,
+                                                        child: IconButton(
+                                                          icon: Icon(
+                                                            Icons.close,
+                                                            color: CLTheme.of(context).primaryText,
+                                                            size: 24,
+                                                          ),
+                                                          onPressed: () {
+                                                            Navigator.of(dialogContext).pop();
+                                                          },
+                                                          tooltip: 'Chiudi',
+                                                          splashRadius: 20,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        );
+                                      },
                                       validators: [Validators.required],
                                       searchCallback: vm.getAllStore,
                                       searchColumn: "name",
