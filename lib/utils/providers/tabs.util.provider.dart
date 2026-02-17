@@ -252,6 +252,37 @@ class TabsState extends ChangeNotifier {
       setActiveTabByIndex(currentIndex + 1);
     }
   }
+
+  /// Resetta completamente tutti i tab (utile dopo login/logout)
+  void resetTabs() {
+    _tabs.clear();
+    _activeTabId = null;
+    notifyListeners();
+  }
+
+  /// Rimuove tutti i tab che iniziano con uno dei path specificati
+  void removeTabsByPaths(List<String> pathPrefixes) {
+    _tabs.removeWhere((tab) {
+      for (final prefix in pathPrefixes) {
+        if (tab.path.startsWith(prefix)) {
+          return true;
+        }
+      }
+      return false;
+    });
+
+    // Se il tab attivo è stato rimosso, attiva il primo disponibile
+    if (_activeTabId != null && !hasTab(_activeTabId!)) {
+      _activeTabId = _tabs.isNotEmpty ? _tabs.first.id : null;
+    }
+
+    notifyListeners();
+  }
+
+  /// Rimuove i tab di welcome/auth (da chiamare dopo il login)
+  void removeAuthTabs() {
+    removeTabsByPaths(['/welcome', '/auth', '/login', '/register']);
+  }
 }
 
 

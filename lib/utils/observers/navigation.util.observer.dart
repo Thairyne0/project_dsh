@@ -6,6 +6,27 @@ import 'package:project_dsh/utils/providers/tabs.util.provider.dart';
 
 class GoRouterBreadcrumbObserver extends NavigatorObserver {
 
+  /// Path che NON devono creare tab (pagine di autenticazione, welcome, etc.)
+  static const List<String> _excludedPaths = [
+    '/welcome',
+    '/auth',
+    '/login',
+    '/register',
+    '/forgot-password',
+    '/reset-password',
+    '/onboarding',
+  ];
+
+  /// Controlla se un path deve essere escluso dai tab
+  bool _shouldExcludeFromTabs(String path) {
+    for (final excluded in _excludedPaths) {
+      if (path.startsWith(excluded)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   /// Apre automaticamente un tab per la route corrente
   void _openTabForRoute(BuildContext ctx, {required String name, required String path, required bool isModule}) {
     print('[TabObserver] _openTabForRoute chiamato con name: $name, path: $path, isModule: $isModule');
@@ -13,6 +34,12 @@ class GoRouterBreadcrumbObserver extends NavigatorObserver {
     // Non aprire tab per route senza path valido
     if (path.isEmpty) {
       print('[TabObserver] Path vuoto, skip creazione tab');
+      return;
+    }
+
+    // Non aprire tab per pagine escluse (welcome, login, etc.)
+    if (_shouldExcludeFromTabs(path)) {
+      print('[TabObserver] Path escluso dai tab: $path');
       return;
     }
 

@@ -8,10 +8,12 @@ import 'package:project_dsh/utils/models/province.model.dart';
 import 'package:project_dsh/utils/models/state.model.dart' as state;
 import 'package:project_dsh/modules/users/models/user_data.model.dart';
 import 'package:project_dsh/utils/shared_manager.util.dart';
+import 'package:provider/provider.dart';
 import '../../../utils/api_manager.util.dart';
 import '../../../utils/app_database.util.dart';
 import '../../../utils/base.viewmodel.dart';
 import '../../../utils/constants/strings.constant.dart';
+import '../../../utils/providers/tabs.util.provider.dart';
 import '../../users/models/user.model.dart';
 import '../../../utils/providers/authstate.util.provider.dart';
 import '../../../utils/providers/navigation.util.provider.dart';
@@ -75,6 +77,11 @@ class AuthViewModel extends CLBaseViewModel {
     await AppDatabase.storeUser(user);
     SharedManager.setBool(Strings.authenticated, true);
     await authState.saveCurrentUser(user);
+
+    // Reset dei tab per rimuovere welcome/login prima di andare alla dashboard
+    final tabsState = Provider.of<TabsState>(viewContext, listen: false);
+    tabsState.resetTabs();
+
     NavigationState();
     viewContext.customGoNamed(DashboardRoutes.dashboard.name);
   }
