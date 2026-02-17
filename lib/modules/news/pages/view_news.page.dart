@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -85,7 +84,7 @@ class _ViewNewsPageState extends State<ViewNewsPage> {
                                     contentPadding: EdgeInsets.zero,
                                     minTileHeight: 0,
                                     title: Text("Titolo", style: CLTheme.of(context).bodyLabel),
-                                    subtitle: Text("${vm.news.title}", style: CLTheme.of(context).bodyText),
+                                    subtitle: Text(vm.news.title, style: CLTheme.of(context).bodyText),
                                   ),
                                 ),
                                 ResponsiveGridItem(
@@ -96,7 +95,7 @@ class _ViewNewsPageState extends State<ViewNewsPage> {
                                     contentPadding: EdgeInsets.zero,
                                     minTileHeight: 0,
                                     title: Text("Data inizio", style: CLTheme.of(context).smallLabel.copyWith(fontWeight: FontWeight.bold)),
-                                    subtitle: SelectableText("${vm.news.startingAtDate}", style: CLTheme.of(context).bodyText),
+                                    subtitle: SelectableText(vm.news.startingAtDate, style: CLTheme.of(context).bodyText),
                                   ),
                                 ),
                                 ResponsiveGridItem(
@@ -107,7 +106,7 @@ class _ViewNewsPageState extends State<ViewNewsPage> {
                                     minTileHeight: 0,
                                     minVerticalPadding: 0,
                                     title: Text("Data fine", style: CLTheme.of(context).smallLabel.copyWith(fontWeight: FontWeight.bold)),
-                                    subtitle: Text("${vm.news.endingAtDate}", style: CLTheme.of(context).bodyText),
+                                    subtitle: Text(vm.news.endingAtDate, style: CLTheme.of(context).bodyText),
                                   ),
                                 ),
                                 ResponsiveGridItem(

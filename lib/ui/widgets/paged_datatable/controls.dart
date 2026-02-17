@@ -150,7 +150,7 @@ class _DropdownButtonCell<TType extends Object, T extends Object> extends HookWi
         focusNode: focusNode,
         items: items,
         decoration: decoration ?? const InputDecoration(border: InputBorder.none),
-        value: currentValueRef.value,
+        initialValue: currentValueRef.value,
         onChanged:
             isLoadingN.value
                 ? null

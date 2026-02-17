@@ -1,4 +1,3 @@
-import 'package:aligned_dialog/aligned_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_framework/responsive_framework.dart';
@@ -67,8 +66,9 @@ class StoreReportPageState extends State<StoreReportPage> {
                           initialPage: "1",
                           initialPageSize: 25,
                           onItemTap: (item) {
-                            if (authState.hasPermission(PermissionSlugs.dettaglioStoreReport))
+                            if (authState.hasPermission(PermissionSlugs.dettaglioStoreReport)) {
                               context.customGoNamed(StoreReportRoutes.viewStoreReport.name, params: {"id": item.id});
+                            }
                           },
                           columns: [
                             TableColumn(

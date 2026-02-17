@@ -10,7 +10,7 @@ class Dashboard extends BaseModel {
   List<CityGraphData> cityGraphData;
 
   @override
-  String get modelIdentifier => "$id";
+  String get modelIdentifier => id;
 
   Dashboard._internal({
     required this.id,

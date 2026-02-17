@@ -16,7 +16,7 @@ import '../../../../../utils/providers/appstate.util.provider.dart';
 import '../viewmodels/news.viewmodel.dart';
 
 class EditNewsPage extends StatefulWidget {
-  const EditNewsPage({Key? key, required this.id}) : super(key: key);
+  const EditNewsPage({super.key, required this.id});
 
   final String id;
 

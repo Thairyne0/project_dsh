@@ -85,7 +85,7 @@ class _ViewEventCategoryPageState extends State<ViewEventCategoryPage> {
                                       contentPadding: EdgeInsets.zero,
                                       minTileHeight: 0,
                                       title: Text("Nome", style: CLTheme.of(context).bodyLabel),
-                                      subtitle: Text("${vm.eventCategory.name}", style: CLTheme.of(context).bodyText),
+                                      subtitle: Text(vm.eventCategory.name, style: CLTheme.of(context).bodyText),
                                     ),
                                   ),
                                   ResponsiveGridItem(

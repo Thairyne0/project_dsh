@@ -1,7 +1,6 @@
 import 'package:project_dsh/modules/profile/constants/users_routes.constants.dart';
 import 'package:project_dsh/ui/cl_theme.dart';
 import 'package:project_dsh/ui/widgets/cl_container.widget.dart';
-import 'package:country_flags/country_flags.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stacked/stacked.dart';
@@ -11,14 +10,9 @@ import '../../../../ui/widgets/cl_responsive_grid/flutter_responsive_flex_grid.d
 import '../../../../utils/base.viewmodel.dart';
 import '../../../../utils/models/pageaction.model.dart';
 import '../../../../utils/providers/appstate.util.provider.dart';
-import '../../../ui/widgets/avatar.widget.dart';
-import '../../../ui/widgets/cl_media_viewer.widget.dart';
-import '../../../ui/widgets/loading.widget.dart';
 import '../../../utils/providers/authstate.util.provider.dart';
 import '../../auth/constants/auth_routes.constants.dart';
 import '../viewmodels/profile.viewmodel.dart';
-import 'package:intl/intl.dart';
-import 'package:go_router/go_router.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -88,8 +82,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                     child: FittedBox(
                                       fit: BoxFit.scaleDown,
                                       child: Text(
-                                        "${authState.getCurrentUser?.userData.firstName?[0] ?? ''}"
-                                            "${authState.getCurrentUser?.userData.lastName?[0] ?? ''}",
+                                        "${authState.getCurrentUser?.userData.firstName[0] ?? ''}"
+                                            "${authState.getCurrentUser?.userData.lastName[0] ?? ''}",
                                         style: CLTheme.of(context).heading1,
                                       ),
                                     ),
@@ -99,8 +93,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                   child: FittedBox(
                                     fit: BoxFit.scaleDown,
                                     child: Text(
-                                      "${authState.getCurrentUser?.userData.firstName?[0] ?? ''}"
-                                          "${authState.getCurrentUser?.userData.lastName?[0] ?? ''}",
+                                      "${authState.getCurrentUser?.userData.firstName[0] ?? ''}"
+                                          "${authState.getCurrentUser?.userData.lastName[0] ?? ''}",
                                       style: CLTheme.of(context).heading1,
                                     ),
                                   ),

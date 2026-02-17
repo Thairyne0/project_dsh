@@ -100,12 +100,13 @@ class _ViewLocationPageState extends State<ViewLocationPage> {
                                     text: vm.location.store.name,
                                     onTap: () {
                                       if (authState.hasPermission(
-                                          PermissionSlugs.dettaglioStore))
+                                          PermissionSlugs.dettaglioStore)) {
                                         context.customGoNamed(
                                             StoreRoutes.viewStore.name,
                                             params: {
                                               "id": vm.location.store.id
                                             });
+                                      }
                                     },
                                     context: context,
                                   ),
@@ -123,7 +124,7 @@ class _ViewLocationPageState extends State<ViewLocationPage> {
                                           .smallLabel
                                           .copyWith(
                                               fontWeight: FontWeight.bold)),
-                                  subtitle: Text("${vm.location.name}",
+                                  subtitle: Text(vm.location.name,
                                       style: CLTheme.of(context).bodyText),
                                 ),
                               ),
@@ -139,7 +140,7 @@ class _ViewLocationPageState extends State<ViewLocationPage> {
                                           .smallLabel
                                           .copyWith(
                                               fontWeight: FontWeight.bold)),
-                                  subtitle: Text("${vm.location.civic}",
+                                  subtitle: Text(vm.location.civic,
                                       style: CLTheme.of(context).bodyText),
                                 ),
                               ),
@@ -155,7 +156,7 @@ class _ViewLocationPageState extends State<ViewLocationPage> {
                                           .smallLabel
                                           .copyWith(
                                               fontWeight: FontWeight.bold)),
-                                  subtitle: Text("${vm.location.poiId}",
+                                  subtitle: Text(vm.location.poiId,
                                       style: CLTheme.of(context).bodyText),
                                 ),
                               ),
@@ -184,7 +185,7 @@ class _ViewLocationPageState extends State<ViewLocationPage> {
                                   title: Text("Data inizio validità",
                                       style: CLTheme.of(context).bodyLabel),
                                   subtitle: Text(
-                                      "${vm.location.startValidityAtDate}",
+                                      vm.location.startValidityAtDate,
                                       style: CLTheme.of(context).bodyText),
                                 ),
                               ),
@@ -197,7 +198,7 @@ class _ViewLocationPageState extends State<ViewLocationPage> {
                                   title: Text("Data fine validità",
                                       style: CLTheme.of(context).bodyLabel),
                                   subtitle: Text(
-                                      "${vm.location.endValidityAtDate}",
+                                      vm.location.endValidityAtDate,
                                       style: CLTheme.of(context).bodyText),
                                 ),
                               ),

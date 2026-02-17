@@ -95,7 +95,7 @@ class _ViewStoreCategoryPageState extends State<ViewStoreCategoryPage> {
                                       contentPadding: EdgeInsets.zero,
                                       minTileHeight: 0,
                                       title: Text("Nome", style: CLTheme.of(context).bodyLabel),
-                                      subtitle: Text("${vm.storeCategory.name}", style: CLTheme.of(context).bodyText),
+                                      subtitle: Text(vm.storeCategory.name, style: CLTheme.of(context).bodyText),
                                     ),
                                   ),
                                   ResponsiveGridItem(
@@ -134,8 +134,9 @@ class _ViewStoreCategoryPageState extends State<ViewStoreCategoryPage> {
                                       initialPage: "1",
                                       initialPageSize: 25,
                                       onItemTap: (item) {
-                                        if (authState.hasPermission(PermissionSlugs.dettaglioCategoriaStore))
+                                        if (authState.hasPermission(PermissionSlugs.dettaglioCategoriaStore)) {
                                           context.customGoNamed(StoreCategoryRoutes.viewStoreCategory.name, params: {"id": item.storeCategory.id}, replacedRouteName: item.modelIdentifier);
+                                        }
                                       },
                                       actionsBuilder: (item) => [
                                         if (authState.hasPermission(PermissionSlugs.allegaCategoriaStore))

@@ -38,7 +38,7 @@ class AppDatabase {
     return user;
   }
 
-  static deleteCurrentUser() async {
+  static Future<void> deleteCurrentUser() async {
     var storeUser = intMapStoreFactory.store('users');
     await storeUser.delete(db);
   }

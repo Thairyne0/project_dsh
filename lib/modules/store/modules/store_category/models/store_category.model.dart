@@ -5,7 +5,7 @@ import '../../../models/store.model.dart';
 
 class StoreCategory extends BaseModel {
   @override
-  String get modelIdentifier => "$name";
+  String get modelIdentifier => name;
 
   String id;
   String name;

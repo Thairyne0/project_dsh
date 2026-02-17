@@ -8,7 +8,7 @@ import '../../../utils/models/state.model.dart';
 
 class UserData extends BaseModel {
   @override
-  String get modelIdentifier => "$firstName";
+  String get modelIdentifier => firstName;
 
   String id;
   String firstName;

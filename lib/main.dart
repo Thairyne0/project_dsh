@@ -1,5 +1,4 @@
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:intl/intl.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:project_dsh/ui/widgets/alertmanager/alert_manager.dart';
 import 'package:project_dsh/utils/app_database.util.dart';
@@ -10,6 +9,7 @@ import 'package:project_dsh/utils/providers/authstate.util.provider.dart';
 import 'package:project_dsh/utils/go_router_modular/go_router_modular_configure.dart';
 import 'package:project_dsh/utils/providers/chat.util.provider.dart';
 import 'package:project_dsh/utils/providers/navigation.util.provider.dart';
+import 'package:project_dsh/utils/providers/tabs.util.provider.dart';
 import 'package:project_dsh/utils/providers/theme.util.provider.dart';
 import 'package:project_dsh/utils/shared_manager.util.dart';
 import 'package:flutter/material.dart';
@@ -37,6 +37,7 @@ void main() async {
           ChangeNotifierProvider<AuthState>(create: (context) => AuthState()),
           ChangeNotifierProvider<ChatState>(create: (context) => ChatState()),
           ChangeNotifierProvider<ThemeProvider>(create: (context) => ThemeProvider()),
+          ChangeNotifierProvider<TabsState>(create: (context) => TabsState()),
         ],
         child: MainApp()),
   );

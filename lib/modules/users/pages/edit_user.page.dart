@@ -18,7 +18,7 @@ import '../modules/role_permission/models/role.model.dart';
 import '../viewmodels/user.viewmodel.dart';
 
 class EditUserPage extends StatefulWidget {
-  EditUserPage({super.key, required this.id});
+  const EditUserPage({super.key, required this.id});
 
   final String id;
 

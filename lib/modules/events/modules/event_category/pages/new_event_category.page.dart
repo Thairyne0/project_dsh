@@ -16,7 +16,7 @@ import '../../../../../utils/providers/appstate.util.provider.dart';
 import '../viewmodels/event_category.viewmodel.dart';
 
 class NewEventCategoryPage extends StatefulWidget {
-  const NewEventCategoryPage({Key? key}) : super(key: key);
+  const NewEventCategoryPage({super.key});
 
   @override
   createState() => NewEventCategoryPageState();

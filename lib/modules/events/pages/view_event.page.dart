@@ -118,7 +118,7 @@ class _ViewEventPageState extends State<ViewEventPage> {
                                   contentPadding: EdgeInsets.zero,
                                   minTileHeight: 0,
                                   title: Text("Titolo", style: CLTheme.of(context).smallLabel.copyWith(fontWeight: FontWeight.bold)),
-                                  subtitle: Text("${vm.event.title}", style: CLTheme.of(context).bodyText),
+                                  subtitle: Text(vm.event.title, style: CLTheme.of(context).bodyText),
                                 ),
                               ),
                               ResponsiveGridItem(
@@ -129,7 +129,7 @@ class _ViewEventPageState extends State<ViewEventPage> {
                                   contentPadding: EdgeInsets.zero,
                                   minTileHeight: 0,
                                   title: Text("Data inizio", style: CLTheme.of(context).smallLabel.copyWith(fontWeight: FontWeight.bold)),
-                                  subtitle: SelectableText("${vm.event.startingAtDate}", style: CLTheme.of(context).bodyText),
+                                  subtitle: SelectableText(vm.event.startingAtDate, style: CLTheme.of(context).bodyText),
                                 ),
                               ),
                               ResponsiveGridItem(
@@ -140,7 +140,7 @@ class _ViewEventPageState extends State<ViewEventPage> {
                                   minTileHeight: 0,
                                   minVerticalPadding: 0,
                                   title: Text("Data fine", style: CLTheme.of(context).smallLabel.copyWith(fontWeight: FontWeight.bold)),
-                                  subtitle: Text("${vm.event.endingAtDate}", style: CLTheme.of(context).bodyText),
+                                  subtitle: Text(vm.event.endingAtDate, style: CLTheme.of(context).bodyText),
                                 ),
                               ),
                               ResponsiveGridItem(
@@ -674,7 +674,7 @@ class _ViewEventPageState extends State<ViewEventPage> {
                                                       return AlertDialog(
                                                         backgroundColor: CLTheme.of(context).secondaryBackground,
                                                         title: Text("Seleziona un file zip", style: CLTheme.of(context).title),
-                                                        content: Container(
+                                                        content: SizedBox(
                                                           width: 600,
                                                           child: Column(
                                                             mainAxisSize: MainAxisSize.min,

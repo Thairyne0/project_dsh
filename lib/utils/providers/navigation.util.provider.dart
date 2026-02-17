@@ -90,7 +90,7 @@ class NavigationState extends ChangeNotifier {
 
               // Verifica prima se il path corrente contiene il path precedente come prefisso
               // (indica che è una route figlia diretta o più profonda)
-              final isChildOfLast = item.path.startsWith(lastItem.path + '/');
+              final isChildOfLast = item.path.startsWith('${lastItem.path}/');
 
               if (isChildOfLast) {
                 // È una route figlia (diretta o più profonda) → AGGIUNGI

@@ -16,7 +16,7 @@ import '../../../ui/cl_theme.dart';
 import '../viewmodels/news.viewmodel.dart';
 
 class NewNewsPage extends StatefulWidget {
-  const NewNewsPage({Key? key}) : super(key: key);
+  const NewNewsPage({super.key});
 
   @override
   createState() => NewNewsPageState();

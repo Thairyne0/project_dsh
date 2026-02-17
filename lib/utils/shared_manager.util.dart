@@ -4,7 +4,7 @@ class SharedManager {
   //
   static SharedPreferences? prefs;
 
-  static initPrefs() async {
+  static Future<void> initPrefs() async {
     prefs ??= await SharedPreferences.getInstance();
   }
 

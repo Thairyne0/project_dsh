@@ -4,8 +4,6 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:universal_html/html.dart' as html;
-import 'package:project_dsh/utils/download_extension_io.dart';
-import '../../../../../app.constants.dart';
 import '../../../../../ui/widgets/alertmanager/alert_manager.dart';
 import '../../../../../ui/widgets/paged_datatable/paged_datatable.dart';
 import '../../../../../utils/api_manager.util.dart';
@@ -162,7 +160,7 @@ class StoreReportViewModel extends CLBaseViewModel {
       "numeroScontrini4": int.tryParse(numeroScontrini4TEC.text) ?? 0,
       "numeroScontrini0": int.tryParse(numeroScontrini0TEC.text) ?? 0,
       "ingressi": int.tryParse(ingressiTEC.text) ?? 0,
-      "reportDate": "${selectedReportDateFormat!.toUtc().toIso8601String()}",
+      "reportDate": selectedReportDateFormat!.toUtc().toIso8601String(),
       "note": noteTEC.text
     };
     ApiCallResponse apiCallResponse = await StoreReportCalls.createStoreReport(viewContext, params);
@@ -182,7 +180,7 @@ class StoreReportViewModel extends CLBaseViewModel {
   Future<void> downloadExcelReport() async {
     setBusy(true);
     final params = {
-      "reportDate": "${selectedReportDateFormat!.toUtc().toIso8601String()}",
+      "reportDate": selectedReportDateFormat!.toUtc().toIso8601String(),
     };
 
     ApiCallResponse apiCallResponse = await StoreReportCalls.downloadReportExcel(viewContext, params);

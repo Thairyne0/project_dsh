@@ -314,7 +314,7 @@ class _HoverableRowState<TKey extends Comparable, TResultId extends Comparable, 
                                                           child: tableAction.content,
                                                         ),
                                                       );
-                                                    }).toList(),
+                                                    }),
                                                     SizedBox(height: Sizes.padding),
                                                   ],
                                                 ),

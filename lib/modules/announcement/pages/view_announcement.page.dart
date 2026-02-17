@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -80,7 +79,7 @@ class ViewAnnouncementPageState extends State<ViewAnnouncementPage> {
                                     contentPadding: EdgeInsets.zero,
                                     minTileHeight: 0,
                                     title: Text("Titolo", style: CLTheme.of(context).bodyLabel),
-                                    subtitle: Text("${vm.announcement.title}", style: CLTheme.of(context).bodyText),
+                                    subtitle: Text(vm.announcement.title, style: CLTheme.of(context).bodyText),
                                   ),
                                 ),
                                 ResponsiveGridItem(

@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:project_dsh/utils/go_router_modular/go_router_modular_configure.dart';
-import 'package:project_dsh/utils/go_router_modular/routes/child_route.dart';
 import 'package:project_dsh/utils/go_router_modular/routes/i_modular_route.dart';
 import 'package:project_dsh/utils/go_router_modular/routes/module_route.dart';
-import 'modules/announcement/announcement.module.dart';
 import 'modules/auth/auth.module.dart';
 import 'modules/dashboard/dashboard.module.dart';
 import '../../utils/providers/authstate.util.provider.dart';

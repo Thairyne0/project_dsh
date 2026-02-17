@@ -25,7 +25,7 @@ class Store extends BaseModel {
   List<OpeningClosingStore> weeklySchedule;
 
   @override
-  String get modelIdentifier => "$name";
+  String get modelIdentifier => name;
 
   Store._internal({
     required this.id,

@@ -17,7 +17,7 @@ import '../../../../../utils/providers/appstate.util.provider.dart';
 import '../viewmodels/brand.viewmodel.dart';
 
 class EditBrandPage extends StatefulWidget {
-  const EditBrandPage({Key? key, required this.id}) : super(key: key);
+  const EditBrandPage({super.key, required this.id});
 
   final String id;
 

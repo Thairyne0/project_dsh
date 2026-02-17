@@ -7,7 +7,7 @@ import '../../../models/user.model.dart';
 
 class UserPermission extends BaseModel {
   @override
-  String get modelIdentifier => "$id";
+  String get modelIdentifier => id;
 
   String id;
   User? user;

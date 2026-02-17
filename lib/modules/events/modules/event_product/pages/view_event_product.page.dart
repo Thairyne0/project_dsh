@@ -101,7 +101,7 @@ class _ViewEventProductPageState extends State<ViewEventProductPage> {
                                 contentPadding: EdgeInsets.zero,
                                 minTileHeight: 0,
                                 title: Text("Nome", style: CLTheme.of(context).bodyLabel),
-                                subtitle: Text("${vm.eventProduct.name}", style: CLTheme.of(context).bodyText),
+                                subtitle: Text(vm.eventProduct.name, style: CLTheme.of(context).bodyText),
                               ),
                             ),
                             ResponsiveGridItem(

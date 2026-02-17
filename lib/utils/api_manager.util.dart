@@ -2,9 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:core';
 import 'dart:typed_data';
-import 'package:project_dsh/utils/providers/errorstate.util.provider.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
 import 'package:equatable/equatable.dart';
 import 'package:http_parser/http_parser.dart';
@@ -351,8 +349,8 @@ class ApiManager {
         else if (value is DateTimeRange) {
           if (i == parts.length - 1) {
             currentLevel[parts[i]] = {
-              'gte': "${value.start.toUtc().toIso8601String()}",
-              'lte': "${value.end.add(const Duration(hours: 23, minutes: 59, seconds: 59)).toUtc().toIso8601String()}",
+              'gte': value.start.toUtc().toIso8601String(),
+              'lte': value.end.add(const Duration(hours: 23, minutes: 59, seconds: 59)).toUtc().toIso8601String(),
             };
           } else {
             // Check if next part is 'some' or 'every' (Prisma array filters)

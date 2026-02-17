@@ -20,7 +20,6 @@ import '../../../ui/widgets/paged_datatable/paged_datatable.dart';
 import '../../../ui/widgets/table_action_item.widget.dart';
 import '../../../utils/base.viewmodel.dart';
 import '../../../utils/models/pageaction.model.dart';
-import '../../users/models/user.model.dart';
 import '../../../utils/providers/appstate.util.provider.dart';
 import '../../../utils/providers/authstate.util.provider.dart';
 import '../../users/constants/permission_slug.dart';
@@ -103,8 +102,9 @@ class _ViewStorePageState extends State<ViewStorePage> {
                                       subtitle: CLActionText.primary(
                                         text: vm.store.brand.name,
                                         onTap: () {
-                                          if (authState.hasPermission(PermissionSlugs.dettaglioBrand))
+                                          if (authState.hasPermission(PermissionSlugs.dettaglioBrand)) {
                                             context.customGoNamed(BrandRoutes.viewBrand.name, params: {"id": vm.store.brand.id});
+                                          }
                                         },
                                         context: context,
                                       )),
@@ -116,7 +116,7 @@ class _ViewStorePageState extends State<ViewStorePage> {
                                     contentPadding: EdgeInsets.zero,
                                     minTileHeight: 0,
                                     title: Text("Ragione sociale", style: CLTheme.of(context).bodyLabel),
-                                    subtitle: Text("${vm.store.name}", style: CLTheme.of(context).bodyText),
+                                    subtitle: Text(vm.store.name, style: CLTheme.of(context).bodyText),
                                   ),
                                 ),
                                 ResponsiveGridItem(
@@ -126,7 +126,7 @@ class _ViewStorePageState extends State<ViewStorePage> {
                                     contentPadding: EdgeInsets.zero,
                                     minTileHeight: 0,
                                     title: Text("Email", style: CLTheme.of(context).bodyLabel),
-                                    subtitle: Text("${vm.store.email}", style: CLTheme.of(context).bodyText),
+                                    subtitle: Text(vm.store.email, style: CLTheme.of(context).bodyText),
                                   ),
                                 ),
                                 ResponsiveGridItem(
@@ -136,7 +136,7 @@ class _ViewStorePageState extends State<ViewStorePage> {
                                     contentPadding: EdgeInsets.zero,
                                     minTileHeight: 0,
                                     title: Text("PEC", style: CLTheme.of(context).bodyLabel),
-                                    subtitle: Text("${vm.store.pec}", style: CLTheme.of(context).bodyText),
+                                    subtitle: Text(vm.store.pec, style: CLTheme.of(context).bodyText),
                                   ),
                                 ),
                                 ResponsiveGridItem(
@@ -146,7 +146,7 @@ class _ViewStorePageState extends State<ViewStorePage> {
                                     contentPadding: EdgeInsets.zero,
                                     minTileHeight: 0,
                                     title: Text("Telefono", style: CLTheme.of(context).bodyLabel),
-                                    subtitle: Text("${vm.store.phone}", style: CLTheme.of(context).bodyText),
+                                    subtitle: Text(vm.store.phone, style: CLTheme.of(context).bodyText),
                                   ),
                                 ),
                                 ResponsiveGridItem(
@@ -156,7 +156,7 @@ class _ViewStorePageState extends State<ViewStorePage> {
                                     contentPadding: EdgeInsets.zero,
                                     minTileHeight: 0,
                                     title: Text("Partita IVA", style: CLTheme.of(context).bodyLabel),
-                                    subtitle: Text("${vm.store.piva}", style: CLTheme.of(context).bodyText),
+                                    subtitle: Text(vm.store.piva, style: CLTheme.of(context).bodyText),
                                   ),
                                 ),
                                 ResponsiveGridItem(
@@ -166,7 +166,7 @@ class _ViewStorePageState extends State<ViewStorePage> {
                                     contentPadding: EdgeInsets.zero,
                                     minTileHeight: 0,
                                     title: Text("Indirizzo Legale", style: CLTheme.of(context).bodyLabel),
-                                    subtitle: Text("${vm.store.legalAddress}", style: CLTheme.of(context).bodyText),
+                                    subtitle: Text(vm.store.legalAddress, style: CLTheme.of(context).bodyText),
                                   ),
                                 ),
 
@@ -399,8 +399,9 @@ class _ViewStorePageState extends State<ViewStorePage> {
                                 initialPage: "1",
                                 initialPageSize: 25,
                                 onItemTap: (item) {
-                                  if (authState.hasPermission(PermissionSlugs.dettaglioPromo))
+                                  if (authState.hasPermission(PermissionSlugs.dettaglioPromo)) {
                                     context.customGoNamed(PromoRoutes.viewPromo.name, params: {"id": item.id}, replacedRouteName: item.modelIdentifier);
+                                  }
                                 },
                                 actionsBuilder: (item) => [
                                   if (authState.hasPermission(PermissionSlugs.updatePromo))
@@ -554,8 +555,9 @@ class _ViewStorePageState extends State<ViewStorePage> {
                                 initialPage: "1",
                                 initialPageSize: 25,
                                 onItemTap: (item) {
-                                  if (authState.hasPermission(PermissionSlugs.dettaglioUtente))
+                                  if (authState.hasPermission(PermissionSlugs.dettaglioUtente)) {
                                     context.customGoNamed(UserRoutes.viewUser.name, params: {"id": item.user.id}, replacedRouteName: item.user.modelIdentifier);
+                                  }
                                 },
                                 actionsBuilder: (item) => [
                                   if (authState.hasPermission(PermissionSlugs.updateUtenti))
@@ -635,9 +637,10 @@ class _ViewStorePageState extends State<ViewStorePage> {
                                 initialPage: "1",
                                 initialPageSize: 25,
                                 onItemTap: (item) {
-                                  if (authState.hasPermission(PermissionSlugs.dettaglioStoreReport))
+                                  if (authState.hasPermission(PermissionSlugs.dettaglioStoreReport)) {
                                     context.customGoNamed(StoreReportRoutes.viewStoreReport.name,
                                       params: {"id": item.id}, replacedRouteName: item.modelIdentifier);
+                                  }
                                 },
                                 actionsBuilder: (item) => [
                                   if (authState.hasPermission(PermissionSlugs.dettaglioStoreReport))
@@ -681,8 +684,9 @@ class _ViewStorePageState extends State<ViewStorePage> {
                                   CLButton.primary(
                                     text: ResponsiveBreakpoints.of(context).isDesktop ? "Aggiungi Nuovo" : "",
                                     onTap: () async {
-                                      if (authState.hasPermission(PermissionSlugs.creazioneStoreReport))
+                                      if (authState.hasPermission(PermissionSlugs.creazioneStoreReport)) {
                                         context.customGoNamed(StoreReportRoutes.newStoreReport.name, params: {"storeId": widget.id});
+                                      }
                                     },
                                     context: context,
                                     icon: Icons.add,
@@ -701,8 +705,9 @@ class _ViewStorePageState extends State<ViewStorePage> {
                                     initialPage: "1",
                                     initialPageSize: 25,
                                     onItemTap: (item) {
-                                      if (authState.hasPermission(PermissionSlugs.dettaglioLocation))
+                                      if (authState.hasPermission(PermissionSlugs.dettaglioLocation)) {
                                         context.customGoNamed(LocationRoutes.viewLocation.name, params: {"id": item.id});
+                                      }
                                     },
                                     actionsBuilder: (item) => [
                                       if (authState.hasPermission(PermissionSlugs.rimozioneLocation))

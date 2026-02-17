@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:universal_html/html.dart' as html;
@@ -222,9 +221,9 @@ class UserViewModel extends CLBaseViewModel {
         await PermissionCalls.getAllPermission(viewContext, page: page, perPage: perPage, searchParams: searchBy, orderByParams: orderBy);
     if (apiCallResponse.succeeded) {
       final permissionsByUserJsonArray = (apiCallResponse.jsonBody as List);
-      permissionsByUserJsonArray.forEach((jsonObject) {
+      for (var jsonObject in permissionsByUserJsonArray) {
         permissionsByUserArray.add(Permission.fromJson(jsonObject: jsonObject));
-      });
+      }
     }
     return (permissionsByUserArray, apiCallResponse.pagination);
   }

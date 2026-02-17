@@ -1,13 +1,10 @@
 import 'dart:async';
 import 'dart:collection';
 import 'dart:math';
-import 'package:auto_size_text/auto_size_text.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:project_dsh/ui/cl_theme.dart';
 import 'package:project_dsh/ui/layout/constants/sizes.constant.dart';
 import 'package:project_dsh/ui/widgets/buttons/cl_button.widget.dart';
-import 'package:project_dsh/ui/widgets/buttons/cl_outline_button.widget.dart';
 import 'package:project_dsh/ui/widgets/cl_shimmer.widget.dart';
 import 'package:project_dsh/ui/widgets/cl_text_field.widget.dart';
 import 'package:project_dsh/ui/widgets/cl_container.widget.dart';
@@ -21,7 +18,6 @@ import 'package:intl/intl.dart' hide TextDirection;
 import 'package:provider/provider.dart';
 import 'package:equatable/equatable.dart';
 import 'package:responsive_framework/responsive_framework.dart';
-import 'package:project_dsh/ui/widgets/cl_responsive_grid/flutter_responsive_flex_grid.dart';
 import '../../../utils/api_manager.util.dart';
 
 part 'controls.dart';
@@ -263,8 +259,8 @@ class PagedDataTable<TKey extends Comparable, TResultId extends Comparable, TRes
                       /* ITEMS */
                       _PagedDataTableRows<TKey, TResultId, TResult>(
                         rowsSelectable,
-                        this.onItemTap,
-                        this.isInSnippet,
+                        onItemTap,
+                        isInSnippet,
                         customRowBuilder ??
                             CustomRowBuilder<TResult>(
                               builder: (context, item) => throw UnimplementedError("This does not build nothing"),
@@ -273,13 +269,13 @@ class PagedDataTable<TKey extends Comparable, TResultId extends Comparable, TRes
                         noItemsFoundBuilder,
                         errorBuilder,
                         width,
-                        this.actionsTitle,
-                        this.tableActions,
-                        this.actionsBuilder,
+                        actionsTitle,
+                        tableActions,
+                        actionsBuilder,
                         localTheme.configuration.initialPageSize,
                         showShimmerLoading,
-                        this.expandedRowBuilder,
-                        this.onRowExpanded,
+                        expandedRowBuilder,
+                        onRowExpanded,
                       ),
                       Divider(height: 0, color: CLTheme.of(context).borderColor, thickness: 1),
                     ],
@@ -313,8 +309,8 @@ class PagedDataTable<TKey extends Comparable, TResultId extends Comparable, TRes
                     ],
                     _PagedDataTableBoxed<TKey, TResultId, TResult>(
                       rowsSelectable,
-                      this.onItemTap,
-                      this.isInSnippet,
+                      onItemTap,
+                      isInSnippet,
                       customRowBuilder ??
                           CustomRowBuilder<TResult>(
                             builder: (context, item) => throw UnimplementedError("This does not build nothing"),
@@ -323,9 +319,9 @@ class PagedDataTable<TKey extends Comparable, TResultId extends Comparable, TRes
                       noItemsFoundBuilder,
                       errorBuilder,
                       width,
-                      this.actionsTitle,
-                      this.tableActions,
-                      this.actionsBuilder,
+                      actionsTitle,
+                      tableActions,
+                      actionsBuilder,
                     ),
                   ],
                 );
@@ -404,7 +400,7 @@ class PagedDataTable<TKey extends Comparable, TResultId extends Comparable, TRes
                                 )
                                 : SizedBox.shrink()
                             : const SizedBox.shrink(),
-                        !this.isInSnippet ? SizedBox(height: Sizes.padding) : SizedBox.shrink(),
+                        !isInSnippet ? SizedBox(height: Sizes.padding) : SizedBox.shrink(),
                       ],
                     ),
                   ),

@@ -26,7 +26,7 @@ class EventProduct extends BaseModel {
 
 
   @override
-  String get modelIdentifier => "$name";
+  String get modelIdentifier => name;
 
   EventProduct._internal({
     required this.id,

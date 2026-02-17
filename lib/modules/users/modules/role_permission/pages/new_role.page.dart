@@ -15,7 +15,7 @@ import '../../../../../utils/providers/appstate.util.provider.dart';
 import '../viewmodels/role_permission.viewmodel.dart';
 
 class NewRolePage extends StatefulWidget {
-  const NewRolePage({Key? key}) : super(key: key);
+  const NewRolePage({super.key});
 
   @override
   createState() => NewRolePageState();

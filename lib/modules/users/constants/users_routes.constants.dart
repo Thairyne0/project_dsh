@@ -5,5 +5,5 @@ class UserRoutes {
   static final CLRoute viewUser = CLRoute(name: "Dettaglio Utente", path: "/user-details");
   static final CLRoute editUser = CLRoute(name: "Modifica Utente", path: "/user-edit");
   static final CLRoute newUser = CLRoute(name: "Aggiungi Utente", path: "/new-user");
-  static final CLRoute addPermissionToUser = CLRoute(name: "Aggiungi Permesso all\'utente", path: "/permission-add");
+  static final CLRoute addPermissionToUser = CLRoute(name: "Aggiungi Permesso all'utente", path: "/permission-add");
 }

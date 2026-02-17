@@ -16,7 +16,7 @@ class LogoWidget extends StatefulWidget {
 class _LogoWidgetState extends State<LogoWidget> {
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
         height: widget.height ?? 90,
         child:
             widget.dark

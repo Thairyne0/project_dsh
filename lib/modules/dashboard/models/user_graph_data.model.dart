@@ -2,7 +2,7 @@ import 'package:project_dsh/utils/models/custom_model.model.dart';
 
 class UserGraphData extends BaseModel {
   @override
-  String get modelIdentifier => "$key";
+  String get modelIdentifier => key;
 
   String key;
   int value;

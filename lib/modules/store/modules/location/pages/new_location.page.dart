@@ -16,7 +16,7 @@ import '../../../models/store.model.dart';
 import '../viewmodels/location.viewmodel.dart';
 
 class NewLocationPage extends StatefulWidget {
-  const NewLocationPage({Key? key}) : super(key: key);
+  const NewLocationPage({super.key});
 
   @override
   createState() => NewLocationPageState();
@@ -136,7 +136,7 @@ class NewLocationPageState extends State<NewLocationPage> with TickerProviderSta
                     ),
                   )
             ),
-          ))]);;
+          ))]);
         });
   }
 }

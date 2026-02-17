@@ -16,7 +16,7 @@ import '../../../../../utils/providers/appstate.util.provider.dart';
 import '../viewmodels/store_category.viewmodel.dart';
 
 class NewStoreCategoryPage extends StatefulWidget {
-  const NewStoreCategoryPage({Key? key}) : super(key: key);
+  const NewStoreCategoryPage({super.key});
 
   @override
   createState() => NewStoreCategoryPageState();

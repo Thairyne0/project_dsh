@@ -1,7 +1,6 @@
 import 'package:project_dsh/utils/go_router_modular/routes/cl_route.dart';
 import 'package:project_dsh/utils/providers/appstate.util.provider.dart';
 import 'package:project_dsh/utils/providers/authstate.util.provider.dart';
-import 'package:project_dsh/utils/providers/navigation.util.provider.dart';
 import 'package:provider/provider.dart';
 import '../app.constants.dart';
 import '../modules/auth/auth.module.dart';

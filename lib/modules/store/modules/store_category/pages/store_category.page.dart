@@ -66,8 +66,9 @@ class StoreCategoryPageState extends State<StoreCategoryPage> {
                             initialPage: "1",
                             initialPageSize: 25,
                             onItemTap: (item) {
-                              if (authState.hasPermission(PermissionSlugs.dettaglioCategoriaStore))
+                              if (authState.hasPermission(PermissionSlugs.dettaglioCategoriaStore)) {
                                 context.customGoNamed(StoreCategoryRoutes.viewStoreCategory.name, params: {"id": item.id});
+                              }
                             },
                             actionsBuilder: (item) => [
                               if (authState.hasPermission(PermissionSlugs.updateCategoriaStore))

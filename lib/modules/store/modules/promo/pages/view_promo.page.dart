@@ -90,8 +90,9 @@ class _ViewPromoPageState extends State<ViewPromoPage> {
                                         subtitle: CLActionText.primary(
                                           text: vm.promo.store.name,
                                           onTap: () {
-                                            if (authState.hasPermission(PermissionSlugs.dettaglioStore))
+                                            if (authState.hasPermission(PermissionSlugs.dettaglioStore)) {
                                               context.customGoNamed(StoreRoutes.viewStore.name, params: {"id": vm.promo.store.id});
+                                            }
                                           },
                                           context: context,
                                         )),
@@ -107,8 +108,9 @@ class _ViewPromoPageState extends State<ViewPromoPage> {
                                           text: vm.promo.store.brand.name,
 
                                           onTap: () {
-                                            if (authState.hasPermission(PermissionSlugs.dettaglioBrand))
+                                            if (authState.hasPermission(PermissionSlugs.dettaglioBrand)) {
                                               context.customGoNamed(BrandRoutes.viewBrand.name, params: {"id": vm.promo.store.brand.id});
+                                            }
                                           },
                                           context: context,
                                         )),
@@ -120,7 +122,7 @@ class _ViewPromoPageState extends State<ViewPromoPage> {
                                       contentPadding: EdgeInsets.zero,
                                       minTileHeight: 0,
                                       title: Text("Titolo", style: CLTheme.of(context).bodyLabel),
-                                      subtitle: Text("${vm.promo.title}", style: CLTheme.of(context).bodyText),
+                                      subtitle: Text(vm.promo.title, style: CLTheme.of(context).bodyText),
                                     ),
                                   ),
 
@@ -152,7 +154,7 @@ class _ViewPromoPageState extends State<ViewPromoPage> {
                                       contentPadding: EdgeInsets.zero,
                                       minTileHeight: 0,
                                       title: Text("Codice", style: CLTheme.of(context).bodyLabel),
-                                      subtitle: SelectableText("${vm.promo.code}", style: CLTheme.of(context).bodyText),
+                                      subtitle: SelectableText(vm.promo.code, style: CLTheme.of(context).bodyText),
                                     ),
                                   ),
                                   ResponsiveGridItem(
@@ -162,7 +164,7 @@ class _ViewPromoPageState extends State<ViewPromoPage> {
                                       contentPadding: EdgeInsets.zero,
                                       minTileHeight: 0,
                                       title: Text("Data inizio", style: CLTheme.of(context).bodyLabel),
-                                      subtitle: Text("${vm.promo.startingAtDate}", style: CLTheme.of(context).bodyText),
+                                      subtitle: Text(vm.promo.startingAtDate, style: CLTheme.of(context).bodyText),
                                     ),
                                   ),
                                   ResponsiveGridItem(
@@ -172,7 +174,7 @@ class _ViewPromoPageState extends State<ViewPromoPage> {
                                       contentPadding: EdgeInsets.zero,
                                       minTileHeight: 0,
                                       title: Text("Data fine", style: CLTheme.of(context).bodyLabel),
-                                      subtitle: Text("${vm.promo.endingAtDate}", style: CLTheme.of(context).bodyText),
+                                      subtitle: Text(vm.promo.endingAtDate, style: CLTheme.of(context).bodyText),
                                     ),
                                   ),
                                   ResponsiveGridItem(

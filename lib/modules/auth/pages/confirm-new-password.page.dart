@@ -33,7 +33,7 @@ class _ConfirmNewPasswordState extends State<ConfirmNewPassword> {
                   Text('Password aggiornata con successo!', style: CLTheme.of(context).heading4.copyWith(color: Colors.white, fontWeight: FontWeight.bold)),
                   SizedBox(height: Sizes.padding),
                   Text(
-                    'Potrai effettuare l\accesso utilizzando le credenziali aggiornate.',
+                    'Potrai effettuare laccesso utilizzando le credenziali aggiornate.',
                     style: CLTheme.of(context).bodyText.copyWith(color: Colors.white),
                     textAlign: TextAlign.center,
                   ),

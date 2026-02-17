@@ -61,8 +61,9 @@ class _RolePageState extends State<RolePage> {
                           initialPage: "1",
                           initialPageSize: 25,
                           onItemTap: (item) {
-                            if (authState.hasPermission(PermissionSlugs.dettaglioRuolo))
+                            if (authState.hasPermission(PermissionSlugs.dettaglioRuolo)) {
                               context.customGoNamed(RoleRoutes.viewRole.name, params: {"id": item.id}, replacedRouteName: item.modelIdentifier);
+                            }
                           },
                           actionsBuilder: (item) => [
                             if (authState.hasPermission(PermissionSlugs.updateRuolo))

@@ -104,9 +104,9 @@ class RoleViewModel extends CLBaseViewModel {
     ApiCallResponse apiCallResponse = await PermissionCalls.getAllPermission(viewContext, page: page, perPage: perPage, searchParams: searchBy, orderByParams: orderBy);
     if (apiCallResponse.succeeded) {
       final permissionsByRoleJsonArray = (apiCallResponse.jsonBody as List);
-      permissionsByRoleJsonArray.forEach((jsonObject) {
+      for (var jsonObject in permissionsByRoleJsonArray) {
         permissionsByRoleArray.add(Permission.fromJson(jsonObject: jsonObject));
-      });
+      }
     }
     return (permissionsByRoleArray, apiCallResponse.pagination);
   }

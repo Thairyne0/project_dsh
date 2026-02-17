@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_framework/responsive_framework.dart';
-import 'package:sembast/sembast.dart';
 import 'package:stacked/stacked.dart';
 import 'package:intl/intl.dart';
 import 'package:project_dsh/modules/users/modules/role_permission/models/user_permission.model.dart';
@@ -96,7 +95,7 @@ class _ViewUserPageState extends State<ViewUserPage> {
                                       contentPadding: EdgeInsets.zero,
                                       minTileHeight: 0,
                                       title: Text("Nome", style: CLTheme.of(context).bodyLabel),
-                                      subtitle: Text("${vm.user.userData.firstName}", style: CLTheme.of(context).bodyText),
+                                      subtitle: Text(vm.user.userData.firstName, style: CLTheme.of(context).bodyText),
                                     ),
                                   ),
                                   ResponsiveGridItem(
@@ -106,7 +105,7 @@ class _ViewUserPageState extends State<ViewUserPage> {
                                       contentPadding: EdgeInsets.zero,
                                       minTileHeight: 0,
                                       title: Text("Cognome", style: CLTheme.of(context).bodyLabel),
-                                      subtitle: Text("${vm.user.userData.lastName}", style: CLTheme.of(context).bodyText),
+                                      subtitle: Text(vm.user.userData.lastName, style: CLTheme.of(context).bodyText),
                                     ),
                                   ),
                                   ResponsiveGridItem(
@@ -116,7 +115,7 @@ class _ViewUserPageState extends State<ViewUserPage> {
                                       contentPadding: EdgeInsets.zero,
                                       minTileHeight: 0,
                                       title: Text("Genere", style: CLTheme.of(context).bodyLabel),
-                                      subtitle: Text("${vm.user.userData.gender}", style: CLTheme.of(context).bodyText),
+                                      subtitle: Text(vm.user.userData.gender, style: CLTheme.of(context).bodyText),
                                     ),
                                   ),
                                   ResponsiveGridItem(),
@@ -127,7 +126,7 @@ class _ViewUserPageState extends State<ViewUserPage> {
                                       contentPadding: EdgeInsets.zero,
                                       minTileHeight: 0,
                                       title: Text("Data di nascita", style: CLTheme.of(context).bodyLabel),
-                                      subtitle: Text("${vm.user.userData.formattedDate}", style: CLTheme.of(context).bodyText),
+                                      subtitle: Text(vm.user.userData.formattedDate, style: CLTheme.of(context).bodyText),
                                     ),
                                   ),
                                   ResponsiveGridItem(
@@ -137,7 +136,7 @@ class _ViewUserPageState extends State<ViewUserPage> {
                                       contentPadding: EdgeInsets.zero,
                                       minTileHeight: 0,
                                       title: Text("Residenza", style: CLTheme.of(context).bodyLabel),
-                                      subtitle: Text("${vm.user.userData.cityOfResidence.name}", style: CLTheme.of(context).bodyText),
+                                      subtitle: Text(vm.user.userData.cityOfResidence.name, style: CLTheme.of(context).bodyText),
                                     ),
                                   ),
                                   ResponsiveGridItem(
@@ -147,7 +146,7 @@ class _ViewUserPageState extends State<ViewUserPage> {
                                       contentPadding: EdgeInsets.zero,
                                       minTileHeight: 0,
                                       title: Text("CAP di residenza", style: CLTheme.of(context).bodyLabel),
-                                      subtitle: Text("${vm.user.userData.cap}", style: CLTheme.of(context).bodyText),
+                                      subtitle: Text(vm.user.userData.cap, style: CLTheme.of(context).bodyText),
                                     ),
                                   ),
                                   ResponsiveGridItem(lg: 25, xs: 100),
@@ -168,7 +167,7 @@ class _ViewUserPageState extends State<ViewUserPage> {
                                       contentPadding: EdgeInsets.zero,
                                       minTileHeight: 0,
                                       title: Text("Email", style: CLTheme.of(context).bodyLabel),
-                                      subtitle: Text("${vm.user.email}", style: CLTheme.of(context).bodyText),
+                                      subtitle: Text(vm.user.email, style: CLTheme.of(context).bodyText),
                                     ),
                                   ),
                                   ResponsiveGridItem(
@@ -199,7 +198,7 @@ class _ViewUserPageState extends State<ViewUserPage> {
                                       contentPadding: EdgeInsets.zero,
                                       minTileHeight: 0,
                                       title: Text("Ruolo", style: CLTheme.of(context).bodyLabel),
-                                      subtitle: Text("${vm.user.role.name}", style: CLTheme.of(context).bodyText),
+                                      subtitle: Text(vm.user.role.name, style: CLTheme.of(context).bodyText),
                                     ),
                                   ),
                                   ResponsiveGridItem(

@@ -74,8 +74,9 @@ class _PromoPageState extends State<PromoPage> {
                           initialPage: "1",
                           initialPageSize: 25,
                           onItemTap: (item) {
-                            if (authState.hasPermission(PermissionSlugs.dettaglioPromo))
+                            if (authState.hasPermission(PermissionSlugs.dettaglioPromo)) {
                               context.customGoNamed(PromoRoutes.viewPromo.name, params: {"id": item.id});
+                            }
                           },
                           actionsBuilder: (item) => [
                             if (authState.hasPermission(PermissionSlugs.updatePromo) && item.status == PromoStatus.pending)
@@ -172,8 +173,9 @@ class _PromoPageState extends State<PromoPage> {
                                 cellBuilder: (item) => CLActionText.primary(
                                     text: item.store.name,
                                     onTap: () {
-                                      if (authState.hasPermission(PermissionSlugs.dettaglioStore))
+                                      if (authState.hasPermission(PermissionSlugs.dettaglioStore)) {
                                         context.customGoNamed(StoreRoutes.viewStore.name, params: {"id": item.store.id});
+                                      }
                                     },
                                     context: context),
                                 sizeFactor: .15,
@@ -185,8 +187,9 @@ class _PromoPageState extends State<PromoPage> {
                                 cellBuilder: (item) => CLActionText.primary(
                                     text: item.store.brand.name,
                                     onTap: () {
-                                      if (authState.hasPermission(PermissionSlugs.dettaglioStore))
+                                      if (authState.hasPermission(PermissionSlugs.dettaglioStore)) {
                                         context.customGoNamed(StoreRoutes.viewStore.name, params: {"id": item.store.id});
+                                      }
                                     },
                                     context: context),
                                 sizeFactor: .15,

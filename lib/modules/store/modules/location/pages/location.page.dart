@@ -65,8 +65,9 @@ class _LocationPageState extends State<LocationPage> {
                             initialPage: "1",
                             initialPageSize: 25,
                             onItemTap: (item) {
-                              if (authState.hasPermission(PermissionSlugs.dettaglioLocation))
+                              if (authState.hasPermission(PermissionSlugs.dettaglioLocation)) {
                                 context.customGoNamed(LocationRoutes.viewLocation.name, params: {"id": item.id});
+                              }
                             },
                             actionsBuilder: (item) => [
                               if (authState.hasPermission(PermissionSlugs.updateLocation))

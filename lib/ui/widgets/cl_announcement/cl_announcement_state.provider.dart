@@ -15,7 +15,7 @@ class _CLAnnouncementState<T extends Object> extends ChangeNotifier {
     _dispatchCallback(page: 1);
   }
 
-  _dispatchCallback({required int page}) async {
+  Future<void> _dispatchCallback({required int page}) async {
     _announcementState = _AnnouncementState.loading;
     announcementList.clear();
     currentPage = page;

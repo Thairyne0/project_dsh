@@ -85,13 +85,13 @@ class _ViewRolePageState extends State<ViewRolePage> {
                                   ResponsiveGridItem(
                                     lg: 50,
                                     xs: 100,
-                                    child: Container(
+                                    child: SizedBox(
                                       width: double.infinity,
                                       child: Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           Text("Nome", style: CLTheme.of(context).bodyLabel),
-                                          Text("${vm.role.name}", style: CLTheme.of(context).bodyText),
+                                          Text(vm.role.name, style: CLTheme.of(context).bodyText),
                                         ],
                                       ),
                                     ),
@@ -99,13 +99,13 @@ class _ViewRolePageState extends State<ViewRolePage> {
                                   ResponsiveGridItem(
                                     lg: 50,
                                     xs: 100,
-                                    child: Container(
+                                    child: SizedBox(
                                         width: double.infinity,
                                         child: Column(
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             Text("Slug", style: CLTheme.of(context).bodyLabel),
-                                            Text("${vm.role.slug}", style: CLTheme.of(context).bodyText),
+                                            Text(vm.role.slug, style: CLTheme.of(context).bodyText),
                                           ],
                                         )),
                                   ),

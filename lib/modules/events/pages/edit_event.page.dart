@@ -18,7 +18,7 @@ import '../modules/event_category/models/event_category.model.dart';
 import '../viewmodels/event.viewmodel.dart';
 
 class EditEventPage extends StatefulWidget {
-  EditEventPage({super.key, required this.id});
+  const EditEventPage({super.key, required this.id});
 
   final String id;
 

@@ -67,8 +67,9 @@ class _StorePageState extends State<StorePage> {
                           initialPage: "1",
                           initialPageSize: 25,
                           onItemTap: (item) {
-                            if (authState.hasPermission(PermissionSlugs.dettaglioStore))
+                            if (authState.hasPermission(PermissionSlugs.dettaglioStore)) {
                               context.customGoNamed(StoreRoutes.viewStore.name, params: {"id": item.id});
+                            }
                           },
                           actionsBuilder: (item) => [
                             if (authState.hasPermission(PermissionSlugs.updateStore))
@@ -100,8 +101,9 @@ class _StorePageState extends State<StorePage> {
                               cellBuilder: (item) => CLActionText.primary(
                                   text: item.brand.name,
                                   onTap: () {
-                                    if (authState.hasPermission(PermissionSlugs.dettaglioBrand))
+                                    if (authState.hasPermission(PermissionSlugs.dettaglioBrand)) {
                                       context.customGoNamed(BrandRoutes.viewBrand.name, params: {"id": item.brand.id});
+                                    }
                                   },
                                   context: context),
                               sizeFactor: .2,

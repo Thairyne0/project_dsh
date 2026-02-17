@@ -8,7 +8,7 @@ import '../../../models/store.model.dart';
 
 class StoreReport extends BaseModel {
   @override
-  String get modelIdentifier => "${store.name}";
+  String get modelIdentifier => store.name;
 
   String id;
   String fileUrl;

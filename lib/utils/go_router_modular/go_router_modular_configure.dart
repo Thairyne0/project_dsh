@@ -6,7 +6,6 @@ import 'package:go_router/go_router.dart';
 
 import 'bind.dart';
 import 'module.dart';
-import 'route_registry.dart';
 
 typedef Modular = GoRouterModular;
 
@@ -36,7 +35,7 @@ class GoRouterModular {
 
   static T get<T>() => Bind.get<T>();
 
-  static getCurrentPathOf(BuildContext context) => GoRouterState.of(context).path ?? '';
+  static String getCurrentPathOf(BuildContext context) => GoRouterState.of(context).path ?? '';
 
   static GoRouterState stateOf(BuildContext context) => GoRouterState.of(context);
   static late BuildContext _viewContext;

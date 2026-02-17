@@ -32,7 +32,8 @@ class Event extends BaseModel {
   DateTime? participantPeakDate;
 
 
-  String get modelIdentifier => "$title";
+  @override
+  String get modelIdentifier => title;
 
   Event._internal({
     required this.id,

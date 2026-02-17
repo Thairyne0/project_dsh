@@ -8,7 +8,6 @@ import '../../modules/profile/constants/users_routes.constants.dart';
 import 'package:project_dsh/utils/providers/navigation.util.provider.dart';
 import '../../utils/providers/authstate.util.provider.dart';
 import '../../utils/providers/theme.util.provider.dart';
-import '../../utils/providers/notifications_panel.util.provider.dart';
 import '../widgets/avatar.widget.dart';
 import '../widgets/cl_container.widget.dart';
 import 'breadcrumbs.layout.dart';

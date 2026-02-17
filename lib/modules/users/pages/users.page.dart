@@ -66,8 +66,9 @@ class _UsersPageState extends State<UsersPage> {
                           initialPage: "1",
                           initialPageSize: 25,
                           onItemTap: (item) {
-                            if (authState.hasPermission(PermissionSlugs.dettaglioUtente))
+                            if (authState.hasPermission(PermissionSlugs.dettaglioUtente)) {
                               context.customGoNamed(UserRoutes.viewUser.name, params: {"id": item.id}, replacedRouteName: item.modelIdentifier);
+                            }
                           },
                           actionsBuilder: (item) => [
                             /*TableAction<User>(
@@ -253,7 +254,7 @@ class _UsersPageState extends State<UsersPage> {
                   Text('Seleziona filtri export', style: CLTheme.of(context).title),
                 ],
               ),
-              content: Container(
+              content: SizedBox(
                 width: 450,
                 child: Form(
                   key: formKey,
@@ -411,10 +412,10 @@ class DateRangePickerField extends StatefulWidget {
   final Function(DateTimeRange?) onChanged;
 
   const DateRangePickerField({
-    Key? key,
+    super.key,
     this.initialValue,
     required this.onChanged,
-  }) : super(key: key);
+  });
 
   @override
   State<DateRangePickerField> createState() => _DateRangePickerFieldState();

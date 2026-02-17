@@ -17,6 +17,7 @@ class AuthCalls {
     );
   }
   static Future<ApiCallResponse> getMe(BuildContext context) {
+    print("chiamo get me");
     return ApiManager.instance.makeApiCall(
         apiUrl: AuthApi.me,
         callType: ApiCallType.GET,

@@ -10,11 +10,9 @@ import 'package:project_dsh/ui/widgets/stats.widget.dart';
 import 'package:project_dsh/utils/extension.util.dart';
 import '../../../ui/cl_theme.dart';
 import '../../../ui/widgets/buttons/cl_action_text.widget.dart';
-import '../../../ui/widgets/buttons/cl_button.widget.dart';
 import '../../../ui/widgets/charts/cl_spline_area_chart.widget.dart';
 import '../../../ui/widgets/cl_container.widget.dart';
 import '../../../ui/widgets/cl_media_viewer.widget.dart';
-import '../../../ui/widgets/cl_pill.widget.dart';
 import '../../../ui/widgets/cl_responsive_grid/flutter_responsive_flex_grid.dart';
 import '../../../ui/widgets/loading.widget.dart';
 import '../../../ui/widgets/paged_datatable/paged_datatable.dart';
@@ -260,7 +258,7 @@ class _DashboardPageState extends State<DashboardPage>
                                       );
                                     },
                                     child: CLContainer(
-                                      actionWidget: Container(
+                                      actionWidget: SizedBox(
                                         height: 35,
                                         width: 115,
                                         child: DropdownButtonFormField2<DateTime>(

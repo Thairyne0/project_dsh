@@ -16,7 +16,7 @@ import '../../../../../utils/providers/appstate.util.provider.dart';
 import '../viewmodels/announcement.viewmodel.dart';
 
 class NewAnnouncementPage extends StatefulWidget {
-  const NewAnnouncementPage({Key? key}) : super(key: key);
+  const NewAnnouncementPage({super.key});
 
   @override
   createState() => NewAnnouncementPageState();

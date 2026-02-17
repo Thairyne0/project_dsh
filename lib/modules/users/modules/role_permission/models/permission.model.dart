@@ -4,7 +4,7 @@ import 'package:project_dsh/utils/models/custom_model.model.dart';
 
 class Permission extends BaseModel {
   @override
-  String get modelIdentifier => "$name";
+  String get modelIdentifier => name;
 
   String id;
   String name;

@@ -7,6 +7,7 @@ import 'package:project_dsh/utils/go_router_modular/routes/cl_route.dart';
 import 'package:project_dsh/utils/go_router_modular/routes/i_modular_route.dart';
 import 'package:project_dsh/utils/go_router_modular/routes/module_route.dart';
 import 'package:project_dsh/utils/go_router_modular/routes/shell_modular_route.dart';
+import 'package:project_dsh/utils/go_router_modular/routes/stateful_shell_modular_route.dart';
 import 'package:project_dsh/utils/go_router_modular/transition.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -256,10 +257,10 @@ abstract class Module {
   }
 
   List<RouteBase> _createShellRoutes(bool topLevel) {
-    return routes.whereType<ShellModularRoute>().map((shellRoute) {
-      // if (shellRoute.routes.whereType<ChildRoute>().where((element) => element.path == '/').isNotEmpty) {
-      //   throw Exception('ShellModularRoute cannot contain ChildRoute with path "/"');
-      // }
+    List<RouteBase> shellRoutes = [];
+
+    // Gestisce ShellModularRoute standard
+    shellRoutes.addAll(routes.whereType<ShellModularRoute>().map((shellRoute) {
       return ShellRoute(
         builder: (context, state, child) => shellRoute.builder!(context, state, child),
         pageBuilder: shellRoute.pageBuilder != null ? (context, state, child) => shellRoute.pageBuilder!(context, state, child) : null,
@@ -280,7 +281,30 @@ abstract class Module {
             .whereType<RouteBase>()
             .toList(),
       );
-    }).toList();
+    }).toList());
+
+    // Gestisce StatefulShellModularRoute per tab navigation
+    shellRoutes.addAll(routes.whereType<StatefulShellModularRoute>().map((shellRoute) {
+      return StatefulShellRoute.indexedStack(
+        builder: (context, state, navigationShell) => shellRoute.builder(context, state, navigationShell),
+        redirect: shellRoute.redirect,
+        parentNavigatorKey: shellRoute.parentNavigatorKey,
+        restorationScopeId: shellRoute.restorationScopeId,
+        branches: shellRoute.routes.whereType<ModuleRoute>().map((moduleRoute) {
+          return StatefulShellBranch(
+            routes: [
+              _createModule(
+                module: moduleRoute,
+                modulePath: moduleRoute.path,
+                topLevel: topLevel,
+              ),
+            ],
+          );
+        }).toList(),
+      );
+    }).toList());
+
+    return shellRoutes;
   }
 
   String adjustRoute(String route) {

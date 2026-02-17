@@ -107,7 +107,7 @@ class DropdownTableFilter<TValue> extends TableFilter<TValue> {
   Widget buildPicker(BuildContext context, TableFilterState state) {
     return DropdownButtonFormField<TValue>(
       items: items,
-      value: state.value,
+      initialValue: state.value,
       onChanged: (newValue) {},
       onSaved: (newValue) {
         state.value = newValue;

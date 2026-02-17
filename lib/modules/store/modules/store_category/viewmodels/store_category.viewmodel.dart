@@ -110,9 +110,9 @@ class StoreCategoryViewModel extends CLBaseViewModel {
     await StoreCalls.getAllStore(viewContext, page: page, perPage: perPage, searchParams: searchBy, orderByParams: orderBy);
     if (apiCallResponse.succeeded) {
       final storesByStoreCategoryJsonArray = (apiCallResponse.jsonBody as List);
-      storesByStoreCategoryJsonArray.forEach((jsonObject) {
+      for (var jsonObject in storesByStoreCategoryJsonArray) {
         storesByStoreCategoryArray.add(Store.fromJson(jsonObject: jsonObject));
-      });
+      }
     }
     return (storesByStoreCategoryArray, apiCallResponse.pagination);
   }

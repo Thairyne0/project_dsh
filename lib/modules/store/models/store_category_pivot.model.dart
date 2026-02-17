@@ -5,7 +5,7 @@ import 'package:project_dsh/utils/models/custom_model.model.dart';
 
 class StoreCategoryPivot extends BaseModel {
   @override
-  String get modelIdentifier => "$id";
+  String get modelIdentifier => id;
 
   String id;
   String storeCategoryId;

@@ -204,7 +204,6 @@ class ThemeTypography extends Typography {
     double size, {
     FontWeight? weight,
     Color? color,
-    double? letterSpacing,
     FontStyle? fontStyle,
     TextDecoration? decoration,
     double? lineHeight,

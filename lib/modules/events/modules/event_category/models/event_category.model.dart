@@ -3,7 +3,7 @@ import '../../../models/event.model.dart';
 
 class EventCategory extends BaseModel {
   @override
-  String get modelIdentifier => "$name";
+  String get modelIdentifier => name;
 
   String id;
   String name;

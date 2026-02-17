@@ -50,7 +50,7 @@ class _PagedDataTableFooter<TKey extends Comparable, TResultId extends Comparabl
                         ),
                       ),
                     );
-                  }).toList(),
+                  }),
                   const SizedBox(width: Sizes.padding),
                   Text('Totale: ${state.totalElement} elementi', style: themeData.footerTextStyle ?? CLTheme.of(context).bodyText),
                 ],

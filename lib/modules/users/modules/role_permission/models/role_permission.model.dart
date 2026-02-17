@@ -6,7 +6,7 @@ import '../../../../../utils/models/custom_model.model.dart';
 
 class RolePermission extends BaseModel {
   @override
-  String get modelIdentifier => "$id";
+  String get modelIdentifier => id;
 
   String id;
   Role role;

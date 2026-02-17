@@ -19,7 +19,7 @@ import '../modules/role_permission/models/role.model.dart';
 import '../viewmodels/user.viewmodel.dart';
 
 class NewUserPage extends StatefulWidget {
-  const NewUserPage({Key? key}) : super(key: key);
+  const NewUserPage({super.key});
 
   @override
   createState() => NewUserPageState();

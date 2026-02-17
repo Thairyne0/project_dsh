@@ -6,7 +6,7 @@ import '../../../models/store.model.dart';
 
 class Promo extends BaseModel {
   @override
-  String get modelIdentifier => "$title";
+  String get modelIdentifier => title;
 
   String id;
   String title;

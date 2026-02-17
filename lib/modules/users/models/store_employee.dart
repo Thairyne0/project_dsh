@@ -10,11 +10,10 @@ import 'package:project_dsh/utils/models/custom_model.model.dart';
 import 'package:project_dsh/utils/models/province.model.dart';
 import 'package:project_dsh/utils/models/state.model.dart';
 
-import '../../../utils/models/custom_model.model.dart';
 
 class StoreEmployee extends BaseModel {
   @override
-  String get modelIdentifier => "$id";
+  String get modelIdentifier => id;
 
   String id;
   String userId;

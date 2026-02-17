@@ -18,7 +18,7 @@ import '../modules/brand/models/brand.model.dart';
 import '../viewmodels/store.viewmodel.dart';
 
 class NewStorePage extends StatefulWidget {
-  const NewStorePage({Key? key}) : super(key: key);
+  const NewStorePage({super.key});
 
   @override
   createState() => NewStorePageState();

@@ -66,8 +66,9 @@ class _BrandPageState extends State<BrandPage> {
                             initialPage: "1",
                             initialPageSize: 25,
                             onItemTap: (item) {
-                              if (authState.hasPermission(PermissionSlugs.dettaglioBrand))
+                              if (authState.hasPermission(PermissionSlugs.dettaglioBrand)) {
                                 context.customGoNamed(BrandRoutes.viewBrand.name, params: {"id": item.id});
+                              }
                             },
                             actionsBuilder: (item) => [
                               if (authState.hasPermission(PermissionSlugs.updateBrand))

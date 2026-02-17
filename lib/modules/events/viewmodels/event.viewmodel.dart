@@ -25,7 +25,6 @@ import '../modules/event_category/constants/event_category_api_calls.constant.da
 import '../modules/event_category/models/event_category.model.dart';
 import '../modules/event_product/costants/event_product_api_calls.costant.dart';
 import '../modules/event_product/models/event_product.model.dart';
-import 'dart:developer';
 import '../../store/models/store.model.dart';
 
 class EventViewModel extends CLBaseViewModel {

@@ -19,7 +19,7 @@ import '../../users/models/user.model.dart';
 import '../viewmodels/store.viewmodel.dart';
 
 class AddStoreEmployeePage extends StatefulWidget {
-  const AddStoreEmployeePage({Key? key, required this.id}) : super(key: key);
+  const AddStoreEmployeePage({super.key, required this.id});
 
   final String id;
 

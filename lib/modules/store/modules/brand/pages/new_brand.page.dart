@@ -16,7 +16,7 @@ import '../../../../../utils/providers/appstate.util.provider.dart';
 import '../viewmodels/brand.viewmodel.dart';
 
 class NewBrandPage extends StatefulWidget {
-  const NewBrandPage({Key? key}) : super(key: key);
+  const NewBrandPage({super.key});
 
   @override
   createState() => NewBrandPageState();

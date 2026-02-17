@@ -60,7 +60,7 @@ class _PagedDataTableBoxed<TKey extends Comparable, TResultId extends Comparable
                 child: customRowBuilder.builder(context, model.item),
               );
             }
-            return !this.isInSnippet
+            return !isInSnippet
                 ? IntrinsicHeight(
                     child: Container(
                       padding: const EdgeInsets.all(Sizes.padding - 5),

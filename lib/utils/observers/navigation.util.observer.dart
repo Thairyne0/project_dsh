@@ -2,8 +2,58 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:project_dsh/utils/models/breadcrumb_item.model.dart';
 import 'package:project_dsh/utils/providers/navigation.util.provider.dart';
+import 'package:project_dsh/utils/providers/tabs.util.provider.dart';
 
 class GoRouterBreadcrumbObserver extends NavigatorObserver {
+
+  /// Apre automaticamente un tab per la route corrente
+  void _openTabForRoute(BuildContext ctx, {required String name, required String path, required bool isModule}) {
+    print('[TabObserver] _openTabForRoute chiamato con name: $name, path: $path, isModule: $isModule');
+
+    // Non aprire tab per route senza path valido
+    if (path.isEmpty) {
+      print('[TabObserver] Path vuoto, skip creazione tab');
+      return;
+    }
+
+    // Usa addPostFrameCallback per evitare setState durante il build
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      try {
+        final tabsState = Provider.of<TabsState>(ctx, listen: false);
+
+        // Determina l'icona in base al tipo di pagina
+        IconData? icon = _getIconForRoute(path, name);
+
+        // Determina se il tab può essere chiuso (Dashboard no, altri sì)
+        bool canClose = path != '/dashboard';
+
+        // Apri o attiva il tab
+        tabsState.openTab(
+          path: path,
+          title: name,
+          icon: icon,
+          canClose: canClose,
+        );
+
+        print('[TabObserver] Tab aperto/attivato: $name ($path)');
+      } catch (e) {
+        print('[TabObserver] Errore nell\'apertura del tab: $e');
+      }
+    });
+  }
+
+  /// Restituisce l'icona appropriata per una route
+  IconData? _getIconForRoute(String path, String name) {
+    if (path.startsWith('/dashboard')) return Icons.dashboard;
+    if (path.startsWith('/news')) return Icons.newspaper;
+    if (path.startsWith('/events')) return Icons.event;
+    if (path.startsWith('/stores')) return Icons.store;
+    if (path.startsWith('/profile')) return Icons.person;
+    if (path.startsWith('/event-categories')) return Icons.category;
+    if (path.startsWith('/users')) return Icons.people;
+    return Icons.description; // Icona default
+  }
+
   void _addBreadcrumb(Route<dynamic> route) {
     if (route is PageRoute) {
       final ctx = navigator?.context;
@@ -35,6 +85,10 @@ class GoRouterBreadcrumbObserver extends NavigatorObserver {
         print('[BreadcrumbObserver] Ignorata route intermedia: $name');
         return;
       }
+
+      // === GESTIONE TAB STILE IDE ===
+      // Apri automaticamente un tab per questa pagina
+      _openTabForRoute(ctx, name: name, path: path, isModule: isModule);
 
       // Se questa è una voce di menu (isMenuRoute=true), aggiungi solo il breadcrumb con il parent module info
       if (isMenuRoute) {

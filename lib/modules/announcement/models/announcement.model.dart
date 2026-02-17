@@ -4,7 +4,7 @@ import '../../../ui/widgets/cl_announcement/cl_announcemet.model.dart';
 
 class Announcement extends BaseModel {
   @override
-  String get modelIdentifier => "$title";
+  String get modelIdentifier => title;
 
   String id;
   String title;

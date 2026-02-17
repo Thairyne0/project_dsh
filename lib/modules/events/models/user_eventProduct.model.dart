@@ -17,6 +17,7 @@ class UserEventProduct extends BaseModel {
   int? progressive;
   List<String> mediaUrls;
 
+  @override
   String get modelIdentifier => id;
 
   UserEventProduct({

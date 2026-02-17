@@ -3,7 +3,7 @@ import 'package:project_dsh/utils/models/custom_model.model.dart';
 
 class News extends BaseModel {
   @override
-  String get modelIdentifier => "$title";
+  String get modelIdentifier => title;
 
   String id;
   String title;

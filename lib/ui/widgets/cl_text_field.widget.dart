@@ -607,7 +607,6 @@ class CLTextFieldState extends State<CLTextField> {
                   onSurface: CLTheme.of(context).primaryText,
                   surface: CLTheme.of(context).secondaryBackground,
                 ),
-                dialogBackgroundColor: CLTheme.of(context).secondaryBackground,
                 datePickerTheme: DatePickerThemeData(
                   backgroundColor: CLTheme.of(context).secondaryBackground,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Sizes.borderRadius)),
@@ -641,7 +640,7 @@ class CLTextFieldState extends State<CLTextField> {
                   }),
                   cancelButtonStyle: ButtonStyle(foregroundColor: WidgetStateProperty.all(CLTheme.of(context).danger)),
                   confirmButtonStyle: ButtonStyle(foregroundColor: WidgetStateProperty.all(CLTheme.of(context).primary)),
-                ),
+                ), dialogTheme: DialogThemeData(backgroundColor: CLTheme.of(context).secondaryBackground),
               ),
               child: child!,
             );

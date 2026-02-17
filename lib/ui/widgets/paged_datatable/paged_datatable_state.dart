@@ -127,8 +127,8 @@ class _PagedDataTableState<TKey extends Comparable, TResultId extends Comparable
 
     searchParams.removeWhere((key, value) => value == null);
     Map<String, dynamic> sortMap = sortModel != null ? {"columnId": sortModel.columnId, "mode": sortModel.descending ? "DESC" : "ASC"} : {};
-    if (this.downloadCallback != null) {
-      await this.downloadCallback!(searchBy: searchParams, orderBy: sortMap);
+    if (downloadCallback != null) {
+      await downloadCallback!(searchBy: searchParams, orderBy: sortMap);
     }
   }
 
@@ -328,10 +328,10 @@ class _PagedDataTableState<TKey extends Comparable, TResultId extends Comparable
           // Gestione speciale per CLDropdownTableFilterAsync e CLDropdownTableFilterSync
           var filterValue = value.value;
           if (value._filter is CLDropdownTableFilterAsync) {
-            final dropdownFilter = value._filter as CLDropdownTableFilterAsync;
+            final dropdownFilter = value._filter;
             filterValue = dropdownFilter.getValueForBackend(value.value);
           } else if (value._filter is CLDropdownTableFilterSync) {
-            final dropdownFilter = value._filter as CLDropdownTableFilterSync;
+            final dropdownFilter = value._filter;
             filterValue = dropdownFilter.getValueForBackend(value.value);
           }
 

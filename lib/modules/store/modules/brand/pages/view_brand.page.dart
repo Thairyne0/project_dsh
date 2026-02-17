@@ -86,7 +86,7 @@ class _ViewBrandPageState extends State<ViewBrandPage> {
                                     contentPadding: EdgeInsets.zero,
                                     minTileHeight: 0,
                                     title: Text("Nome", style: CLTheme.of(context).bodyLabel),
-                                    subtitle: Text("${vm.brand.name}", style: CLTheme.of(context).bodyText),
+                                    subtitle: Text(vm.brand.name, style: CLTheme.of(context).bodyText),
                                   ),
                                 ),
                                 ResponsiveGridItem(
@@ -96,7 +96,7 @@ class _ViewBrandPageState extends State<ViewBrandPage> {
                                     contentPadding: EdgeInsets.zero,
                                     minTileHeight: 0,
                                     title: Text("Descrizione", style: CLTheme.of(context).bodyLabel),
-                                    subtitle: ExcerptText(text:"${vm.brand.description}", textStyle: CLTheme.of(context).bodyText),
+                                    subtitle: ExcerptText(text:vm.brand.description, textStyle: CLTheme.of(context).bodyText),
                                   ),
                                 ),
                                 ResponsiveGridItem(

@@ -90,8 +90,9 @@ class _ViewStoreReportPageState extends State<ViewStoreReportPage> {
                                       subtitle: CLActionText.primary(
                                           text: vm.storeReport.store.name,
                                           onTap: () {
-                                            if (authState.hasPermission(PermissionSlugs.dettaglioStore))
+                                            if (authState.hasPermission(PermissionSlugs.dettaglioStore)) {
                                               context.customGoNamed(StoreRoutes.viewStore.name, params: {"id": vm.storeReport.store.id});
+                                            }
                                           },
                                           context: context),
                                     ),
@@ -103,7 +104,7 @@ class _ViewStoreReportPageState extends State<ViewStoreReportPage> {
                                       contentPadding: EdgeInsets.zero,
                                       minTileHeight: 0,
                                       title: Text("Mese e anno del report", style: CLTheme.of(context).bodyLabel),
-                                      subtitle: Text("${vm.storeReport.reportDateFormat}", style: CLTheme.of(context).bodyText),
+                                      subtitle: Text(vm.storeReport.reportDateFormat, style: CLTheme.of(context).bodyText),
                                     ),
                                   ),
                                   ResponsiveGridItem(
@@ -425,7 +426,7 @@ class _ViewStoreReportPageState extends State<ViewStoreReportPage> {
                                       contentPadding: EdgeInsets.zero,
                                       minTileHeight: 0,
                                       title: Text("Note del report ", style: CLTheme.of(context).bodyLabel),
-                                      subtitle: Text("${vm.storeReport.note}", style: CLTheme.of(context).bodyText),
+                                      subtitle: Text(vm.storeReport.note, style: CLTheme.of(context).bodyText),
                                     ),
                                   ),
                                 ],

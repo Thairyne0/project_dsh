@@ -85,7 +85,7 @@ class DashboardViewModel extends CLBaseViewModel {
 
   Future<(List<Event>, Pagination?)> getAllEventDashboard({int? page, int? perPage, Map<String, dynamic>? searchBy, Map<String, dynamic>? orderBy}) async {
     searchBy ??= {};
-    searchBy.addAll({"status": 1, "endingAt": {"gte": "${DateTime.now().toUtc().toIso8601String()}"}});
+    searchBy.addAll({"status": 1, "endingAt": {"gte": DateTime.now().toUtc().toIso8601String()}});
     ApiCallResponse apiCallResponse = await DashboardCalls.getAllEventDashboard(viewContext, page: page, perPage: perPage, searchParams: searchBy, orderByParams: orderBy,);
     List<Event> eventArray = [];
     if (apiCallResponse.succeeded) {
