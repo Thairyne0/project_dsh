@@ -8,9 +8,16 @@ import 'pages/edit_role.page.dart';
 import 'pages/new_role.page.dart';
 import 'pages/role.page.dart';
 import 'pages/view_role.page.dart';
+import 'package:project_dsh/utils/go_router_modular/breadcrumb.system.dart';
 
 
-class RolePermissionModule extends Module {
+class RolePermissionModule extends Module with BreadcrumbAware {
+  @override
+  Map<String, String> get breadcrumbLabels => {
+    '/roles': 'Ruoli e Permessi',
+    '/roles/new': 'Nuovo Ruolo',
+  };
+
   @override
   CLRoute get moduleRoute => RoleRoutes.roleModule;
 

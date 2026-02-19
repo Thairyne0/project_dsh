@@ -7,8 +7,15 @@ import 'pages/edit_location.page.dart';
 import 'pages/location.page.dart';
 import 'pages/new_location.page.dart';
 import 'pages/view_location.page.dart';
+import 'package:project_dsh/utils/go_router_modular/breadcrumb.system.dart';
 
-class LocationModule extends Module {
+class LocationModule extends Module with BreadcrumbAware {
+  @override
+  Map<String, String> get breadcrumbLabels => {
+    '/store/locations': 'Sedi',
+    '/store/locations/new': 'Nuova Sede',
+  };
+
   @override
   CLRoute get moduleRoute => LocationRoutes.locationModule;
 

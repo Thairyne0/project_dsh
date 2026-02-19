@@ -14,8 +14,15 @@ import '../../utils/go_router_modular/routes/i_modular_route.dart';
 import '../../utils/providers/authstate.util.provider.dart';
 import 'constants/permission_slug.dart';
 import 'constants/users_routes.constants.dart';
+import 'package:project_dsh/utils/go_router_modular/breadcrumb.system.dart';
 
-class UsersModule extends Module {
+class UsersModule extends Module with BreadcrumbAware {
+  @override
+  Map<String, String> get breadcrumbLabels => {
+    '/users': 'Utenti',
+    '/users/new': 'Nuovo Utente',
+    '/users/permissions': 'Gestione Permessi',
+  };
 
   @override
   CLRoute get moduleRoute => UserRoutes.moduleRoute;

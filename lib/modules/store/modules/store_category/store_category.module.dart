@@ -9,8 +9,15 @@ import '../../../../utils/go_router_modular/routes/child_route.dart';
 import '../../../../utils/go_router_modular/routes/cl_route.dart';
 import '../../../../utils/go_router_modular/routes/i_modular_route.dart';
 import 'constants/store_category_routes.constant.dart';
+import 'package:project_dsh/utils/go_router_modular/breadcrumb.system.dart';
 
-class StoreCategoryModule extends Module {
+class StoreCategoryModule extends Module with BreadcrumbAware {
+  @override
+  Map<String, String> get breadcrumbLabels => {
+    '/store/categories': 'Categorie Negozi',
+    '/store/categories/new': 'Nuova Categoria',
+  };
+
   @override
   CLRoute get moduleRoute => StoreCategoryRoutes.storeCategoriesModule;
 

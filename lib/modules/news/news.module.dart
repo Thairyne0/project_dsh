@@ -7,9 +7,16 @@ import '../../../../utils/go_router_modular/routes/child_route.dart';
 import '../../../../utils/go_router_modular/routes/cl_route.dart';
 import '../../../../utils/go_router_modular/routes/i_modular_route.dart';
 import 'constants/news_routes.costant.dart';
+import 'package:project_dsh/utils/go_router_modular/breadcrumb.system.dart';
 
 
-class NewsModule extends Module {
+class NewsModule extends Module with BreadcrumbAware {
+  @override
+  Map<String, String> get breadcrumbLabels => {
+    '/news': 'News',
+    '/news/new': 'Nuova News',
+  };
+
   @override
   CLRoute get moduleRoute => NewsRoutes.newsModule;
 

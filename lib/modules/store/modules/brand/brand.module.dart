@@ -7,8 +7,15 @@ import 'pages/brand.page.dart';
 import 'pages/edit_brand.page.dart';
 import 'pages/new_brand.page.dart';
 import 'pages/view_brand.page.dart';
+import 'package:project_dsh/utils/go_router_modular/breadcrumb.system.dart';
 
-class BrandModule extends Module {
+class BrandModule extends Module with BreadcrumbAware {
+  @override
+  Map<String, String> get breadcrumbLabels => {
+    '/store/brands': 'Marchi',
+    '/store/brands/new': 'Nuovo Marchio',
+  };
+
   @override
   CLRoute get moduleRoute => BrandRoutes.brandModule;
 

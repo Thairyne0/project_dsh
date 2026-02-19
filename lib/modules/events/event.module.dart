@@ -10,8 +10,15 @@ import '../../utils/go_router_modular/routes/i_modular_route.dart';
 import 'constants/event_routes.constant.dart';
 import 'modules/event_product/event_product.module.dart';
 import 'pages/view_event.page.dart';
+import 'package:project_dsh/utils/go_router_modular/breadcrumb.system.dart';
 
-class EventModule extends Module {
+class EventModule extends Module with BreadcrumbAware {
+  @override
+  Map<String, String> get breadcrumbLabels => {
+    '/events': 'Eventi',
+    '/events/new': 'Nuovo Evento',
+  };
+
   @override
   CLRoute get moduleRoute => EventRoutes.moduleRoute;
 

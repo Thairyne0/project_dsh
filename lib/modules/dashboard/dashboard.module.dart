@@ -4,8 +4,14 @@ import 'package:project_dsh/utils/go_router_modular/routes/cl_route.dart';
 import '../../utils/go_router_modular/module.dart';
 import '../../utils/go_router_modular/routes/child_route.dart';
 import '../../utils/go_router_modular/routes/i_modular_route.dart';
+import 'package:project_dsh/utils/go_router_modular/breadcrumb.system.dart';
 
-class DashboardModule extends Module {
+class DashboardModule extends Module with BreadcrumbAware {
+  @override
+  Map<String, String> get breadcrumbLabels => {
+    '/dashboard': 'Dashboard',
+  };
+
   @override
   CLRoute get moduleRoute => DashboardRoutes.moduleRoute;
 

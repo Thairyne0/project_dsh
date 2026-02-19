@@ -25,8 +25,17 @@ import 'modules/store_report/pages/new_store_report.page.dart';
 import 'pages/edit_store.page.dart';
 import 'pages/new_store.page.dart';
 import 'pages/view_store.page.dart';
+import 'package:project_dsh/utils/go_router_modular/breadcrumb.system.dart';
 
-class StoreModule extends Module {
+class StoreModule extends Module with BreadcrumbAware {
+  @override
+  Map<String, String> get breadcrumbLabels => {
+    '/store': 'Gestione Negozi',
+    '/store/new': 'Nuovo Negozio',
+    '/store/edit': 'Modifica Negozio',
+    '/store/add-employee': 'Aggiungi Dipendente',
+  };
+
   @override
   CLRoute get moduleRoute => StoreRoutes.storesModule;
 

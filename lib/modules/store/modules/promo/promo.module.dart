@@ -7,8 +7,16 @@ import 'pages/edit_promo.page.dart';
 import 'pages/new_promo.page.dart';
 import 'pages/promo.page.dart';
 import 'pages/view_promo.page.dart';
+import 'package:project_dsh/utils/go_router_modular/breadcrumb.system.dart';
 
-class PromoModule extends Module {
+
+class PromoModule extends Module with BreadcrumbAware {
+  @override
+  Map<String, String> get breadcrumbLabels => {
+    '/store/promos': 'Promozioni',
+    '/store/promos/new': 'Nuova Promo',
+  };
+
   @override
   CLRoute get moduleRoute => PromoRoutes.promoModule;
 

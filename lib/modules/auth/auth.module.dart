@@ -4,12 +4,23 @@ import 'package:project_dsh/modules/auth/pages/login.page.dart';
 import 'package:project_dsh/modules/auth/pages/recover_password.page.dart';
 import 'package:project_dsh/modules/auth/pages/set_new_password.page.dart';
 import 'package:project_dsh/utils/go_router_modular/routes/cl_route.dart';
+import 'package:project_dsh/utils/go_router_modular/breadcrumb.system.dart'; // System Import
 import 'pages/confirm-new-password.page.dart';
 import '../../utils/go_router_modular/module.dart';
 import '../../utils/go_router_modular/routes/child_route.dart';
 import '../../utils/go_router_modular/routes/i_modular_route.dart';
 
-class AuthModule extends Module {
+class AuthModule extends Module with BreadcrumbAware {
+  
+  @override
+  Map<String, String> get breadcrumbLabels => {
+    '/auth': 'Autenticazione',
+    '/auth/login': 'Accedi',
+    '/auth/verify-email': 'Verifica Email',
+    '/auth/recover-password': 'Recupero Password',
+    '/auth/set-new-password': 'Nuova Password',
+  };
+
   @override
   CLRoute get moduleRoute => AuthRoutes.moduleRoute;
 

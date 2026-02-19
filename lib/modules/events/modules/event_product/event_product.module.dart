@@ -7,8 +7,14 @@ import '../../../../utils/go_router_modular/routes/child_route.dart';
 import '../../../../utils/go_router_modular/routes/cl_route.dart';
 import '../../../../utils/go_router_modular/routes/i_modular_route.dart';
 import 'costants/event_product_routes.costant.dart';
+import 'package:project_dsh/utils/go_router_modular/breadcrumb.system.dart';
 
-class EventProductModule extends Module{
+class EventProductModule extends Module with BreadcrumbAware {
+  @override
+  Map<String, String> get breadcrumbLabels => {
+    '/products': 'Prodotti Evento',
+    '/products/new': 'Nuovo Prodotto',
+  };
 
   @override
   CLRoute get moduleRoute => EventProductRoutes.eventProductsModule;
