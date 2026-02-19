@@ -14,7 +14,7 @@ import '../../../../utils/base.viewmodel.dart';
 import '../../../../utils/models/pageaction.model.dart';
 import '../../../../utils/providers/appstate.util.provider.dart';
 import '../../../ui/cl_theme.dart';
-import '../modules/event_category/models/event_category.model.dart';
+import '../../event_category/models/event_category.model.dart';
 import '../viewmodels/event.viewmodel.dart';
 
 class EditEventPage extends StatefulWidget {

@@ -15,11 +15,27 @@ class NewsModule extends Module {
 
   @override
   List<ModularRoute> get routes => [
-        ChildRoute.build(route: NewsRoutes.news, childBuilder: (context, state) => const NewsPage(), isModuleRoute: true),
         ChildRoute.build(
-            route: NewsRoutes.viewNews, childBuilder: (context, state) => ViewNewsPage(id: state.pathParameters["id"]!), params: ["id"], isVisible: false),
-        ChildRoute.build(
-            route: NewsRoutes.editNews, childBuilder: (context, state) => EditNewsPage(id: state.pathParameters["id"]!), params: ["id"], isVisible: false),
-        ChildRoute.build(route: NewsRoutes.newNews, childBuilder: (context, state) => NewNewsPage(), isVisible: false),
+          route: NewsRoutes.news,
+          childBuilder: (context, state) => const NewsPage(),
+          isModuleRoute: true,
+          routes: [
+            // Route figlie di News (annidate)
+            ChildRoute.build(
+                route: NewsRoutes.viewNews,
+                childBuilder: (context, state) => ViewNewsPage(id: state.pathParameters["id"]!),
+                params: ["id"],
+                isVisible: false),
+            ChildRoute.build(
+                route: NewsRoutes.editNews,
+                childBuilder: (context, state) => EditNewsPage(id: state.pathParameters["id"]!),
+                params: ["id"],
+                isVisible: false),
+            ChildRoute.build(
+                route: NewsRoutes.newNews,
+                childBuilder: (context, state) => NewNewsPage(),
+                isVisible: false),
+          ],
+        ),
       ];
 }

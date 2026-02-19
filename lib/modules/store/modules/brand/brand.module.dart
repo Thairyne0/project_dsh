@@ -14,11 +14,27 @@ class BrandModule extends Module {
 
   @override
   List<ModularRoute> get routes => [
-        ChildRoute.build(route: BrandRoutes.brand, childBuilder: (context, state) => const BrandPage(), isModuleRoute: true),
         ChildRoute.build(
-            route: BrandRoutes.viewBrand, childBuilder: (context, state) => ViewBrandPage(id: state.pathParameters["id"]!), params: ["id"], isVisible: false),
-        ChildRoute.build(
-            route: BrandRoutes.editBrand, childBuilder: (context, state) => EditBrandPage(id: state.pathParameters["id"]!), params: ["id"], isVisible: false),
-        ChildRoute.build(route: BrandRoutes.newBrand, childBuilder: (context, state) => NewBrandPage(), isVisible: false),
+          route: BrandRoutes.brand,
+          childBuilder: (context, state) => const BrandPage(),
+          isModuleRoute: true,
+          routes: [
+            // Route figlie di Brand (annidate)
+            ChildRoute.build(
+                route: BrandRoutes.viewBrand,
+                childBuilder: (context, state) => ViewBrandPage(id: state.pathParameters["id"]!),
+                params: ["id"],
+                isVisible: false),
+            ChildRoute.build(
+                route: BrandRoutes.editBrand,
+                childBuilder: (context, state) => EditBrandPage(id: state.pathParameters["id"]!),
+                params: ["id"],
+                isVisible: false),
+            ChildRoute.build(
+                route: BrandRoutes.newBrand,
+                childBuilder: (context, state) => NewBrandPage(),
+                isVisible: false),
+          ],
+        ),
       ];
 }

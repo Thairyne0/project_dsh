@@ -12,7 +12,18 @@ class StoreReportModule extends Module {
 
   @override
   List<ModularRoute> get routes => [
-    ChildRoute.build(route: StoreReportRoutes.storeReports, childBuilder: (context, state) => const StoreReportPage(), isModuleRoute: true),
-    ChildRoute.build(route: StoreReportRoutes.viewStoreReport, childBuilder: (context, state) => ViewStoreReportPage(id: state.pathParameters["id"]!), params: ["id"], isVisible: false),
-  ];
+        ChildRoute.build(
+          route: StoreReportRoutes.storeReports,
+          childBuilder: (context, state) => const StoreReportPage(),
+          isModuleRoute: true,
+          routes: [
+            // Route figlie di Report Store (annidate)
+            ChildRoute.build(
+                route: StoreReportRoutes.viewStoreReport,
+                childBuilder: (context, state) => ViewStoreReportPage(id: state.pathParameters["id"]!),
+                params: ["id"],
+                isVisible: false),
+          ],
+        ),
+      ];
 }

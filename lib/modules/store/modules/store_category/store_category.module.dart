@@ -16,11 +16,32 @@ class StoreCategoryModule extends Module {
 
   @override
   List<ModularRoute> get routes => [
-        ChildRoute.build(route: StoreCategoryRoutes.storeCategories, childBuilder: (context, state) => const StoreCategoryPage(), isModuleRoute: true,),
-        ChildRoute.build(route: StoreCategoryRoutes.viewStoreCategory, childBuilder: (context, state) => ViewStoreCategoryPage(id: state.pathParameters["id"]!), params: ["id"],isVisible: false),
-        ChildRoute.build(route: StoreCategoryRoutes.editStoreCategory, childBuilder: (context, state) => EditStoreCategoryPage(id: state.pathParameters["id"]!), params: ["id"], isVisible: false),
-        ChildRoute.build(route: StoreCategoryRoutes.newStoreCategory, childBuilder: (context, state) => const NewStoreCategoryPage(), isVisible: false),
-    ChildRoute.build(route: StoreCategoryRoutes.addStoreToStoreCategory, childBuilder: (context, state) => AddStoreToStoreCategoryPage(id: state.pathParameters["id"]!), params: ["id"], isVisible: false),
-
-  ];
+        ChildRoute.build(
+          route: StoreCategoryRoutes.storeCategories,
+          childBuilder: (context, state) => const StoreCategoryPage(),
+          isModuleRoute: true,
+          routes: [
+            // Route figlie di Categorie Store (annidate)
+            ChildRoute.build(
+                route: StoreCategoryRoutes.viewStoreCategory,
+                childBuilder: (context, state) => ViewStoreCategoryPage(id: state.pathParameters["id"]!),
+                params: ["id"],
+                isVisible: false),
+            ChildRoute.build(
+                route: StoreCategoryRoutes.editStoreCategory,
+                childBuilder: (context, state) => EditStoreCategoryPage(id: state.pathParameters["id"]!),
+                params: ["id"],
+                isVisible: false),
+            ChildRoute.build(
+                route: StoreCategoryRoutes.newStoreCategory,
+                childBuilder: (context, state) => const NewStoreCategoryPage(),
+                isVisible: false),
+            ChildRoute.build(
+                route: StoreCategoryRoutes.addStoreToStoreCategory,
+                childBuilder: (context, state) => AddStoreToStoreCategoryPage(id: state.pathParameters["id"]!),
+                params: ["id"],
+                isVisible: false),
+          ],
+        ),
+      ];
 }

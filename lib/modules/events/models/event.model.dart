@@ -1,8 +1,10 @@
 import 'package:intl/intl.dart';
 import 'package:project_dsh/utils/models/custom_model.model.dart';
+import '../../event_category/models/event_category.model.dart';
 import '../../store/models/store.model.dart';
+import '../../store/modules/brand/models/brand.model.dart';
 import '../../store/modules/location/models/location.model.dart';
-import '../modules/event_category/models/event_category.model.dart';
+import '../../store/modules/store_category/models/store_category.model.dart';
 import '../modules/event_product/models/event_product.model.dart';
 
 
@@ -140,9 +142,15 @@ class Event extends BaseModel {
       pointsReward: jsonObject["pointsReward"] ?? 0,
       participantPeak: jsonObject["participantPeak"] ?? 0,
       totalParticipant: jsonObject["totalParticipant"] ?? 0,
-      location: jsonObject["location"] ,
-      store: jsonObject["store"],
-      additionalPurchaseStore: jsonObject["additionalPurchaseStore"],
+      location: jsonObject["location"] != null
+        ? Location.fromJson(jsonObject: jsonObject["location"])
+        : Location(store: Store(brand: Brand(id: "", name: "", description: "", stores: []), storeCategory: StoreCategory())),
+      store: jsonObject["store"] != null
+        ? Store.fromJson(jsonObject: jsonObject["store"])
+        : Store(brand: Brand(id: "", name: "", description: "", stores: []), storeCategory: StoreCategory()),
+      additionalPurchaseStore: jsonObject["additionalPurchaseStore"] != null
+        ? Store.fromJson(jsonObject: jsonObject["additionalPurchaseStore"])
+        : Store(brand: Brand(id: "", name: "", description: "", stores: []), storeCategory: StoreCategory()),
     );
   }
 

@@ -15,10 +15,10 @@ import '../../../../ui/widgets/textfield_validator.dart';
 import '../../../../utils/base.viewmodel.dart';
 import '../../../../utils/models/pageaction.model.dart';
 import '../../../ui/cl_theme.dart';
+import '../../event_category/models/event_category.model.dart';
+import '../../event_category/pages/new_event_category.page.dart';
 import '../../store/modules/location/models/location.model.dart';
 import '../../store/models/store.model.dart' as StoreModel;
-import '../modules/event_category/models/event_category.model.dart';
-import '../modules/event_category/pages/new_event_category.page.dart';
 import '../viewmodels/event.viewmodel.dart';
 
 class NewEventPage extends StatefulWidget {

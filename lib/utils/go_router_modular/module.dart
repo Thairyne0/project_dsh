@@ -22,17 +22,49 @@ abstract class Module {
 
   CLRoute get moduleRoute;
 
-  List<RouteBase> configureRoutes({String modulePath = '', bool topLevel = false, String? parentModuleName, String? parentModulePath, String parentRoutePath = ''}) {
+  List<RouteBase> configureRoutes({
+    String modulePath = '',
+    bool topLevel = false,
+    String? parentModuleName,
+    String? parentModulePath,
+    String parentRoutePath = '',
+  }) {
     List<RouteBase> result = [];
     RouteManager().registerBindsAppModule(this);
 
-    result.addAll(_createChildRoutes(topLevel: topLevel, parentModuleName: parentModuleName, parentModulePath: parentModulePath, parentRoutePath: parentRoutePath, parentMenuPath: null));
-    result.addAll(_createModuleRoutes(modulePath: modulePath, topLevel: topLevel, grandParentModuleName: parentModuleName, grandParentModulePath: parentModulePath));
+    // Per i moduli top-level, NON passare parentModule per le child routes principali
+    // In questo modo i breadcrumbs si sommano tra moduli diversi (Dashboard > News > Eventi)
+    // Solo per i sottomoduli o pagine interne si passa il parentModule
+    result.addAll(
+      _createChildRoutes(
+        topLevel: topLevel,
+        parentModuleName: parentModuleName,
+        parentModulePath: parentModulePath,
+        parentRoutePath: parentRoutePath,
+        parentMenuPath: null,
+      ),
+    );
+    result.addAll(
+      _createModuleRoutes(
+        modulePath: modulePath,
+        topLevel: topLevel,
+        grandParentModuleName: parentModuleName,
+        grandParentModulePath: parentModulePath,
+      ),
+    );
     result.addAll(_createShellRoutes(topLevel));
     return result;
   }
 
-  GoRoute _createChild({required ChildRoute childRoute, required bool topLevel, String? parentModuleName, String? parentModulePath, String parentRoutePath = '', String? parentMenuName, String? parentMenuPath}) {
+  GoRoute _createChild({
+    required ChildRoute childRoute,
+    required bool topLevel,
+    String? parentModuleName,
+    String? parentModulePath,
+    String parentRoutePath = '',
+    String? parentMenuName,
+    String? parentMenuPath,
+  }) {
     final String fullPath = _normalizePath(path: childRoute.path, topLevel: topLevel);
 
     // Costruisci il path completo assoluto per il RouteRegistry
@@ -48,7 +80,9 @@ abstract class Module {
     }
 
     if (Modular.debugLogDiagnostics) {
-      print('[_createChild] childRoute.name="${childRoute.name}", childRoute.path="${childRoute.path}", fullPath="$fullPath", parentRoutePath="$parentRoutePath", absolutePath="$absolutePath"');
+      print(
+        '[_createChild] childRoute.name="${childRoute.name}", childRoute.path="${childRoute.path}", fullPath="$fullPath", parentRoutePath="$parentRoutePath", absolutePath="$absolutePath"',
+      );
     }
 
     // Registra la route nel registry con il path completo assoluto
@@ -59,17 +93,20 @@ abstract class Module {
 
     return GoRoute(
       path: fullPath,
-      name: fullPath, // Usa il path completo come name univoco
-      builder: (context, state) => _buildRouteChild(
-        context,
-        state: state,
-        route: childRoute,
-      ),
+      name: fullPath,
+      // Usa il path completo come name univoco
+      builder: (context, state) => _buildRouteChild(context, state: state, route: childRoute),
       pageBuilder: childRoute.pageBuilder != null
           ? (context, state) => childRoute.pageBuilder!(context, state)
           : (context, state) {
               final String fullPath = state.uri.path;
 
+              // Determina se è un sottomodulo: controlla il path assoluto della route
+              // Se ha 3+ segmenti (es: /stores/brands/...), fa parte di un sottomodulo
+              // Se ha 2 segmenti (es: /stores/details-store), è una pagina diretta del modulo root
+              bool isSubmodule = false;
+              final absPathSegments = absolutePath.split('/').where((s) => s.isNotEmpty && !s.contains(':')).toList();
+              isSubmodule = absPathSegments.length >= 3;
 
               final Map<String, dynamic> routeParams = {
                 "routeName": childRoute.name,
@@ -77,6 +114,7 @@ abstract class Module {
                 "isModule": false,
                 "isMenuRoute": hasChildren, // Se ha figli, è una voce di menu
                 "isNestedInMenu": parentMenuName != null, // È una route figlia di una voce di menu
+                "isSubmodule": isSubmodule, // Flag per distinguere sottomoduli da pagine del modulo principale
               };
               // Aggiungi info sul parent module se presente
               if (parentModuleName != null) routeParams["parentModuleName"] = parentModuleName;
@@ -93,11 +131,12 @@ abstract class Module {
               if (parentMenuPath != null) routeParams["parentMenuPath"] = parentMenuPath;
 
               if (Modular.debugLogDiagnostics) {
-                print('[_createChild pageBuilder] routeName="${childRoute.name}", hasChildren=$hasChildren, parentModuleName=$parentModuleName, parentMenuName=$parentMenuName, parentMenuPath=$parentMenuPath');
+                print(
+                  '[_createChild pageBuilder] routeName="${childRoute.name}", hasChildren=$hasChildren, parentModuleName=$parentModuleName, parentMenuName=$parentMenuName, parentMenuPath=$parentMenuPath',
+                );
               }
 
-              return _buildCustomTransitionPage(context,
-                  state: state, route: childRoute, routeParameter: routeParams);
+              return _buildCustomTransitionPage(context, state: state, route: childRoute, routeParameter: routeParams);
             },
       routes: _createChildRoutes(
         routeList: childRoute.routes,
@@ -105,7 +144,8 @@ abstract class Module {
         parentModuleName: parentModuleName,
         parentModulePath: parentModulePath,
         parentRoutePath: absolutePath,
-        parentMenuName: hasChildren ? childRoute.name : parentMenuName, // Se ha figli, è la voce di menu
+        parentMenuName: hasChildren ? childRoute.name : parentMenuName,
+        // Se ha figli, è la voce di menu
         parentMenuPath: hasChildren ? absolutePath : parentMenuPath, // Se ha figli, passa il suo path
       ),
       //module.module.configureRoutes(modulePath: modulePath, topLevel: false),
@@ -115,19 +155,53 @@ abstract class Module {
     );
   }
 
-  List<GoRoute> _createChildRoutes({List<ModularRoute>? routeList, required bool topLevel, String? parentModuleName, String? parentModulePath, String parentRoutePath = '', String? parentMenuName, String? parentMenuPath}) {
+  List<GoRoute> _createChildRoutes({
+    List<ModularRoute>? routeList,
+    required bool topLevel,
+    String? parentModuleName,
+    String? parentModulePath,
+    String parentRoutePath = '',
+    String? parentMenuName,
+    String? parentMenuPath,
+  }) {
+    // Se parentModuleName è null (modulo top-level), usa il nome del modulo corrente
+    final effectiveParentModuleName = parentModuleName ?? (topLevel ? null : moduleRoute.name);
+    final effectiveParentModulePath = parentModulePath ?? (topLevel ? null : moduleRoute.path);
+
     if (routeList != null) {
       return routeList.whereType<ChildRoute>().where((route) => adjustRoute(route.path) != '/').map((route) {
-        return _createChild(childRoute: route, topLevel: topLevel, parentModuleName: parentModuleName, parentModulePath: parentModulePath, parentRoutePath: parentRoutePath, parentMenuName: parentMenuName, parentMenuPath: parentMenuPath);
+        return _createChild(
+          childRoute: route,
+          topLevel: topLevel,
+          parentModuleName: effectiveParentModuleName,
+          parentModulePath: effectiveParentModulePath,
+          parentRoutePath: parentRoutePath,
+          parentMenuName: parentMenuName,
+          parentMenuPath: parentMenuPath,
+        );
       }).toList();
     } else {
       return routes.whereType<ChildRoute>().where((route) => adjustRoute(route.path) != '/').map((route) {
-        return _createChild(childRoute: route, topLevel: topLevel, parentModuleName: parentModuleName, parentModulePath: parentModulePath, parentRoutePath: parentRoutePath, parentMenuName: parentMenuName, parentMenuPath: parentMenuPath);
+        return _createChild(
+          childRoute: route,
+          topLevel: topLevel,
+          parentModuleName: effectiveParentModuleName,
+          parentModulePath: effectiveParentModulePath,
+          parentRoutePath: parentRoutePath,
+          parentMenuName: parentMenuName,
+          parentMenuPath: parentMenuPath,
+        );
       }).toList();
     }
   }
 
-  GoRoute _createModule({required ModuleRoute module, required String modulePath, required bool topLevel, String? grandParentModuleName, String? grandParentModulePath}) {
+  GoRoute _createModule({
+    required ModuleRoute module,
+    required String modulePath,
+    required bool topLevel,
+    String? grandParentModuleName,
+    String? grandParentModulePath,
+  }) {
     final childRoute = module.module.routes.whereType<ChildRoute>().where((route) => adjustRoute(route.path) == '/').firstOrNull;
 
     // Costruisci il path completo ASSOLUTO per il RouteRegistry (senza normalizzazioni)
@@ -139,7 +213,9 @@ abstract class Module {
     final String fullPath = _normalizePath(path: module.path + (childRoute?.path ?? ""), topLevel: topLevel);
 
     if (Modular.debugLogDiagnostics) {
-      print('[_createModule] module.name="${module.name}", modulePath="$modulePath", absolutePathForRegistry="$absolutePathForRegistry", fullPath="$fullPath"');
+      print(
+        '[_createModule] module.name="${module.name}", modulePath="$modulePath", absolutePathForRegistry="$absolutePathForRegistry", fullPath="$fullPath"',
+      );
     }
 
     // Registra la route nel registry con il path ASSOLUTO completo
@@ -149,31 +225,43 @@ abstract class Module {
     RouteRegistry().registerRoute(module.name, absolutePathForRegistry);
     return GoRoute(
       path: fullPath,
-      name: fullPath, // Usa il path completo come name univoco
+      name: fullPath,
+      // Usa il path completo come name univoco
       builder: (context, state) => _buildModuleChild(context, state: state, module: module, route: childRoute),
       pageBuilder: childRoute != null
           ? childRoute.pageBuilder != null
-              ? (context, state) => childRoute.pageBuilder!(context, state)
-              : (context, state) {
-                  // Passa il nome della child route, non del modulo
-                  // Se c'è un grandParent (modulo principale), usa quello come parent nei breadcrumbs
-                  final String parentForBreadcrumbs = grandParentModuleName ?? moduleRoute.name;
-                  final String parentPathForBreadcrumbs = grandParentModulePath ?? moduleRoute.path;
+                ? (context, state) => childRoute.pageBuilder!(context, state)
+                : (context, state) {
+                    // Passa il nome della child route, non del modulo
+                    // Se c'è un grandParent (modulo principale), usa quello come parent nei breadcrumbs
+                    // Per i moduli top-level (grandParent == null), usa il NOME DEL MODULO STESSO come parent
+                    final String? parentForBreadcrumbs = grandParentModuleName ?? module.name;
+                    final String? parentPathForBreadcrumbs = grandParentModulePath ?? modulePath;
 
-                  if (Modular.debugLogDiagnostics) {
-                    print('[GoRouterModular] Creating module route: childRoute=${childRoute.name}, parentModule=$parentForBreadcrumbs, grandParent=$grandParentModuleName, path=${state.uri.path}');
-                  }
-                  return _buildCustomTransitionPage(context,
+                    if (Modular.debugLogDiagnostics) {
+                      print(
+                        '[GoRouterModular] Creating module route: childRoute=${childRoute.name}, parentModule=$parentForBreadcrumbs, grandParent=$grandParentModuleName, path=${state.uri.path}',
+                      );
+                    }
+
+                    final Map<String, dynamic> routeParams = {
+                      "routeName": childRoute.name, // Nome della pagina (es. "News")
+                      "routePath": state.uri.path,
+                      "isModule": false, // È una pagina, non un modulo
+                      "isSubmodule": grandParentModuleName != null, // Se ha un grandParent, è un sottomodulo
+                    };
+
+                    // Aggiungi parent info (sempre presente ora, anche per moduli top-level)
+                    routeParams["parentModuleName"] = parentForBreadcrumbs;
+                    routeParams["parentModulePath"] = parentPathForBreadcrumbs;
+
+                    return _buildCustomTransitionPage(
+                      context,
                       state: state,
                       route: childRoute,
-                      routeParameter: {
-                        "routeName": childRoute.name,  // Nome della pagina (es. "Progettazioni")
-                        "routePath": state.uri.path,
-                        "isModule": false,  // È una pagina, non un modulo
-                        "parentModuleName": parentForBreadcrumbs,  // Nome del modulo principale (es. "Progettista")
-                        "parentModulePath": parentPathForBreadcrumbs,  // Path del modulo principale
-                      });
-                }
+                      routeParameter: routeParams,
+                    );
+                  }
           : null,
       routes: [
         // Route del sottomodulo (esclusa la principale che è questo modulo)
@@ -188,12 +276,14 @@ abstract class Module {
         ...() {
           if (childRoute != null && childRoute.routes.isNotEmpty) {
             if (Modular.debugLogDiagnostics) {
-              print('[_createModule] Creating nested routes for module "${module.name}", childRoute.routes.length=${childRoute.routes.length}, grandParentModuleName=$grandParentModuleName, moduleRoute.name=${moduleRoute.name}');
+              print(
+                '[_createModule] Creating nested routes for module "${module.name}", childRoute.routes.length=${childRoute.routes.length}, grandParentModuleName=$grandParentModuleName, moduleRoute.name=${moduleRoute.name}',
+              );
             }
             return _createChildRoutes(
               routeList: childRoute.routes,
-              topLevel: true,  // ✅ topLevel=true per mantenere lo slash iniziale
-              // Usa grandParentModuleName se disponibile (es. "Progettista" per le route di Juridicals)
+              topLevel: false, // ← Cambiato da true a false: le route annidate devono ricevere il parentModule
+              // Usa grandParentModuleName se disponibile (es. "Gestione Store" per le route di Promozioni)
               // altrimenti usa il nome del modulo corrente (per moduli top-level)
               parentModuleName: grandParentModuleName ?? moduleRoute.name,
               parentModulePath: grandParentModulePath ?? moduleRoute.path,
@@ -207,11 +297,18 @@ abstract class Module {
       ],
       parentNavigatorKey: childRoute?.parentNavigatorKey,
       redirect: childRoute?.redirect,
-      onExit: (context, state) => childRoute == null ? Future.value(true) : _handleRouteExit(context, state: state, route: childRoute, module: module.module),
+      onExit: (context, state) =>
+          childRoute == null ? Future.value(true) : _handleRouteExit(context, state: state, route: childRoute, module: module.module),
     );
   }
 
-  List<GoRoute> _createModuleRoutes({List<ModularRoute>? routeList, required String modulePath, required bool topLevel, String? grandParentModuleName, String? grandParentModulePath}) {
+  List<GoRoute> _createModuleRoutes({
+    List<ModularRoute>? routeList,
+    required String modulePath,
+    required bool topLevel,
+    String? grandParentModuleName,
+    String? grandParentModulePath,
+  }) {
     if (routeList != null) {
       return routeList.whereType<ModuleRoute>().map((module) {
         String fullPath = "";
@@ -305,17 +402,23 @@ abstract class Module {
     return route.child(context, state);
   }
 
-  Page<void> _buildCustomTransitionPage(BuildContext context,
-      {required GoRouterState state, required ChildRoute route, required Map<String, dynamic> routeParameter}) {
+  Page<void> _buildCustomTransitionPage(
+    BuildContext context, {
+    required GoRouterState state,
+    required ChildRoute route,
+    required Map<String, dynamic> routeParameter,
+  }) {
     Map<String, String> extraMap = {};
     if (state.extra != null && state.extra is Map<String, String>) {
       final dynamicExtra = state.extra as Map<String, String>;
-      extraMap = dynamicExtra.map((key, value) => MapEntry(
-            key,
-            value.toString(), // Converti il valore a stringa, se è null usa una stringa vuota
-          ));
+      extraMap = dynamicExtra.map(
+        (key, value) => MapEntry(
+          key,
+          value.toString(), // Converti il valore a stringa, se è null usa una stringa vuota
+        ),
+      );
     }
-// Crea il Map con tutti i parametri
+    // Crea il Map con tutti i parametri
     Map<String, dynamic> allParams = {
       ...routeParameter,
       ...extraMap, // Aggiungi le voci extra
@@ -326,22 +429,20 @@ abstract class Module {
     // Se noTransition, usa NoTransitionPage per cambio istantaneo
     if (pageTransition == PageTransition.noTransition) {
       _register(path: state.uri.toString());
-      return NoTransitionPage(
-        key: state.pageKey,
-        child: route.child(context, state),
-      );
+      return NoTransitionPage(key: state.pageKey, child: route.child(context, state));
     }
 
     return CustomTransitionPage(
-        key: state.pageKey,
-        child: route.child(context, state),
-        transitionsBuilder: Transition.builder(
-          configRouteManager: () {
-            _register(path: state.uri.toString());
-          },
-          pageTransition: pageTransition,
-        ),
-        arguments: allParams);
+      key: state.pageKey,
+      child: route.child(context, state),
+      transitionsBuilder: Transition.builder(
+        configRouteManager: () {
+          _register(path: state.uri.toString());
+        },
+        pageTransition: pageTransition,
+      ),
+      arguments: allParams,
+    );
   }
 
   Widget _buildModuleChild(BuildContext context, {required GoRouterState state, required ModuleRoute module, ChildRoute? route}) {
@@ -370,12 +471,9 @@ abstract class Module {
   }
 
   void _unregister(String path, {Module? module}) {
-    Future.delayed(
-      const Duration(milliseconds: 500),
-      () {
-        RouteManager().unregisterRoute(path, module ?? this);
-      },
-    );
+    Future.delayed(const Duration(milliseconds: 500), () {
+      RouteManager().unregisterRoute(path, module ?? this);
+    });
   }
 
   String _buildPath(String path) {

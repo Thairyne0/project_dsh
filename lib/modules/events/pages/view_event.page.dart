@@ -29,9 +29,9 @@ import '../../../ui/widgets/cl_tabs/cl_tab_view.widget.dart';
 import '../../../ui/widgets/paged_datatable/paged_datatable.dart';
 import '../../../ui/widgets/table_action_item.widget.dart';
 import '../../../utils/providers/authstate.util.provider.dart';
+import '../../event_category/constants/event_category_routes.constant.dart';
 import '../constants/event_routes.constant.dart';
 import '../models/event.model.dart';
-import '../modules/event_category/constants/event_category_routes.constant.dart';
 import '../viewmodels/event.viewmodel.dart';
 
 class ViewEventPage extends StatefulWidget {
@@ -88,7 +88,6 @@ class _ViewEventPageState extends State<ViewEventPage> {
                     child: Column(
                       children: [
                         CLContainer(
-                          backgroundColor: Colors.white,
                           child: ResponsiveGrid(
                             mainAxisAlignment: MainAxisAlignment.start,
                             gridSpacing: Sizes.padding,

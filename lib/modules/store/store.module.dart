@@ -17,11 +17,7 @@ import 'modules/brand/brand.module.dart';
 import 'modules/location/constants/location_routes.constant.dart';
 import 'modules/location/pages/edit_location.page.dart';
 import 'modules/location/pages/view_location.page.dart';
-import 'modules/promo/constants/promo_routes.constant.dart';
-import 'modules/promo/pages/edit_promo.page.dart';
-import 'modules/promo/pages/new_promo.page.dart';
-import 'modules/promo/pages/promo.page.dart';
-import 'modules/promo/pages/view_promo.page.dart';
+import 'modules/promo/promo.module.dart';
 import 'modules/store_category/store_category.module.dart';
 import 'modules/store_report/constants/store_report_routes.constant.dart';
 import 'modules/store_report/pages/edit_store_report.page.dart';
@@ -36,59 +32,42 @@ class StoreModule extends Module {
 
   @override
   List<ModularRoute> get routes => [
-        ChildRoute.build(route: StoreRoutes.stores, childBuilder: (context, state) => const StorePage(), isModuleRoute: true),
+        // Pagina principale del modulo Store
         ChildRoute.build(
-            route: StoreRoutes.viewStore, childBuilder: (context, state) => ViewStorePage(id: state.pathParameters["id"]!), params: ["id"], isVisible: false),
-        ChildRoute.build(
-            route: StoreRoutes.editStore, childBuilder: (context, state) => EditStorePage(id: state.pathParameters["id"]!), params: ["id"], isVisible: false),
-        ChildRoute.build(
-            route: StoreRoutes.storeEmployee,
-            childBuilder: (context, state) => AddStoreEmployeePage(id: state.pathParameters["id"]!),
-            params: ["id"],
-            isVisible: false),
-        ChildRoute.build(route: StoreRoutes.newStore, childBuilder: (context, state) => NewStorePage(), isVisible: false),
-        ChildRoute.build(
-            route: StoreRoutes.addStoreCategoryToStore,
-            childBuilder: (context, state) => AddStoreCategoryToStorePage(id: state.pathParameters["id"]!),
-            params: ["id"],
-            isVisible: false),
-        ModuleRoute(
-            module: StoreCategoryModule(),
-            icon: Icons.abc_outlined,
-            isVisible: GoRouterModular.get<AuthState>().hasPermission(PermissionSlugs.visualizzaCategorieStore)),
-        ModuleRoute(
-            module: BrandModule(), icon: Icons.abc_outlined, isVisible: GoRouterModular.get<AuthState>().hasPermission(PermissionSlugs.visualizzaBrand)),
-        //da mettere permesso qui sotto
-        ModuleRoute(
-            module: StoreReportModule(),
-            icon: Icons.abc_outlined,
-            isVisible: GoRouterModular.get<AuthState>().hasPermission(PermissionSlugs.visualizzaStoreReport)),
-        ChildRoute.build(
-          route: PromoRoutes.promo,
-          childBuilder: (context, state) => const PromoPage(),
-          isModuleRoute: false,
+          route: StoreRoutes.stores,
+          childBuilder: (context, state) => const StorePage(),
+          isModuleRoute: true,
+          isVisible: true,
+          routes: [
+            // Route figlie dirette di Store (dettagli, edit, new) - annidate
+            ChildRoute.build(
+                route: StoreRoutes.viewStore,
+                childBuilder: (context, state) => ViewStorePage(id: state.pathParameters["id"]!),
+                params: ["id"],
+                isVisible: false),
+            ChildRoute.build(
+                route: StoreRoutes.editStore,
+                childBuilder: (context, state) => EditStorePage(id: state.pathParameters["id"]!),
+                params: ["id"],
+                isVisible: false),
+            ChildRoute.build(
+                route: StoreRoutes.storeEmployee,
+                childBuilder: (context, state) => AddStoreEmployeePage(id: state.pathParameters["id"]!),
+                params: ["id"],
+                isVisible: false),
+            ChildRoute.build(
+                route: StoreRoutes.newStore,
+                childBuilder: (context, state) => NewStorePage(),
+                isVisible: false),
+            ChildRoute.build(
+                route: StoreRoutes.addStoreCategoryToStore,
+                childBuilder: (context, state) => AddStoreCategoryToStorePage(id: state.pathParameters["id"]!),
+                params: ["id"],
+                isVisible: false),
+          ],
         ),
 
-        ChildRoute.build(
-            route: PromoRoutes.viewPromo, childBuilder: (context, state) => ViewPromoPage(id: state.pathParameters["id"]!), params: ["id"], isVisible: false),
-        ChildRoute.build(
-            route: PromoRoutes.editPromo, childBuilder: (context, state) => EditPromoPage(id: state.pathParameters["id"]!), params: ["id"], isVisible: false),
-        ChildRoute.build(
-            route: PromoRoutes.newPromo,
-            childBuilder: (context, state) => NewPromoPage(storeId: state.pathParameters["storeId"]),
-            params: ["storeId"],
-            isVisible: false),
-        //ChildRoute.build(route: StoreReportRoutes.viewStoreReport, childBuilder: (context, state) => ViewStoreReportPage(id: state.pathParameters["id"]!), params: ["id"], isVisible: false),
-        ChildRoute.build(
-            route: StoreReportRoutes.editStoreReport,
-            childBuilder: (context, state) => EditStoreReportPage(id: state.pathParameters["id"]!),
-            params: ["id"],
-            isVisible: false),
-        ChildRoute.build(
-            route: StoreReportRoutes.newStoreReport,
-            childBuilder: (context, state) => NewStoreReportPage(storeId: state.pathParameters["storeId"]!),
-            params: ["storeId"],
-            isVisible: false),
+        // Location - route figlie di Store (mantenute al primo livello perché non sono sotto la lista Store)
         ChildRoute.build(
             route: LocationRoutes.newLocation,
             childBuilder: (context, state) => AddLocationToStorePage(storeId: state.pathParameters["storeId"]!),
@@ -104,5 +83,35 @@ class StoreModule extends Module {
             childBuilder: (context, state) => EditLocationPage(locationId: state.pathParameters["locationId"]!),
             params: ["locationId"],
             isVisible: false),
+
+        // StoreReport - route figlie di Store (le edit/new, la lista è nel ModuleRoute sotto)
+        ChildRoute.build(
+            route: StoreReportRoutes.editStoreReport,
+            childBuilder: (context, state) => EditStoreReportPage(id: state.pathParameters["id"]!),
+            params: ["id"],
+            isVisible: false),
+        ChildRoute.build(
+            route: StoreReportRoutes.newStoreReport,
+            childBuilder: (context, state) => NewStoreReportPage(storeId: state.pathParameters["storeId"]!),
+            params: ["storeId"],
+            isVisible: false),
+
+        // Sottomoduli (rami paralleli a Store)
+        ModuleRoute(
+            module: PromoModule(),
+            icon: Icons.abc_outlined,
+            isVisible: true),
+        ModuleRoute(
+            module: StoreCategoryModule(),
+            icon: Icons.abc_outlined,
+            isVisible: GoRouterModular.get<AuthState>().hasPermission(PermissionSlugs.visualizzaCategorieStore)),
+        ModuleRoute(
+            module: BrandModule(),
+            icon: Icons.abc_outlined,
+            isVisible: GoRouterModular.get<AuthState>().hasPermission(PermissionSlugs.visualizzaBrand)),
+        ModuleRoute(
+            module: StoreReportModule(),
+            icon: Icons.abc_outlined,
+            isVisible: GoRouterModular.get<AuthState>().hasPermission(PermissionSlugs.visualizzaStoreReport)),
       ];
 }

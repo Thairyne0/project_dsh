@@ -1,6 +1,6 @@
-import 'package:project_dsh/modules/events/modules/event_category/models/event_category.model.dart';
 import 'package:project_dsh/utils/models/custom_model.model.dart';
 
+import '../../../../event_category/models/event_category.model.dart';
 import '../../../../store/models/store.model.dart';
 import '../../../../store/modules/brand/models/brand.model.dart';
 import '../../../../store/modules/location/models/location.model.dart';

@@ -1,5 +1,5 @@
 import 'package:project_dsh/utils/models/custom_model.model.dart';
-import '../../../models/event.model.dart';
+import '../../events/models/event.model.dart';
 
 class EventCategory extends BaseModel {
   @override
