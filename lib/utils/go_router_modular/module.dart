@@ -164,9 +164,10 @@ abstract class Module {
     String? parentMenuName,
     String? parentMenuPath,
   }) {
-    // Se parentModuleName è null (modulo top-level), usa il nome del modulo corrente
-    final effectiveParentModuleName = parentModuleName ?? (topLevel ? null : moduleRoute.name);
-    final effectiveParentModulePath = parentModulePath ?? (topLevel ? null : moduleRoute.path);
+    // Se parentModuleName è null, usa sempre il nome del modulo corrente (anche se topLevel)
+    // Questo assicura che il modulo root (es. "Gestione News") appaia nei breadcrumbs
+    final effectiveParentModuleName = parentModuleName ?? moduleRoute.name;
+    final effectiveParentModulePath = parentModulePath ?? moduleRoute.path;
 
     if (routeList != null) {
       return routeList.whereType<ChildRoute>().where((route) => adjustRoute(route.path) != '/').map((route) {
@@ -319,8 +320,9 @@ abstract class Module {
         }
         // Quando creiamo sottomoduli, passa il nome del MODULO CORRENTE come grandParent
         // (non il grandParent ricevuto, che è il parent del modulo corrente)
-        final String? parentName = topLevel ? null : moduleRoute.name;
-        final String? parentPath = topLevel ? null : moduleRoute.path;
+        // Se parentModuleName è null, usa sempre il nome del modulo corrente (anche se topLevel)
+        final String? parentName = moduleRoute.name;
+        final String? parentPath = moduleRoute.path;
         return _createModule(
           module: module,
           modulePath: fullPath,
@@ -339,8 +341,9 @@ abstract class Module {
         }
         // Quando creiamo sottomoduli, passa il nome del MODULO CORRENTE come grandParent
         // (non il grandParent ricevuto, che è il parent del modulo corrente)
-        final String? parentName = topLevel ? null : moduleRoute.name;
-        final String? parentPath = topLevel ? null : moduleRoute.path;
+        // Se parentModuleName è null, usa sempre il nome del modulo corrente (anche se topLevel)
+        final String? parentName = moduleRoute.name;
+        final String? parentPath = moduleRoute.path;
         return _createModule(
           module: module,
           modulePath: fullPath,
