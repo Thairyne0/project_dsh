@@ -95,49 +95,50 @@ abstract class Module {
       path: fullPath,
       name: fullPath,
       // Usa il path completo come name univoco
-      builder: (context, state) => _buildRouteChild(context, state: state, route: childRoute),
-      pageBuilder: childRoute.pageBuilder != null
-          ? (context, state) => childRoute.pageBuilder!(context, state)
-          : (context, state) {
-              final String fullPath = state.uri.path;
+     // builder: (context, state) => _buildRouteChild(context, state: state, route: childRoute),
+      pageBuilder: (context, state) {
+        if (childRoute.pageBuilder != null) {
+          return childRoute.pageBuilder!(context, state);
+        }
 
-              // Determina se è un sottomodulo: controlla il path assoluto della route
-              // Se ha 3+ segmenti (es: /stores/brands/...), fa parte di un sottomodulo
-              // Se ha 2 segmenti (es: /stores/details-store), è una pagina diretta del modulo root
-              bool isSubmodule = false;
-              final absPathSegments = absolutePath.split('/').where((s) => s.isNotEmpty && !s.contains(':')).toList();
-              isSubmodule = absPathSegments.length >= 3;
+        final String fullPath = state.uri.path;
+        
+        // Determina se è un sottomodulo: controlla il path assoluto della route
+        bool isSubmodule = false;
+        // Check for absolutePath variable definition or usage
+        // Note: absolutePath variable is defined outside this closure in _createChild
+        final absPathSegments = absolutePath.split('/').where((s) => s.isNotEmpty && !s.contains(':')).toList();
+        isSubmodule = absPathSegments.length >= 3;
 
-              final Map<String, dynamic> routeParams = {
-                "routeName": childRoute.name,
-                "routePath": fullPath,
-                "isModule": false,
-                "isMenuRoute": hasChildren, // Se ha figli, è una voce di menu
-                "isNestedInMenu": parentMenuName != null, // È una route figlia di una voce di menu
-                "isSubmodule": isSubmodule, // Flag per distinguere sottomoduli da pagine del modulo principale
-              };
-              // Aggiungi info sul parent module se presente
-              if (parentModuleName != null) routeParams["parentModuleName"] = parentModuleName;
-              if (parentModulePath != null) routeParams["parentModulePath"] = parentModulePath;
-              // Aggiungi il nome della voce di menu parent (se presente)
-              if (parentMenuName != null) {
-                routeParams["parentMenuName"] = parentMenuName;
-                // Cerca il path della voce di menu parent nel RouteRegistry usando il contesto corrente
-                final parentPath = RouteRegistry().getPathByName(parentMenuName, contextPath: fullPath);
-                if (parentPath != null) {
-                  routeParams["parentMenuPath"] = parentPath;
-                }
-              }
-              if (parentMenuPath != null) routeParams["parentMenuPath"] = parentMenuPath;
+        final Map<String, dynamic> routeParams = {
+          "routeName": childRoute.name,
+          "routePath": fullPath,
+          "isModule": false,
+          "isMenuRoute": hasChildren,
+          "isNestedInMenu": parentMenuName != null,
+          "isSubmodule": isSubmodule,
+        };
+        
+        if (parentModuleName != null) routeParams["parentModuleName"] = parentModuleName;
+        if (parentModulePath != null) routeParams["parentModulePath"] = parentModulePath;
+        
+        if (parentMenuName != null) {
+          routeParams["parentMenuName"] = parentMenuName;
+          final parentPath = RouteRegistry().getPathByName(parentMenuName, contextPath: fullPath);
+          if (parentPath != null) {
+            routeParams["parentMenuPath"] = parentPath;
+          }
+        }
+        if (parentMenuPath != null) routeParams["parentMenuPath"] = parentMenuPath;
 
-              if (Modular.debugLogDiagnostics) {
-                print(
-                  '[_createChild pageBuilder] routeName="${childRoute.name}", hasChildren=$hasChildren, parentModuleName=$parentModuleName, parentMenuName=$parentMenuName, parentMenuPath=$parentMenuPath',
-                );
-              }
+        if (Modular.debugLogDiagnostics) {
+           print(
+             '[_createChild pageBuilder] routeName="${childRoute.name}", params=$routeParams',
+           );
+        }
 
-              return _buildCustomTransitionPage(context, state: state, route: childRoute, routeParameter: routeParams);
-            },
+        return _buildCustomTransitionPage(context, state: state, route: childRoute, routeParameter: routeParams);
+      },
       routes: _createChildRoutes(
         routeList: childRoute.routes,
         topLevel: topLevel,
@@ -432,11 +433,17 @@ abstract class Module {
     // Se noTransition, usa NoTransitionPage per cambio istantaneo
     if (pageTransition == PageTransition.noTransition) {
       _register(path: state.uri.toString());
-      return NoTransitionPage(key: state.pageKey, child: route.child(context, state));
+      return NoTransitionPage(
+        key: state.pageKey,
+        name: route.name, // Imposta il nome umanamente leggibile direttamente sulla Page
+        child: route.child(context, state),
+        arguments: allParams,
+      );
     }
 
     return CustomTransitionPage(
       key: state.pageKey,
+      name: route.name, // Imposta il nome umanamente leggibile direttamente sulla Page
       child: route.child(context, state),
       transitionsBuilder: Transition.builder(
         configRouteManager: () {
