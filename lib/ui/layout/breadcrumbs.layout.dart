@@ -9,6 +9,12 @@ import 'constants/sizes.constant.dart';
 class BreadcrumbsLayout extends StatelessWidget {
   const BreadcrumbsLayout({super.key});
 
+  // RegExp compilata una sola volta (evita ricompilazione ad ogni build)
+  static final RegExp _uuidRegExp = RegExp(
+    r'^[0-9a-fA-F]{8}-?[0-9a-fA-F]{4}-?[0-9a-fA-F]{4}-?[0-9a-fA-F]{4}-?[0-9a-fA-F]{12}$',
+  );
+  static final RegExp _containsDigitRegExp = RegExp(r'[0-9]');
+
   @override
   Widget build(BuildContext context) {
     // Metodo URL-based: funziona su web, desktop e mobile
@@ -17,8 +23,43 @@ class BreadcrumbsLayout extends StatelessWidget {
 
     if (segments.isEmpty) return const SizedBox.shrink();
 
-    // Filtra gli ID (UUID, numeri, stringhe lunghe) e costruisci i breadcrumbs
-    List<_BreadcrumbEntry> entries = [];
+    // Costruisci le entries dai segmenti URL
+    List<_BreadcrumbEntry> entries = _buildEntries(segments);
+
+    if (entries.isEmpty) return const SizedBox.shrink();
+
+    // Troncamento: se ci sono troppi breadcrumbs (>4), mostra primo, "...", e ultimi 2
+    if (entries.length > 4) {
+      final first = entries.first;
+      final lastTwo = entries.sublist(entries.length - 2);
+      entries = [first, _BreadcrumbEntry(label: '...', path: '', isModule: true), ...lastTwo];
+    }
+
+    // Costruisci i widget BreadCrumbItem
+    final List<BreadCrumbItem> items = _buildItems(context, entries);
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        BreadCrumb(
+          items: items,
+          divider: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 6.0),
+            child: HugeIcon(
+              icon: HugeIcons.strokeRoundedArrowRight01,
+              size: Sizes.small,
+              color: CLTheme.of(context).secondaryText,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// Costruisce la lista di entries dai segmenti URL
+  List<_BreadcrumbEntry> _buildEntries(List<String> segments) {
+    final List<_BreadcrumbEntry> entries = [];
     String currentPath = '';
 
     for (int i = 0; i < segments.length; i++) {
@@ -26,7 +67,7 @@ class BreadcrumbsLayout extends StatelessWidget {
       currentPath += '/$segment';
 
       // Salta segmenti che sono ID (UUID, numeri, hash lunghi)
-      if (_isIdSegment(segment)) continue;
+      if (_isIdSegment(segment, currentPath)) continue;
 
       // Se questo path ha un modulo genitore registrato (es. "Gestione News"),
       // aggiungilo come primo breadcrumb non cliccabile
@@ -48,9 +89,12 @@ class BreadcrumbsLayout extends StatelessWidget {
       entries.add(_BreadcrumbEntry(label: label, path: currentPath));
     }
 
-    if (entries.isEmpty) return const SizedBox.shrink();
+    return entries;
+  }
 
-    List<BreadCrumbItem> items = [];
+  /// Costruisce i widget BreadCrumbItem dalla lista di entries
+  List<BreadCrumbItem> _buildItems(BuildContext context, List<_BreadcrumbEntry> entries) {
+    final List<BreadCrumbItem> items = [];
 
     for (int i = 0; i < entries.length; i++) {
       final entry = entries[i];
@@ -58,10 +102,13 @@ class BreadcrumbsLayout extends StatelessWidget {
 
       Widget content;
       if (isLast) {
-        // Ultimo elemento: colore primario, non cliccabile
+        // Ultimo elemento: colore primario, semi-bold, non cliccabile
         content = Text(
           entry.label,
-          style: CLTheme.of(context).bodyText.merge(TextStyle(color: CLTheme.of(context).primary)),
+          style: CLTheme.of(context).bodyText.merge(TextStyle(
+            color: CLTheme.of(context).primary,
+            fontWeight: FontWeight.w600,
+          )),
         );
       } else {
         // Elementi precedenti: grigio
@@ -78,33 +125,23 @@ class BreadcrumbsLayout extends StatelessWidget {
       ));
     }
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        BreadCrumb(
-          items: items,
-          divider: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 6.0),
-            child: HugeIcon(
-              icon: HugeIcons.strokeRoundedArrowRight01,
-              size: Sizes.small,
-              color: CLTheme.of(context).secondaryText,
-            ),
-          ),
-        ),
-      ],
-    );
+    return items;
   }
 
   /// Determina se un segmento URL è un ID (UUID, numero, hash lungo)
-  bool _isIdSegment(String segment) {
+  /// Usa il [currentPath] per verificare se il segmento è registrato nel BreadcrumbRegistry
+  bool _isIdSegment(String segment, String currentPath) {
     // Numeri puri
     if (int.tryParse(segment) != null) return true;
     // Stringhe molto lunghe (probabilmente UUID o hash)
     if (segment.length > 20) return true;
     // Pattern UUID (con o senza trattini)
-    if (RegExp(r'^[0-9a-fA-F]{8}-?[0-9a-fA-F]{4}-?[0-9a-fA-F]{4}-?[0-9a-fA-F]{4}-?[0-9a-fA-F]{12}$').hasMatch(segment)) return true;
+    if (_uuidRegExp.hasMatch(segment)) return true;
+    // Segmento NON registrato nel registry E contiene numeri → probabilmente un ID
+    // (es. "ab12cd", "item3", "ref-45a")
+    if (BreadcrumbRegistry().lookup(currentPath) == null &&
+        BreadcrumbRegistry().lookupModule(currentPath) == null &&
+        _containsDigitRegExp.hasMatch(segment)) return true;
     return false;
   }
 
