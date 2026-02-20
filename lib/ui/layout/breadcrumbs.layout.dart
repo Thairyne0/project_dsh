@@ -28,8 +28,22 @@ class BreadcrumbsLayout extends StatelessWidget {
       // Salta segmenti che sono ID (UUID, numeri, hash lunghi)
       if (_isIdSegment(segment)) continue;
 
-      // Cerca il nome italiano nel BreadcrumbRegistry, fallback a formattazione pulita
+      // Se questo path ha un modulo genitore registrato (es. "Gestione News"),
+      // aggiungilo come primo breadcrumb non cliccabile
+      final moduleLabel = BreadcrumbRegistry().lookupModule(currentPath);
+      if (moduleLabel != null) {
+        // Evita duplicati: aggiungi solo se non è già presente
+        final alreadyAdded = entries.any((e) => e.label == moduleLabel && e.path == currentPath);
+        if (!alreadyAdded) {
+          entries.add(_BreadcrumbEntry(label: moduleLabel, path: currentPath, isModule: true));
+        }
+      }
+
+      // Cerca il nome italiano della pagina nel BreadcrumbRegistry, fallback a formattazione pulita
       String label = BreadcrumbRegistry().lookup(currentPath) ?? _humanize(segment);
+
+      // Se il nome della pagina è uguale al nome del modulo, non duplicare
+      if (moduleLabel != null && label == moduleLabel) continue;
 
       entries.add(_BreadcrumbEntry(label: label, path: currentPath));
     }
@@ -50,16 +64,17 @@ class BreadcrumbsLayout extends StatelessWidget {
           style: CLTheme.of(context).bodyText.merge(TextStyle(color: CLTheme.of(context).primary)),
         );
       } else {
-        // Elementi precedenti: grigio, cliccabile
+        // Elementi precedenti: grigio
         content = Text(
           entry.label,
           style: CLTheme.of(context).bodyLabel.copyWith(color: CLTheme.of(context).secondaryText),
         );
       }
 
+      // I moduli non sono cliccabili, le pagine intermedie sì
       items.add(BreadCrumbItem(
         content: content,
-        onTap: isLast ? null : () => context.go(entry.path),
+        onTap: isLast || entry.isModule ? null : () => context.go(entry.path),
       ));
     }
 
@@ -108,5 +123,6 @@ class BreadcrumbsLayout extends StatelessWidget {
 class _BreadcrumbEntry {
   final String label;
   final String path;
-  _BreadcrumbEntry({required this.label, required this.path});
+  final bool isModule;
+  _BreadcrumbEntry({required this.label, required this.path, this.isModule = false});
 }

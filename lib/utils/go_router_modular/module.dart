@@ -235,7 +235,12 @@ abstract class Module {
     RouteRegistry().registerRoute(module.name, absolutePathForRegistry);
 
     // Registra il nome del MODULO nel BreadcrumbRegistry (es. "/stores" -> "Gestione Store")
-    BreadcrumbRegistry().register(absolutePathForRegistry, module.name);
+    // Usa registerModule per separare il nome del modulo dal nome della pagina
+    BreadcrumbRegistry().registerModule(absolutePathForRegistry, module.name);
+    // Registra anche il nome della pagina lista (es. "/stores" -> "Store", "/news" -> "News")
+    if (childRoute != null) {
+      BreadcrumbRegistry().register(absolutePathForRegistry, childRoute.name);
+    }
     return GoRoute(
       path: fullPath,
       name: fullPath,

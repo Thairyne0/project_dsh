@@ -7,21 +7,35 @@ class BreadcrumbRegistry {
   factory BreadcrumbRegistry() => _instance;
   BreadcrumbRegistry._internal();
 
-  final Map<String, String> _labels = {};
+  final Map<String, String> _labels = {};       // path -> nome pagina (es. "News")
+  final Map<String, String> _moduleLabels = {}; // path -> nome modulo (es. "Gestione News")
 
-  void register(String path, String label) {
+  static String _normPath(String path) {
     if (!path.startsWith('/')) path = '/$path';
     if (path.length > 1 && path.endsWith('/')) {
       path = path.substring(0, path.length - 1);
     }
-    _labels[path] = label;
+    return path;
   }
 
+  /// Registra il nome della pagina per un path
+  void register(String path, String label) {
+    _labels[_normPath(path)] = label;
+  }
+
+  /// Registra il nome del modulo genitore per un path
+  void registerModule(String path, String label) {
+    _moduleLabels[_normPath(path)] = label;
+  }
+
+  /// Cerca il nome della pagina
   String? lookup(String path) {
-    if (path.length > 1 && path.endsWith('/')) {
-      path = path.substring(0, path.length - 1);
-    }
-    return _labels[path];
+    return _labels[_normPath(path)];
+  }
+
+  /// Cerca il nome del modulo genitore
+  String? lookupModule(String path) {
+    return _moduleLabels[_normPath(path)];
   }
 }
 
