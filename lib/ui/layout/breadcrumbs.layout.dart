@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_breadcrumb/flutter_breadcrumb.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hugeicons/hugeicons.dart';
-import 'package:provider/provider.dart';
 import 'package:project_dsh/ui/cl_theme.dart';
-import 'package:project_dsh/utils/providers/navigation.util.provider.dart';
+import 'package:project_dsh/utils/go_router_modular/breadcrumb.system.dart';
 import 'constants/sizes.constant.dart';
 
 class BreadcrumbsLayout extends StatelessWidget {
@@ -12,42 +11,55 @@ class BreadcrumbsLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Usa il NavigationState provider che contiene i breadcrumbs con nomi italiani
-    final navigationState = Provider.of<NavigationState>(context);
-    final breadcrumbs = navigationState.breadcrumbs;
+    // Metodo URL-based: funziona su web, desktop e mobile
+    final String fullPath = GoRouterState.of(context).uri.path;
+    final List<String> segments = fullPath.split('/').where((s) => s.isNotEmpty).toList();
 
-    if (breadcrumbs.isEmpty) return const SizedBox.shrink();
+    if (segments.isEmpty) return const SizedBox.shrink();
+
+    // Filtra gli ID (UUID, numeri, stringhe lunghe) e costruisci i breadcrumbs
+    List<_BreadcrumbEntry> entries = [];
+    String currentPath = '';
+
+    for (int i = 0; i < segments.length; i++) {
+      final segment = segments[i];
+      currentPath += '/$segment';
+
+      // Salta segmenti che sono ID (UUID, numeri, hash lunghi)
+      if (_isIdSegment(segment)) continue;
+
+      // Cerca il nome italiano nel BreadcrumbRegistry, fallback a formattazione pulita
+      String label = BreadcrumbRegistry().lookup(currentPath) ?? _humanize(segment);
+
+      entries.add(_BreadcrumbEntry(label: label, path: currentPath));
+    }
+
+    if (entries.isEmpty) return const SizedBox.shrink();
 
     List<BreadCrumbItem> items = [];
 
-    for (int i = 0; i < breadcrumbs.length; i++) {
-      final bc = breadcrumbs[i];
-      final bool isLast = i == breadcrumbs.length - 1;
+    for (int i = 0; i < entries.length; i++) {
+      final entry = entries[i];
+      final bool isLast = i == entries.length - 1;
 
       Widget content;
       if (isLast) {
         // Ultimo elemento: colore primario, non cliccabile
         content = Text(
-          bc.name,
+          entry.label,
           style: CLTheme.of(context).bodyText.merge(TextStyle(color: CLTheme.of(context).primary)),
         );
-      } else if (bc.isModule) {
-        // Modulo intermedio: grigio, non cliccabile
-        content = Text(
-          bc.name,
-          style: CLTheme.of(context).bodyLabel.copyWith(color: CLTheme.of(context).secondaryText),
-        );
       } else {
-        // Pagina intermedia: grigio, cliccabile
+        // Elementi precedenti: grigio, cliccabile
         content = Text(
-          bc.name,
+          entry.label,
           style: CLTheme.of(context).bodyLabel.copyWith(color: CLTheme.of(context).secondaryText),
         );
       }
 
       items.add(BreadCrumbItem(
         content: content,
-        onTap: isLast || bc.isModule ? null : () => context.go(bc.path),
+        onTap: isLast ? null : () => context.go(entry.path),
       ));
     }
 
@@ -69,4 +81,32 @@ class BreadcrumbsLayout extends StatelessWidget {
       ],
     );
   }
+
+  /// Determina se un segmento URL è un ID (UUID, numero, hash lungo)
+  bool _isIdSegment(String segment) {
+    // Numeri puri
+    if (int.tryParse(segment) != null) return true;
+    // Stringhe molto lunghe (probabilmente UUID o hash)
+    if (segment.length > 20) return true;
+    // Pattern UUID (con o senza trattini)
+    if (RegExp(r'^[0-9a-fA-F]{8}-?[0-9a-fA-F]{4}-?[0-9a-fA-F]{4}-?[0-9a-fA-F]{4}-?[0-9a-fA-F]{12}$').hasMatch(segment)) return true;
+    return false;
+  }
+
+  /// Converte un segmento URL in un nome leggibile (fallback se non trovato nel registry)
+  /// Es: "details-promo" -> "Details Promo"
+  String _humanize(String segment) {
+    return segment
+        .replaceAll('-', ' ')
+        .replaceAll('_', ' ')
+        .split(' ')
+        .map((word) => word.isNotEmpty ? '${word[0].toUpperCase()}${word.substring(1)}' : '')
+        .join(' ');
+  }
+}
+
+class _BreadcrumbEntry {
+  final String label;
+  final String path;
+  _BreadcrumbEntry({required this.label, required this.path});
 }

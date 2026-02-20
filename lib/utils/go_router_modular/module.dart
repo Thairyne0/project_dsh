@@ -11,6 +11,7 @@ import 'package:project_dsh/utils/go_router_modular/transition.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'bind.dart';
+import 'breadcrumb.system.dart';
 import 'go_router_modular_configure.dart';
 
 abstract class Module {
@@ -87,6 +88,13 @@ abstract class Module {
 
     // Registra la route nel registry con il path completo assoluto
     RouteRegistry().registerRoute(childRoute.name, absolutePath);
+
+    // Registra il nome italiano nel BreadcrumbRegistry per il lookup URL->nome
+    // Rimuovi i segmenti parametro (es. :id) dal path per ottenere il path "fisso"
+    String breadcrumbPath = absolutePath.replaceAll(RegExp(r'/:[^/]+'), '');
+    if (breadcrumbPath.isNotEmpty) {
+      BreadcrumbRegistry().register(breadcrumbPath, childRoute.name);
+    }
 
     // Determina se questa route ha figli (quindi è una voce di menu)
     final bool hasChildren = childRoute.routes.isNotEmpty;
@@ -225,6 +233,9 @@ abstract class Module {
       RouteRegistry().registerRoute(childRoute.name, absolutePathForRegistry);
     }
     RouteRegistry().registerRoute(module.name, absolutePathForRegistry);
+
+    // Registra il nome del MODULO nel BreadcrumbRegistry (es. "/stores" -> "Gestione Store")
+    BreadcrumbRegistry().register(absolutePathForRegistry, module.name);
     return GoRoute(
       path: fullPath,
       name: fullPath,
