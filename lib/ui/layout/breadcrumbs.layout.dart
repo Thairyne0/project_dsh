@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_breadcrumb/flutter_breadcrumb.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hugeicons/hugeicons.dart';
+import 'package:provider/provider.dart';
 import 'package:project_dsh/ui/cl_theme.dart';
-import 'package:project_dsh/utils/go_router_modular/breadcrumb.system.dart';
+import 'package:project_dsh/utils/providers/navigation.util.provider.dart';
 import 'constants/sizes.constant.dart';
 
 class BreadcrumbsLayout extends StatelessWidget {
@@ -11,41 +12,42 @@ class BreadcrumbsLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // 1. Ottieni il path corrente (reattivo)
-    final String fullPath = GoRouterState.of(context).uri.path;
-    final List<String> segments = fullPath.split('/').where((s) => s.isNotEmpty).toList();
+    // Usa il NavigationState provider che contiene i breadcrumbs con nomi italiani
+    final navigationState = Provider.of<NavigationState>(context);
+    final breadcrumbs = navigationState.breadcrumbs;
 
-    if (segments.isEmpty) return const SizedBox.shrink();
+    if (breadcrumbs.isEmpty) return const SizedBox.shrink();
 
-    // 2. Costruisci la lista di items
     List<BreadCrumbItem> items = [];
-    String currentPath = '';
 
-    for (int i = 0; i < segments.length; i++) {
-      final segment = segments[i];
-      currentPath += '/$segment';
-      final bool isLast = i == segments.length - 1;
+    for (int i = 0; i < breadcrumbs.length; i++) {
+      final bc = breadcrumbs[i];
+      final bool isLast = i == breadcrumbs.length - 1;
 
-      // 3. Risolvi la label usando il Registry o fallback
-      String label = BreadcrumbRegistry().lookup(currentPath) ?? _fallbackLabel(segment, segments, i);
-
-      // Costruisci il widget per l'item
       Widget content;
       if (isLast) {
+        // Ultimo elemento: colore primario, non cliccabile
         content = Text(
-          label,
+          bc.name,
           style: CLTheme.of(context).bodyText.merge(TextStyle(color: CLTheme.of(context).primary)),
         );
-      } else {
+      } else if (bc.isModule) {
+        // Modulo intermedio: grigio, non cliccabile
         content = Text(
-          label,
+          bc.name,
+          style: CLTheme.of(context).bodyLabel.copyWith(color: CLTheme.of(context).secondaryText),
+        );
+      } else {
+        // Pagina intermedia: grigio, cliccabile
+        content = Text(
+          bc.name,
           style: CLTheme.of(context).bodyLabel.copyWith(color: CLTheme.of(context).secondaryText),
         );
       }
 
       items.add(BreadCrumbItem(
         content: content,
-        onTap: isLast ? null : () => context.go(currentPath),
+        onTap: isLast || bc.isModule ? null : () => context.go(bc.path),
       ));
     }
 
@@ -66,13 +68,5 @@ class BreadcrumbsLayout extends StatelessWidget {
         ),
       ],
     );
-  }
-
-  String _fallbackLabel(String segment, List<String> segments, int index) {
-    if (segment.length > 20 || int.tryParse(segment) != null) {
-      return '#$segment'; // ID
-    }
-    // Capitalize
-    return segment.isNotEmpty ? '${segment[0].toUpperCase()}${segment.substring(1)}' : segment;
   }
 }
