@@ -75,19 +75,20 @@ class ChildRoute extends ModularRoute {
       "${childRoutePath.isNotEmpty ? childRoutePath : ''}$argsPath",
     );
 
-    String name = _extractName(route.name);
+    // FIX CHIAVE: NON estrarre il nome come un path (es. /details -> details).
+    // Usa DIRETTAMENTE route.name (es. "Dettaglio Promo").
+    String name = route.name;//_extractName(route.name);
 
     return ChildRoute(fullPath, child: childBuilder, name: name, routeName: route.name, pageTransition: pageTransition, isVisible: isVisible, routes: routes);
   }
 
   static String _extractName(String path) {
+    if (!path.startsWith('/')) return path; // Se non inizia con /, è un nome umano -> ritorna così com'è.
     final regex = RegExp(r'^/([^/]+)/?');
     final match = regex.firstMatch(path);
-
     if (match != null && match.groupCount >= 1) {
       return match.group(1)!;
     }
-
     return path;
   }
 
