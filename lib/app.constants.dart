@@ -13,6 +13,8 @@ import 'modules/event_category/event_category.module.dart';
 import 'modules/events/event.module.dart';
 import 'modules/news/news.module.dart';
 import 'modules/profile/profile.module.dart';
+import 'modules/machines/machines.module.dart';
+import 'modules/production/production.module.dart';
 import 'modules/store/store.module.dart';
 import 'modules/users/constants/permission_slug.dart';
 import 'modules/welcome/welcome.module.dart';
@@ -39,6 +41,8 @@ class AppConstants {
       ModuleRoute(module: EventModule(), icon: FontAwesomeIcons.calendar, isVisible: authState.hasPermission(PermissionSlugs.visualizzaEventi)),
       ModuleRoute(module: EventCategoryModule(), icon: FontAwesomeIcons.calendarCheck, isVisible: true),
       ModuleRoute(module: StoreModule(), icon: FontAwesomeIcons.store, isVisible: true),
+      ModuleRoute(module: MachinesModule(), icon: FontAwesomeIcons.gears, isVisible: true),
+      ModuleRoute(module: ProductionModule(), icon: FontAwesomeIcons.chartLine, isVisible: true),
     ];
   }
 }
