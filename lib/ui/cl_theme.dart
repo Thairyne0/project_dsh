@@ -80,6 +80,19 @@ abstract class CLTheme {
   final Color background;
   final Color fillColor;
 
+  /// Gradient blu brillante → celeste per bottoni, header, accent
+  LinearGradient get primaryGradient => LinearGradient(
+    colors: [primary, primaryLight],
+    begin: Alignment.centerLeft,
+    end: Alignment.centerRight,
+  );
+
+  /// Versione più chiara/vivace del primary per il gradient
+  Color get primaryLight;
+
+  /// Versione con opacità ridotta per sfondi hover/selected
+  Color get primarySurface => primary.withValues(alpha: 0.08);
+
   /// Typography provider
   Typography get typography => ThemeTypography(this);
 
@@ -125,7 +138,7 @@ abstract class CLTheme {
 class LightModeTheme extends CLTheme {
   const LightModeTheme()
     : super(
-        primary: const Color(0xFFFC1484),           // Pink vibrante - colore principale
+        primary: const Color(0xFF2563EB),           // Blu brillante - colore principale
         secondary: const Color(0xFF1C2082),         // Blu navy professionale
         alternate: const Color(0xFFE5E7EB),         // Grigio chiaro per elementi alternativi
         primaryText: const Color(0xFF15161E),       // Quasi nero per testo principale
@@ -141,12 +154,15 @@ class LightModeTheme extends CLTheme {
         background: const Color(0xFFF9FAFB),        // Stesso del primaryBackground
         fillColor: const Color(0xFFF9FAFB),         // Grigio chiarissimo per riempimenti
       );
+
+  @override
+  Color get primaryLight => const Color(0xFF38BDF8); // Azzurro brillante per gradient
 }
 
 class DarkModeTheme extends CLTheme {
   const DarkModeTheme()
     : super(
-        primary: const Color(0xFFFF6BB3),           // Pink più chiaro per dark mode
+        primary: const Color(0xFF3B82F6),           // Blu brillante per dark mode
         secondary: const Color(0xFF5156B8),         // Blu più chiaro per migliore contrasto
         alternate: const Color(0xFF374151),         // Grigio scuro per elementi alternativi
         primaryText: const Color(0xFFF9FAFB),       // Bianco off-white per testo principale
@@ -162,6 +178,9 @@ class DarkModeTheme extends CLTheme {
         background: const Color(0xFF111827),        // Stesso del primaryBackground
         fillColor: const Color(0xFF1F2937),         // Grigio scuro per riempimenti
       );
+
+  @override
+  Color get primaryLight => const Color(0xFF7DD3FC); // Azzurro chiaro per gradient in dark mode
 }
 
 /// --- Typography ----------------------------------------------------------

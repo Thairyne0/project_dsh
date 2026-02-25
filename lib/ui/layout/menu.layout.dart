@@ -1,22 +1,22 @@
 import 'dart:ui';
 
-import 'package:project_dsh/ui/widgets/avatar.widget.dart';
-import 'package:project_dsh/ui/widgets/buttons/cl_button.widget.dart';
 import 'package:project_dsh/ui/widgets/customexpansiontile.widget.dart';
+import 'package:project_dsh/ui/widgets/logo.widget.dart';
 import 'package:project_dsh/utils/extension.util.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hugeicons/hugeicons.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_framework/responsive_framework.dart';
-import '../../utils/providers/authstate.util.provider.dart';
 import 'constants/sizes.constant.dart';
 import '../../utils/go_router_modular/routes/child_route.dart';
 import '../../utils/go_router_modular/routes/i_modular_route.dart';
 import '../../utils/go_router_modular/routes/module_route.dart';
 import '../../utils/go_router_modular/routes/shell_modular_route.dart';
 import 'package:project_dsh/utils/providers/navigation.util.provider.dart';
+import '../../utils/constants/strings.constant.dart';
 import '../cl_theme.dart';
+
+const double _kMenuHPad = 10.0;
 
 class MenuLayout extends StatefulWidget {
   final List<ModularRoute> routes;
@@ -32,23 +32,66 @@ class MenuLayout extends StatefulWidget {
 class _MenuLayoutState extends State<MenuLayout> {
   @override
   Widget build(BuildContext context) {
-    final authState = context.watch<AuthState>();
     final navigationState = context.watch<NavigationState>();
+    final theme = CLTheme.of(context);
+
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-      width: 280,
+      width: 260,
       decoration: BoxDecoration(
-        color: CLTheme.of(context).secondaryBackground,
-        border: Border(right: BorderSide(color: CLTheme.of(context).borderColor, width: 1)),
+        color: theme.secondaryBackground,
+        border: Border(right: BorderSide(color: theme.borderColor, width: 1)),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // ── Logo / Branding ──────────────────────────────────────────
+          Container(
+            height: Sizes.headerOffset / 2,
+            padding: const EdgeInsets.symmetric(horizontal: Sizes.padding),
+            decoration: BoxDecoration(
+              border: Border(bottom: BorderSide(color: theme.borderColor, width: 1)),
+            ),
+            child: widget.logoImagePath != null
+                ? Center(
+                    child: LogoWidget(
+                      logoImagePath: widget.logoImagePath,
+                      height: 32,
+                      dark: theme == CLTheme.dark,
+                    ),
+                  )
+                : Row(
+                    children: [
+                      Container(
+                        width: 32,
+                        height: 32,
+                        decoration: BoxDecoration(
+                          gradient: theme.primaryGradient,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: const Icon(Icons.dashboard_rounded, color: Colors.white, size: 18),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Text(
+                          Strings.appName,
+                          style: theme.bodyText.copyWith(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 15,
+                            letterSpacing: -0.3,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                        ),
+                      ),
+                    ],
+                  ),
+          ),
+
+          // ── Voci di menu ─────────────────────────────────────────────
           Expanded(
             child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(vertical: 8),
               child: Column(
-                mainAxisSize: MainAxisSize.max,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   for (var route in widget.routes)
@@ -59,239 +102,289 @@ class _MenuLayoutState extends State<MenuLayout> {
                         if (subRoute is ChildRoute && subRoute.isVisible)
                           _buildChildRoute(navigationState, subRoute, 0)
                         else if (subRoute is ModuleRoute && subRoute.isVisible)
-                          if (subRoute.module.routes.where((childRoute) => (childRoute is ChildRoute && childRoute.isVisible)).isNotEmpty)
+                          if (subRoute.module.routes.where((r) => (r is ChildRoute && r.isVisible)).isNotEmpty)
                             if (subRoute.module.routes
-                                    .where(
-                                      (childRoute) =>
-                                          ((childRoute is ChildRoute && childRoute.isVisible || childRoute is ModuleRoute && childRoute.isVisible)),
-                                    )
+                                    .where((r) => ((r is ChildRoute && r.isVisible || r is ModuleRoute && r.isVisible)))
                                     .length ==
                                 1)
                               _buildChildRoute(
                                 navigationState,
-                                (subRoute.module.routes.where((childRoute) => (childRoute is ChildRoute && childRoute.isVisible)).first as ChildRoute)
+                                (subRoute.module.routes.where((r) => (r is ChildRoute && r.isVisible)).first as ChildRoute)
                                   ..icon = subRoute.icon
                                   ..hugeIcon = subRoute.hugeIcon
                                   ..path = subRoute.module.moduleRoute.path,
                                 0,
                               )
                             else
-                              Padding(padding: const EdgeInsets.symmetric(horizontal: 0), child: _buildGroupRoute(navigationState, subRoute))
+                              _buildGroupRoute(navigationState, subRoute)
                           else
-                            Padding(padding: const EdgeInsets.symmetric(horizontal: 0), child: _buildGroupRoute(navigationState, subRoute)),
-                  SizedBox(height: Sizes.padding),
+                            _buildGroupRoute(navigationState, subRoute),
+                  const SizedBox(height: 8),
                 ],
               ),
             ),
           ),
 
-          SizedBox(height: Sizes.padding),
+          // ── Footer ────────────────────────────────────────────────────
+          Divider(height: 0, thickness: 1, color: theme.borderColor),
+          const SizedBox(height: Sizes.padding),
         ],
       ),
     );
   }
 
   Widget _buildChildRoute(NavigationState navigationState, ChildRoute route, double padding) {
-    return ListTile(
-      minLeadingWidth: 0,
-      contentPadding: EdgeInsets.only(left: 38),
-      // Container padding (8px) + spazio simmetrico (8px) + freccia (20px) + spacing (8px) = 36px per allineare l'icona
-      hoverColor: Colors.transparent,
-      minVerticalPadding: Sizes.padding / 2 + 4,
-      minTileHeight: 0,
-      leading:
-          route.hasIcon
-              ? route.buildIcon(
-                size: Sizes.medium,
-                color: _isSelected(navigationState, route.path) ? CLTheme.of(context).primary : CLTheme.of(context).primaryText,
-              )
-              : VerticalDivider(color: _getRouteColor(navigationState, route.path, isVerticalDivider: true), width: 2),
-      title: Text(
-        route.name,
-        style: CLTheme.of(context).bodyLabel.copyWith(
-          color: _isSelected(navigationState, route.path) ? CLTheme.of(context).primary : CLTheme.of(context).primaryText,
-          fontWeight: _isSelected(navigationState, route.path) ? FontWeight.normal : FontWeight.normal,
-        ),
-        overflow: TextOverflow.fade,
-        maxLines: 3,
-      ),
-      selected: _isSelected(navigationState, route.path),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Sizes.borderRadius)),
+    final selected = _isSelected(navigationState, route.path);
+    final theme = CLTheme.of(context);
+    return _MenuItemTile(
+      selected: selected,
+      theme: theme,
+      label: route.name,
+      icon: route.hasIcon ? route.buildIcon(size: 18, color: selected ? theme.primary : theme.secondaryText) : null,
       onTap: () {
-        if (!ResponsiveBreakpoints.of(context).isDesktop) {
-          Scaffold.of(context).closeDrawer();
-        }
+        if (!ResponsiveBreakpoints.of(context).isDesktop) Scaffold.of(context).closeDrawer();
         context.customGoNamed(route.name);
       },
     );
   }
 
   Widget _buildGroupRoute(NavigationState navigationState, ModuleRoute subRoute, {String basePath = ''}) {
-    final currentPath = "$basePath${subRoute.path}"; // Percorso cumulativo
-    final isSelected = _isSelected(navigationState, currentPath.replaceAll('//', '/'), isParentRoute: true);
-
-    // Usa un ValueNotifier per tracciare lo stato di espansione
+    final currentPath = "$basePath${subRoute.path}".replaceAll('//', '/');
+    final isSelected = _isSelected(navigationState, currentPath, isParentRoute: true);
     final isExpandedNotifier = ValueNotifier<bool>(isSelected);
+    final theme = CLTheme.of(context);
 
     return ValueListenableBuilder<bool>(
       valueListenable: isExpandedNotifier,
-      builder: (context, isExpanded, child) {
-        // Colore dinamico basato solo su selezione, non su espansione
-        final iconColor = isSelected ? CLTheme.of(context).primary : CLTheme.of(context).primaryText;
-
-        return CLExpansionTile(
-          title: subRoute.name,
-          isSelected: isSelected,
-          onExpansionChanged: (expanded) {
-            isExpandedNotifier.value = expanded;
-          },
-          leading: subRoute.buildIcon(size: Sizes.medium, color: iconColor) ?? Icon(Icons.folder, size: Sizes.medium, color: iconColor),
-          children: [
-            for (var childRoute in subRoute.module.routes)
-              if (childRoute is ChildRoute && childRoute.isVisible)
-                InkWell(
-                  hoverColor: Colors.transparent,
-                  splashColor: Colors.transparent,
-                  highlightColor: Colors.transparent,
-                  onTap: () {
-                    context.customGoNamed(childRoute.routeName ?? childRoute.name);
-                  },
-                  child: SizedBox(
-                    height: 50,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        // Spazio simmetrico (8) + Freccia (20) + spacing (8) + centro icona (10) = 46px per centrare il divider con l'icona del padre
-                        const SizedBox(width: 48),
-                        SizedBox(
-                          width: 2,
-                          height: 24,
-                          child: Center(
-                            child: Container(
-                              width: _isSelected(navigationState, "$currentPath${childRoute.path}".replaceAll('//', '/')) ? 2 : 1,
-                              height: 24,
-                              decoration: BoxDecoration(
-                                color: _getRouteColor(
-                                  navigationState,
-                                  "$currentPath${childRoute.path}".replaceAll('//', '/'),
-                                  isVerticalDivider: true,
-                                ),
-                                borderRadius: BorderRadius.circular(999),
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 21),
-
-                        Expanded(
-                          child: Text(
-                            childRoute.name,
-                            style: CLTheme.of(
-                              context,
-                            ).bodyText.copyWith(color: _getRouteColor(navigationState, "$currentPath${childRoute.path}".replaceAll('//', '/'))),
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                )
-              else if (childRoute is ModuleRoute && childRoute.isVisible)
-                if (childRoute.module.routes.where((childSubRoute) => (childSubRoute is ChildRoute && childSubRoute.isVisible)).length == 1)
-                  InkWell(
-                    hoverColor: Colors.transparent,
-                    splashColor: Colors.transparent,
-                    highlightColor: Colors.transparent,
-                    onTap: () {
-                      // Usa il path completo per la navigazione
-                      final fullRoutePath = "$currentPath${childRoute.path}".replaceAll('//', '/');
-                      context.go(fullRoutePath);
-                    },
-                    child: SizedBox(
-                      height: 50,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          // Spazio simmetrico (8) + Freccia (20) + spacing (8) + centro icona (10) = 46px per centrare il divider con l'icona del padre
-                          const SizedBox(width: 48),
-                          SizedBox(
-                            width: 2,
-                            height: 24,
-                            child: Center(
-                              child: Container(
-                                width: _isSelected(navigationState, "$currentPath${childRoute.path}".replaceAll('//', '/')) ? 2 : 1,
-                                height: 24,
-                                decoration: BoxDecoration(
-                                  color: _getRouteColor(
-                                    navigationState,
-                                    "$currentPath${childRoute.path}".replaceAll('//', '/'),
-                                    isVerticalDivider: true,
-                                  ),
-                                  borderRadius: BorderRadius.circular(999),
-                                ),
-                              ),
-                            ),
-                          ),
-                          // Centro icona (10) + spacing (8) = 18px, totale 46+18=64px dove inizia il testo del padre
-                          const SizedBox(width: 21),
-                          Expanded(
-                            child: Text(
-                              ((childRoute.module.routes.where((childSubRoute) => (childSubRoute is ChildRoute && childSubRoute.isVisible)).first
-                                        as ChildRoute)
-                                    ..path = childRoute.module.moduleRoute.path)
-                                  .name,
-                              style: CLTheme.of(
-                                context,
-                              ).bodyLabel.copyWith(color: _getRouteColor(navigationState, "$currentPath${childRoute.path}".replaceAll('//', '/'))),
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+      builder: (context, isExpanded, _) {
+        final iconColor = isSelected ? theme.primary : theme.secondaryText;
+        return Padding(
+          padding: EdgeInsets.symmetric(horizontal: _kMenuHPad, vertical: 1),
+          child: CLExpansionTile(
+            title: subRoute.name,
+            isSelected: isSelected,
+            onExpansionChanged: (exp) => isExpandedNotifier.value = exp,
+            leading: subRoute.buildIcon(size: 18, color: iconColor) ?? Icon(Icons.folder_rounded, size: 18, color: iconColor),
+            children: [
+              for (var childRoute in subRoute.module.routes)
+                if (childRoute is ChildRoute && childRoute.isVisible)
+                  _buildSubItem(
+                    navigationState,
+                    label: childRoute.name,
+                    fullPath: "$currentPath${childRoute.path}".replaceAll('//', '/'),
+                    onTap: () => context.customGoNamed(childRoute.routeName ?? childRoute.name),
                   )
-                else
-                  _buildGroupRoute(navigationState, childRoute, basePath: currentPath),
-          ],
+                else if (childRoute is ModuleRoute && childRoute.isVisible)
+                  if (childRoute.module.routes.where((r) => r is ChildRoute && r.isVisible).length == 1)
+                    _buildSubItem(
+                      navigationState,
+                      label: ((childRoute.module.routes.where((r) => r is ChildRoute && r.isVisible).first as ChildRoute)
+                            ..path = childRoute.module.moduleRoute.path)
+                          .name,
+                      fullPath: "$currentPath${childRoute.path}".replaceAll('//', '/'),
+                      onTap: () => context.go("$currentPath${childRoute.path}".replaceAll('//', '/')),
+                    )
+                  else
+                    _buildGroupRoute(navigationState, childRoute, basePath: currentPath),
+            ],
+          ),
         );
       },
     );
   }
 
+  Widget _buildSubItem(
+    NavigationState navigationState, {
+    required String label,
+    required String fullPath,
+    required VoidCallback onTap,
+  }) {
+    final active = _getRouteColor(navigationState, fullPath) == CLTheme.of(context).primary;
+    final theme = CLTheme.of(context);
+    return _SubItemTile(label: label, selected: active, theme: theme, onTap: onTap);
+  }
+
   Color _getRouteColor(NavigationState navigationState, String fullPath, {bool isVerticalDivider = false}) {
     Uri? currentUri = Router.of(context).routeInformationProvider?.value.uri;
-    String normalizedFullPath = fullPath;
-    if (normalizedFullPath.endsWith('/')) {
-      normalizedFullPath = normalizedFullPath.substring(0, normalizedFullPath.length - 1);
-    }
-    return currentUri.toString() == normalizedFullPath
+    String norm = fullPath.endsWith('/') ? fullPath.substring(0, fullPath.length - 1) : fullPath;
+    return currentUri.toString() == norm
         ? CLTheme.of(context).primary
         : isVerticalDivider
-        ? CLTheme.of(context).borderColor
-        : CLTheme.of(context).primaryText;
+            ? CLTheme.of(context).borderColor
+            : CLTheme.of(context).primaryText;
   }
 
   bool _isSelected(NavigationState navigationState, String fullPath, {bool isParentRoute = false}) {
     Uri? currentUri = Router.of(context).routeInformationProvider?.value.uri;
-    String normalizedFullPath = fullPath;
-    if (normalizedFullPath.endsWith('/')) {
-      normalizedFullPath = normalizedFullPath.substring(0, normalizedFullPath.length - 1);
-    }
-    String currentPath = currentUri.toString();
-
+    String norm = fullPath.endsWith('/') ? fullPath.substring(0, fullPath.length - 1) : fullPath;
+    String current = currentUri.toString();
     if (isParentRoute) {
-      // Per le route padre, verifica se siamo esattamente su quella route O su una sua sotto-route
-      // Importante: deve iniziare con il path E poi avere uno slash, altrimenti /training-methodologist
-      // matcherebbe anche /training-methodologist-juridicals
-      return currentPath == normalizedFullPath ||
-          (currentPath.startsWith(normalizedFullPath) &&
-              currentPath.length > normalizedFullPath.length &&
-              currentPath[normalizedFullPath.length] == '/');
-    } else {
-      // Per le route figlie, match esatto
-      return currentPath == normalizedFullPath;
+      return current == norm ||
+          (current.startsWith(norm) && current.length > norm.length && current[norm.length] == '/');
     }
+    return current == norm;
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Voce principale con hover animato
+// ─────────────────────────────────────────────────────────────────────────────
+class _MenuItemTile extends StatefulWidget {
+  final bool selected;
+  final CLTheme theme;
+  final VoidCallback onTap;
+  final Widget? icon;
+  final String label;
+
+  const _MenuItemTile({
+    required this.selected,
+    required this.theme,
+    required this.onTap,
+    required this.label,
+    this.icon,
+  });
+
+  @override
+  State<_MenuItemTile> createState() => _MenuItemTileState();
+}
+
+class _MenuItemTileState extends State<_MenuItemTile> {
+  bool _hovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = widget.theme;
+    final active = widget.selected;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: _kMenuHPad, vertical: 1),
+      child: MouseRegion(
+        cursor: SystemMouseCursors.click,
+        onEnter: (_) => setState(() => _hovered = true),
+        onExit: (_) => setState(() => _hovered = false),
+        child: GestureDetector(
+          onTap: widget.onTap,
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 150),
+            curve: Curves.easeOutCubic,
+            decoration: BoxDecoration(
+              color: active
+                  ? t.primary.withValues(alpha: 0.08)
+                  : _hovered
+                      ? t.alternate.withValues(alpha: 0.7)
+                      : Colors.transparent,
+              borderRadius: BorderRadius.circular(30),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
+              child: Row(
+                children: [
+                  SizedBox(width: 20, height: 20, child: widget.icon ?? const SizedBox.shrink()),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                      widget.label,
+                      style: t.bodyText.copyWith(
+                        fontSize: 13.5,
+                        color: active ? t.primary : t.primaryText,
+                        fontWeight: active ? FontWeight.w600 : FontWeight.w400,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                    ),
+                  ),
+                  if (active)
+                    Container(
+                      width: 6,
+                      height: 6,
+                      decoration: BoxDecoration(color: t.primary, shape: BoxShape.circle),
+                    ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Voce figlia con hover animato
+// ─────────────────────────────────────────────────────────────────────────────
+class _SubItemTile extends StatefulWidget {
+  final bool selected;
+  final CLTheme theme;
+  final VoidCallback onTap;
+  final String label;
+
+  const _SubItemTile({
+    required this.selected,
+    required this.theme,
+    required this.onTap,
+    required this.label,
+  });
+
+  @override
+  State<_SubItemTile> createState() => _SubItemTileState();
+}
+
+class _SubItemTileState extends State<_SubItemTile> {
+  bool _hovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = widget.theme;
+    final active = widget.selected;
+
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      onEnter: (_) => setState(() => _hovered = true),
+      onExit: (_) => setState(() => _hovered = false),
+      child: GestureDetector(
+        onTap: widget.onTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 150),
+          curve: Curves.easeOutCubic,
+          decoration: BoxDecoration(
+            color: active
+                ? t.primary.withValues(alpha: 0.08)
+                : _hovered
+                    ? t.alternate.withValues(alpha: 0.7)
+                    : Colors.transparent,
+            borderRadius: BorderRadius.circular(30),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
+            child: Row(
+              children: [
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 150),
+                  width: active ? 3 : 2,
+                  height: 14,
+                  decoration: BoxDecoration(
+                    color: active ? t.primary : t.borderColor,
+                    borderRadius: BorderRadius.circular(99),
+                  ),
+                ),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Text(
+                    widget.label,
+                    style: t.bodyText.copyWith(
+                      fontSize: 13,
+                      color: active ? t.primary : t.primaryText,
+                      fontWeight: active ? FontWeight.w600 : FontWeight.w400,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

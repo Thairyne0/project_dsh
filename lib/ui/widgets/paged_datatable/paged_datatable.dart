@@ -227,7 +227,7 @@ class PagedDataTable<TKey extends Comparable, TResultId extends Comparable, TRes
         var state = context.read<_PagedDataTableState<TKey, TResultId, TResult>>();
         Widget child = LayoutBuilder(
           builder: (context, constraints) {
-            var width = constraints.maxWidth - 42 - (rowsSelectable ? 48 : 0);
+            var width = constraints.maxWidth - 42 - (rowsSelectable ? 48 : 0) - Sizes.padding;
             state.availableWidth = width;
             return ResponsiveBreakpoints.of(context).isDesktop
                 ? Container(
@@ -281,7 +281,6 @@ class PagedDataTable<TKey extends Comparable, TResultId extends Comparable, TRes
                         this.expandedRowBuilder,
                         this.onRowExpanded,
                       ),
-                      Divider(height: 0, color: CLTheme.of(context).borderColor, thickness: 1),
                     ],
                   ),
                 )

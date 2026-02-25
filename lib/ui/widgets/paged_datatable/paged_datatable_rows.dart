@@ -74,8 +74,8 @@ class _PagedDataTableRows<TKey extends Comparable, TResultId extends Comparable,
     }
     return ListView.separated(
       physics: const NeverScrollableScrollPhysics(),
-      padding: EdgeInsets.zero,
-      separatorBuilder: (_, __) => theme.dividerColor == null ? Divider(height: 0, color: CLTheme.of(context).borderColor, thickness: 1) : SizedBox.shrink(),
+      padding: const EdgeInsets.symmetric(vertical: Sizes.padding / 2),
+      separatorBuilder: (_, __) => const SizedBox.shrink(),
       itemCount: state._rowsState.length,
       shrinkWrap: true,
       itemBuilder:
@@ -150,6 +150,7 @@ class _HoverableRowState<TKey extends Comparable, TResultId extends Comparable, 
       mainAxisSize: MainAxisSize.min,
       children: [
         MouseRegion(
+          cursor: widget.onItemTap != null ? SystemMouseCursors.click : MouseCursor.defer,
           onEnter: (_) => setState(() => _isHovered = true),
           onExit:
               (_) => setState(() {
@@ -182,13 +183,22 @@ class _HoverableRowState<TKey extends Comparable, TResultId extends Comparable, 
                 widget.onItemTap!(model.item);
               }
             },
-            child: Container(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 2),
+              child: AnimatedContainer(
+              duration: const Duration(milliseconds: 150),
+              curve: Curves.easeOutCubic,
               clipBehavior: Clip.antiAlias,
-              constraints: BoxConstraints(minHeight: 56),
-              // Altezza minima fissa
+              constraints: const BoxConstraints(minHeight: 52),
               width: double.infinity,
+              margin: const EdgeInsets.symmetric(horizontal: Sizes.padding / 2),
               padding: EdgeInsets.zero,
-              decoration: BoxDecoration(color: model._isSelected || _isHovered || _isExpanded ? CLTheme.of(context).alternate.withValues(alpha: 0.5) : null),
+              decoration: BoxDecoration(
+                color: model._isSelected || _isHovered || _isExpanded
+                    ? CLTheme.of(context).alternate.withValues(alpha: 0.5)
+                    : Colors.transparent,
+                borderRadius: BorderRadius.circular(30),
+              ),
               child: IntrinsicHeight(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -341,6 +351,7 @@ class _HoverableRowState<TKey extends Comparable, TResultId extends Comparable, 
                         ),
                   ],
                 ),
+              ),
               ),
             ),
           ),

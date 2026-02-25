@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import '../../ui/cl_theme.dart';
-import '../shared_manager.util.dart';
 
 class AppState extends ChangeNotifier {
   late BehaviorSubject<bool> refreshList = BehaviorSubject<bool>.seeded(false);
@@ -54,7 +53,7 @@ class AppState extends ChangeNotifier {
     } else {
       _themeMode = ThemeMode.dark;
     }
-    SharedManager.remove(kThemeModeKey);
+    CLTheme.saveThemeMode(_themeMode);
     notifyListeners();
   }
 

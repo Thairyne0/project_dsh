@@ -35,10 +35,16 @@ class _PagedDataTableFilterTab<TKey extends Comparable, TResultId extends Compar
             color: CLTheme.of(context).primaryBackground,
             borderRadius:
                 isFilterBarRounded
-                    ? BorderRadius.only(topLeft: Radius.circular(Sizes.borderRadius), topRight: Radius.circular(Sizes.borderRadius))
+                    ? const BorderRadius.only(
+                        topLeft: Radius.circular(Sizes.borderRadius),
+                        topRight: Radius.circular(Sizes.borderRadius),
+                      )
                     : null,
           ),
-          padding: EdgeInsets.all(ResponsiveBreakpoints.of(context).isDesktop ? Sizes.padding : 0),
+          padding: EdgeInsets.symmetric(
+            horizontal: Sizes.padding,
+            vertical: ResponsiveBreakpoints.of(context).isDesktop ? 10 : 0,
+          ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

@@ -7,6 +7,7 @@ import 'package:project_dsh/utils/extension.util.dart';
 import '../../modules/profile/constants/users_routes.constants.dart';
 import 'package:project_dsh/utils/providers/navigation.util.provider.dart';
 import '../../utils/providers/authstate.util.provider.dart';
+import '../../utils/providers/appstate.util.provider.dart';
 import '../../utils/providers/theme.util.provider.dart';
 import '../../utils/providers/notifications_panel.util.provider.dart';
 import '../widgets/avatar.widget.dart';
@@ -66,6 +67,7 @@ class _HeaderLayoutState extends State<HeaderLayout> {
               // Toggle Dark Mode con HugeIcon
               Consumer<ThemeProvider>(
                 builder: (context, themeProvider, child) {
+                  final appState = Provider.of<AppState>(context, listen: false);
                   return IconButton(
                     icon: HugeIcon(
                       icon: themeProvider.isDarkMode ? HugeIcons.strokeRoundedSun03 : HugeIcons.strokeRoundedMoon02,
@@ -75,6 +77,7 @@ class _HeaderLayoutState extends State<HeaderLayout> {
                     tooltip: themeProvider.isDarkMode ? 'Modalità chiara' : 'Modalità scura',
                     onPressed: () async {
                       await themeProvider.toggleTheme();
+                      appState.changeTheme();
                     },
                   );
                 },

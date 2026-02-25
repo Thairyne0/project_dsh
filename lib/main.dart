@@ -47,7 +47,7 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final appState = Provider.of<AppState>(context);
+    final themeProvider = Provider.of<ThemeProvider>(context);
     return MaterialApp.router(
       routerConfig: GoRouterModular.routerConfig,
       localizationsDelegates: [
@@ -80,7 +80,7 @@ class MainApp extends StatelessWidget {
       darkTheme: ThemeData(
         brightness: Brightness.dark,
       ),
-      themeMode: appState.theme,
+      themeMode: themeProvider.themeMode,
     );
   }
 }

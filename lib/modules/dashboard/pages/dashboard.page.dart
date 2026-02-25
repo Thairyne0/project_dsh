@@ -10,19 +10,17 @@ import 'package:project_dsh/ui/widgets/stats.widget.dart';
 import 'package:project_dsh/utils/extension.util.dart';
 import '../../../ui/cl_theme.dart';
 import '../../../ui/widgets/buttons/cl_action_text.widget.dart';
-import '../../../ui/widgets/buttons/cl_button.widget.dart';
 import '../../../ui/widgets/charts/cl_spline_area_chart.widget.dart';
 import '../../../ui/widgets/cl_container.widget.dart';
 import '../../../ui/widgets/cl_media_viewer.widget.dart';
-import '../../../ui/widgets/cl_pill.widget.dart';
 import '../../../ui/widgets/cl_responsive_grid/flutter_responsive_flex_grid.dart';
 import '../../../ui/widgets/loading.widget.dart';
 import '../../../ui/widgets/paged_datatable/paged_datatable.dart';
 import '../../../utils/base.viewmodel.dart';
 import '../../../utils/providers/appstate.util.provider.dart';
-import '../../../utils/providers/authstate.util.provider.dart';
 import '../../events/constants/event_routes.constant.dart';
 import '../../events/models/event.model.dart';
+import '../../store/modules/promo/constants/promo_routes.constant.dart';
 import '../viewmodels/dashboard.viewmodel.dart';
 
 class DashboardPage extends StatefulWidget {
@@ -35,7 +33,6 @@ class DashboardPage extends StatefulWidget {
 class _DashboardPageState extends State<DashboardPage>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
-  late Animation<double> _fadeAnimation;
 
   @override
   void initState() {
@@ -43,10 +40,6 @@ class _DashboardPageState extends State<DashboardPage>
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 800),
-    );
-    _fadeAnimation = CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeInOut,
     );
     _animationController.forward();
   }
@@ -60,7 +53,6 @@ class _DashboardPageState extends State<DashboardPage>
   @override
   Widget build(BuildContext context) {
     final appState = Provider.of<AppState>(context);
-    final authState = Provider.of<AuthState>(context);
     return ViewModelBuilder<DashboardViewModel>.reactive(
       viewModelBuilder: () => DashboardViewModel(context, VMType.list, null),
       onViewModelReady: (vm) async => await vm.initialize(),
@@ -98,7 +90,7 @@ class _DashboardPageState extends State<DashboardPage>
                                     style: CLTheme.of(context).bodyText.copyWith(
                                       color: CLTheme.of(
                                         context,
-                                      ).bodyText.color?.withOpacity(0.6),
+                                      ).bodyText.color?.withValues(alpha: 0.6),
                                     ),
                                   ),
                                 ],
@@ -184,7 +176,11 @@ class _DashboardPageState extends State<DashboardPage>
                                       body: vm.dashboard.totalPromos.toString(),
                                       icon: Icons.discount,
                                       color: CLTheme.of(context).danger,
-                                      onTap: () {},
+                                      onTap: () {
+                                        context.customGoNamed(
+                                          PromoRoutes.promo.name,
+                                        );
+                                      },
                                     ),
                                   ),
                                 ),
@@ -228,11 +224,11 @@ class _DashboardPageState extends State<DashboardPage>
                                   colors: [
                                     CLTheme.of(
                                       context,
-                                    ).borderColor.withOpacity(0.0),
+                                    ).borderColor.withValues(alpha: 0.0),
                                     CLTheme.of(context).borderColor,
                                     CLTheme.of(
                                       context,
-                                    ).borderColor.withOpacity(0.0),
+                                    ).borderColor.withValues(alpha: 0.0),
                                   ],
                                 ),
                               ),
@@ -259,7 +255,8 @@ class _DashboardPageState extends State<DashboardPage>
                                         ),
                                       );
                                     },
-                                    child: CLContainer(
+                                    child: _HoverSection(
+                                      child: CLContainer(
                                       actionWidget: Container(
                                         height: 35,
                                         width: 115,
@@ -344,6 +341,7 @@ class _DashboardPageState extends State<DashboardPage>
                                         userChartData: vm.userGraphData,
                                       ),
                                     ),
+                                    ),
                                   ),
                                 ),
                                 ResponsiveGridItem(
@@ -362,7 +360,8 @@ class _DashboardPageState extends State<DashboardPage>
                                         ),
                                       );
                                     },
-                                    child: CLContainer(
+                                    child: _HoverSection(
+                                      child: CLContainer(
                                       contentPadding: EdgeInsets.zero,
                                       actionWidget: CLActionText(
                                         color: CLTheme.of(context).primary,
@@ -375,6 +374,7 @@ class _DashboardPageState extends State<DashboardPage>
                                       child: CLPieChart(
                                         data: vm.dashboard.cityGraphData,
                                       ),
+                                    ),
                                     ),
                                   ),
                                 ),
@@ -392,11 +392,11 @@ class _DashboardPageState extends State<DashboardPage>
                                   colors: [
                                     CLTheme.of(
                                       context,
-                                    ).borderColor.withOpacity(0.0),
+                                    ).borderColor.withValues(alpha: 0.0),
                                     CLTheme.of(context).borderColor,
                                     CLTheme.of(
                                       context,
-                                    ).borderColor.withOpacity(0.0),
+                                    ).borderColor.withValues(alpha: 0.0),
                                   ],
                                 ),
                               ),
@@ -423,7 +423,8 @@ class _DashboardPageState extends State<DashboardPage>
                                         ),
                                       );
                                     },
-                                    child: CLContainer(
+                                    child: _HoverSection(
+                                      child: CLContainer(
                                       height:
                                       ResponsiveBreakpoints.of(
                                         context,
@@ -580,6 +581,7 @@ class _DashboardPageState extends State<DashboardPage>
                                         ],
                                       ),
                                     ),
+                                    ),
                                   ),
                                 ),
                                 ResponsiveGridItem(
@@ -598,7 +600,8 @@ class _DashboardPageState extends State<DashboardPage>
                                         ),
                                       );
                                     },
-                                    child: CLContainer(
+                                    child: _HoverSection(
+                                      child: CLContainer(
                                       actionWidget: CLActionText(
                                         color: CLTheme.of(context).primary,
                                         text: 'Mostra tutti',
@@ -614,6 +617,7 @@ class _DashboardPageState extends State<DashboardPage>
                                       title: 'Monitoraggio dispositivi',
                                       child: Container(),
                                     ),
+                                    ),
                                   ),
                                 ),
                               ],
@@ -628,6 +632,47 @@ class _DashboardPageState extends State<DashboardPage>
 
               );
       },
+    );
+  }
+}
+
+/// Widget wrapper che aggiunge un effetto hover leggero a qualsiasi sezione cliccabile.
+class _HoverSection extends StatefulWidget {
+  final Widget child;
+
+  const _HoverSection({required this.child});
+
+  @override
+  State<_HoverSection> createState() => _HoverSectionState();
+}
+
+class _HoverSectionState extends State<_HoverSection> {
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: AnimatedScale(
+        scale: _isHovered ? 1.008 : 1.0,
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeOutCubic,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.easeOutCubic,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(Sizes.borderRadius),
+            border: Border.all(
+              color: _isHovered
+                  ? CLTheme.of(context).primary.withValues(alpha: 0.55)
+                  : Colors.transparent,
+              width: 1.5,
+            ),
+          ),
+          child: widget.child,
+        ),
+      ),
     );
   }
 }

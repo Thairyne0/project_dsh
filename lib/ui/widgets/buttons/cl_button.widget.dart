@@ -17,6 +17,7 @@ class CLButton extends StatefulWidget {
   final TextStyle? textStyle;
   final Color? iconColor;
   final Widget? hugeIcon;
+  final bool useGradient;
 
   const CLButton({
     super.key,
@@ -33,6 +34,7 @@ class CLButton extends StatefulWidget {
     this.textStyle,
     this.iconColor,
     this.hugeIcon,
+    this.useGradient = false,
   });
 
   factory CLButton.primary({
@@ -63,6 +65,7 @@ class CLButton extends StatefulWidget {
       textStyle: textStyle,
       iconColor: iconColor,
       hugeIcon: hugeIcon,
+      useGradient: true,
     );
   }
 
@@ -234,7 +237,21 @@ class _CLButtonState extends State<CLButton> {
 
   @override
   Widget build(BuildContext context) {
-    return Theme(
+    final effectiveBg = widget.backgroundColor ?? CLTheme.of(context).primary;
+    final gradient = widget.useGradient ? CLTheme.of(context).primaryGradient : null;
+
+    final buttonStyle = ButtonStyle(
+      padding: WidgetStateProperty.all(const EdgeInsets.symmetric(horizontal: Sizes.padding, vertical: Sizes.padding)),
+      backgroundColor: WidgetStateProperty.all(widget.useGradient ? Colors.transparent : effectiveBg),
+      shape: WidgetStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(Sizes.borderRadius))),
+      elevation: WidgetStateProperty.all(0),
+      shadowColor: WidgetStateProperty.all(Colors.transparent),
+      overlayColor: WidgetStateProperty.all(Colors.black.withValues(alpha: 0.1)),
+      splashFactory: NoSplash.splashFactory,
+      foregroundColor: WidgetStateProperty.all(Colors.white),
+    );
+
+    Widget button = Theme(
       data: Theme.of(context).copyWith(splashColor: Colors.transparent, highlightColor: Colors.transparent),
       child: SizedBox(
         width: widget.width,
@@ -259,13 +276,9 @@ class _CLButtonState extends State<CLButton> {
                               confirmationMessage: widget.confirmationMessage,
                               onTap: () async {
                                 if (isAsync(widget.onTap)) {
-                                  setState(() {
-                                    loading = true;
-                                  });
+                                  setState(() { loading = true; });
                                   await widget.onTap();
-                                  setState(() {
-                                    loading = false;
-                                  });
+                                  setState(() { loading = false; });
                                 } else {
                                   widget.onTap();
                                 }
@@ -277,40 +290,23 @@ class _CLButtonState extends State<CLButton> {
                       );
                     } else {
                       if (isAsync(widget.onTap)) {
-                        if (mounted) {
-                          setState(() {
-                            loading = true;
-                          });
-                        }
+                        if (mounted) setState(() { loading = true; });
                         await widget.onTap();
-                        if (mounted) {
-                          setState(() {
-                            loading = false;
-                          });
-                        }
+                        if (mounted) setState(() { loading = false; });
                       } else {
                         widget.onTap();
                       }
                     }
                   },
-                  style: ButtonStyle(
-                    padding: WidgetStateProperty.all(const EdgeInsets.symmetric(horizontal: Sizes.padding, vertical: Sizes.padding)),
-                    backgroundColor: WidgetStateProperty.all(widget.backgroundColor ?? CLTheme.of(context).primary),
-                    shape: WidgetStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(Sizes.borderRadius))),
-                    elevation: WidgetStateProperty.all(0),
-                    shadowColor: WidgetStateProperty.all(Colors.transparent),
-                    overlayColor: WidgetStateProperty.all(Colors.black.withValues(alpha: 0.1)),
-                    splashFactory: NoSplash.splashFactory,
-                    foregroundColor: WidgetStateProperty.all(Colors.white),
-                  ),
+                  style: buttonStyle,
                   label: Text(widget.text, style: widget.textStyle ?? CLTheme.of(context).bodyText.copyWith(color: Colors.white)),
                 )
                 : IconButton(
-                  color: widget.backgroundColor ?? CLTheme.of(context).primary,
+                  color: effectiveBg,
                   style: ButtonStyle(
                     elevation: WidgetStateProperty.all(0),
                     shadowColor: WidgetStateProperty.all(Colors.transparent),
-                    backgroundColor: WidgetStateProperty.all(widget.backgroundColor ?? CLTheme.of(context).primary),
+                    backgroundColor: WidgetStateProperty.all(widget.useGradient ? Colors.transparent : effectiveBg),
                     overlayColor: WidgetStateProperty.all(Colors.black.withValues(alpha: 0.1)),
                     shape: WidgetStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(Sizes.borderRadius))),
                     splashFactory: NoSplash.splashFactory,
@@ -318,13 +314,9 @@ class _CLButtonState extends State<CLButton> {
                   ),
                   onPressed: () async {
                     if (isAsync(widget.onTap)) {
-                      setState(() {
-                        loading = true;
-                      });
+                      setState(() { loading = true; });
                       await widget.onTap();
-                      setState(() {
-                        loading = false;
-                      });
+                      setState(() { loading = false; });
                     } else {
                       widget.onTap();
                     }
@@ -339,6 +331,19 @@ class _CLButtonState extends State<CLButton> {
                 ),
       ),
     );
+
+    if (gradient != null) {
+      return Container(
+        width: widget.width,
+        decoration: BoxDecoration(
+          gradient: gradient,
+          borderRadius: BorderRadius.circular(Sizes.borderRadius),
+        ),
+        child: button,
+      );
+    }
+
+    return button;
   }
 
   bool isAsync(Function function) {

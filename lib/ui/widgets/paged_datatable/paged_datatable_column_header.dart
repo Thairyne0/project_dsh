@@ -13,13 +13,9 @@ class _PagedDataTableHeaderRow<TKey extends Comparable, TResultId extends Compar
 
     Widget child = Container(
       decoration: BoxDecoration(
-        color: CLTheme.of(context).secondaryBackground,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(Sizes.borderRadius),
-          topRight: Radius.circular(Sizes.borderRadius)
-        ),
+        color: CLTheme.of(context).primaryBackground,
       ),
-      height: theme.configuration.columnsHeaderHeight,
+      height: 44,
       child: Stack(
         fit: StackFit.expand,
         children: [
@@ -29,7 +25,9 @@ class _PagedDataTableHeaderRow<TKey extends Comparable, TResultId extends Compar
               builder: (context, isSorted, child) {
                 var state = context.read<_PagedDataTableState<TKey, TResultId, TResult>>();
                 return Padding(
-                  padding: EdgeInsets.only(left: rowsSelectable ? Sizes.padding : 0),
+                  padding: EdgeInsets.only(
+                    left: (rowsSelectable ? Sizes.padding : 0) + Sizes.padding / 2,
+                  ),
                   child: Row(children: [
                     if (rowsSelectable)
                       Selector<_PagedDataTableState<TKey, TResultId, TResult>, int>(
@@ -99,13 +97,9 @@ class _PagedDataTableHeaderRow<TKey extends Comparable, TResultId extends Compar
                             children: [
                               Flexible(child: column.title),
                               if (state.hasSortModel && state._sortModel!.columnId == column.id) ...[
-                                const SizedBox(width: 8),
+                                const SizedBox(width: 4),
                                 state._sortModel!._descending
-                                    ? Icon(
-                                        Icons.arrow_drop_up_outlined,
-                                        size: Sizes.large,
-                                        color: CLTheme.of(context).primary,
-                                      )
+                                    ? Icon(Icons.arrow_drop_up_outlined, size: Sizes.large, color: CLTheme.of(context).primary)
                                     : Icon(Icons.arrow_drop_down_outlined, size: Sizes.large, color: CLTheme.of(context).primary),
                               ],
                             ],
@@ -114,9 +108,18 @@ class _PagedDataTableHeaderRow<TKey extends Comparable, TResultId extends Compar
                       );
 
                       child = Container(
-                          padding: EdgeInsets.symmetric(horizontal: Sizes.padding),
-                          width: column.sizeFactor == null ? state._nullSizeFactorColumnsWidth : width * column.sizeFactor!,
-                          child: child);
+                        padding: const EdgeInsets.symmetric(horizontal: Sizes.padding),
+                        width: column.sizeFactor == null ? state._nullSizeFactorColumnsWidth : width * column.sizeFactor!,
+                        child: DefaultTextStyle(
+                          style: (theme.headerTextStyle ?? CLTheme.of(context).bodyLabel).copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: CLTheme.of(context).secondaryText,
+                            fontSize: 11,
+                            letterSpacing: 0.6,
+                          ),
+                          child: child,
+                        ),
+                      );
                       return child;
                     }),
                   ]),
@@ -125,32 +128,33 @@ class _PagedDataTableHeaderRow<TKey extends Comparable, TResultId extends Compar
 
           /* LOADING INDICATOR */
           Positioned(
-              bottom: 0,
-              width: MediaQuery.of(context).size.width,
-              child: Selector<_PagedDataTableState<TKey, TResultId, TResult>, _TableState>(
-                  selector: (context, state) => state._state,
-                  builder: (context, tableState, child) {
-                    return AnimatedOpacity(
-                        opacity: tableState == _TableState.loading ? 1 : 0,
-                        duration: const Duration(milliseconds: 300),
-                        child: LinearProgressIndicator(color: CLTheme.of(context).primary));
-                  })),
+            bottom: 0,
+            width: MediaQuery.of(context).size.width,
+            child: Selector<_PagedDataTableState<TKey, TResultId, TResult>, _TableState>(
+              selector: (context, state) => state._state,
+              builder: (context, tableState, child) {
+                return AnimatedOpacity(
+                  opacity: tableState == _TableState.loading ? 1 : 0,
+                  duration: const Duration(milliseconds: 300),
+                  child: LinearProgressIndicator(
+                    color: CLTheme.of(context).primary,
+                    backgroundColor: CLTheme.of(context).borderColor,
+                    minHeight: 2,
+                  ),
+                );
+              },
+            ),
+          ),
         ],
       ),
     );
 
     if (theme.headerBackgroundColor != null) {
-      child = DecoratedBox(
-        decoration: BoxDecoration(color: theme.headerBackgroundColor),
-        child: child,
-      );
+      child = DecoratedBox(decoration: BoxDecoration(color: theme.headerBackgroundColor), child: child);
     }
 
     if (theme.headerTextStyle != null) {
-      child = DefaultTextStyle(
-        style: theme.headerTextStyle!,
-        child: child,
-      );
+      child = DefaultTextStyle(style: theme.headerTextStyle!, child: child);
     }
 
     return child;
