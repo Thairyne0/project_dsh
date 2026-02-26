@@ -1269,74 +1269,134 @@ class _OeeSection extends StatelessWidget {
     return _Section(
       title: 'OEE — Overall Equipment Effectiveness',
       description:
-          'Disponibilità × Performance × Qualità per macchinario. ≥85% eccellente · 65–85% accettabile · <65% da migliorare.',
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: data.map((m) {
-          final oeeColor = m.oee >= 85
-              ? t.success
-              : (m.oee >= 65 ? t.warning : t.danger);
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 14),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(children: [
-                  Expanded(
-                    child: Text(m.machineName,
-                        style: t.smallText
-                            .override(fontWeight: FontWeight.w600),
-                        overflow: TextOverflow.ellipsis),
-                  ),
-                  const SizedBox(width: 8),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 8, vertical: 3),
-                    decoration: BoxDecoration(
-                      color: oeeColor.withValues(alpha: 0.10),
-                      borderRadius: BorderRadius.circular(20),
+          'Disponibilità × Performance × Qualità per macchinario. ≥85 % eccellente · 65–85 % accettabile · <65 % da migliorare.',
+      child: LayoutBuilder(builder: (context, c) {
+        final cols = c.maxWidth >= 900
+            ? 3
+            : c.maxWidth >= 560
+                ? 2
+                : 1;
+        final spacing = Sizes.small;
+        final cardWidth = (c.maxWidth - spacing * (cols - 1)) / cols;
+
+        return Wrap(
+          spacing: spacing,
+          runSpacing: spacing,
+          children: data.map((m) {
+            final oeeColor = m.oee >= 85
+                ? t.success
+                : (m.oee >= 65 ? t.warning : t.danger);
+            return SizedBox(
+              width: cardWidth,
+              child: Container(
+                padding: const EdgeInsets.all(14),
+                decoration: BoxDecoration(
+                  color: t.primaryBackground,
+                  borderRadius: BorderRadius.circular(Sizes.borderRadius),
+                  border: Border.all(color: t.borderColor, width: 1),
+                ),
+                child: Row(
+                  children: [
+                    // ── Indicatore circolare OEE ──
+                    SizedBox(
+                      width: 56,
+                      height: 56,
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          SizedBox(
+                            width: 56,
+                            height: 56,
+                            child: CircularProgressIndicator(
+                              value: (m.oee / 100).clamp(0.0, 1.0),
+                              strokeWidth: 5,
+                              strokeCap: StrokeCap.round,
+                              backgroundColor: t.borderColor,
+                              valueColor: AlwaysStoppedAnimation(oeeColor),
+                            ),
+                          ),
+                          Text(
+                            '${m.oee.toStringAsFixed(0)}%',
+                            style: t.smallText.override(
+                                fontWeight: FontWeight.w700,
+                                color: oeeColor),
+                          ),
+                        ],
+                      ),
                     ),
-                    child: Text(
-                      '${m.oee.toStringAsFixed(1)}%  ${m.oeeLabel}',
-                      style: t.smallText.override(
-                          color: oeeColor, fontWeight: FontWeight.w600),
+                    const SizedBox(width: 14),
+                    // ── Dettagli ──
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  m.machineName,
+                                  style: t.smallText
+                                      .override(fontWeight: FontWeight.w600),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                              const SizedBox(width: 6),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 7, vertical: 2),
+                                decoration: BoxDecoration(
+                                  color: oeeColor.withValues(alpha: 0.10),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Text(
+                                  m.oeeLabel,
+                                  style: t.smallText.override(
+                                      color: oeeColor,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 10),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 10),
+                          _OeeMiniBar(
+                              label: 'Disp.',
+                              value: m.availability,
+                              color: const Color(0xFFF59E0B),
+                              theme: t),
+                          const SizedBox(height: 5),
+                          _OeeMiniBar(
+                              label: 'Perf.',
+                              value: m.performance,
+                              color: const Color(0xFF6366F1),
+                              theme: t),
+                          const SizedBox(height: 5),
+                          _OeeMiniBar(
+                              label: 'Qual.',
+                              value: m.quality,
+                              color: const Color(0xFF14B8A6),
+                              theme: t),
+                        ],
+                      ),
                     ),
-                  ),
-                ]),
-                const SizedBox(height: 6),
-                _OeeBar(
-                    label: 'Disponibilità',
-                    value: m.availability,
-                    color: t.info,
-                    theme: t),
-                const SizedBox(height: 4),
-                _OeeBar(
-                    label: 'Performance',
-                    value: m.performance,
-                    color: t.primary,
-                    theme: t),
-                const SizedBox(height: 4),
-                _OeeBar(
-                    label: 'Qualità',
-                    value: m.quality,
-                    color: t.success,
-                    theme: t),
-              ],
-            ),
-          );
-        }).toList(),
-      ),
+                  ],
+                ),
+              ),
+            );
+          }).toList(),
+        );
+      }),
     );
   }
 }
 
-class _OeeBar extends StatelessWidget {
+class _OeeMiniBar extends StatelessWidget {
   final String label;
   final double value;
   final Color color;
   final CLTheme theme;
-  const _OeeBar(
+  const _OeeMiniBar(
       {required this.label,
       required this.value,
       required this.color,
@@ -1347,26 +1407,26 @@ class _OeeBar extends StatelessWidget {
     final t = theme;
     return Row(children: [
       SizedBox(
-        width: 90,
+        width: 36,
         child: Text(label,
-            style: t.smallText.override(color: t.secondaryText)),
+            style: t.smallText.override(color: t.secondaryText, fontSize: 10)),
       ),
       Expanded(
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(4),
+          borderRadius: BorderRadius.circular(3),
           child: LinearProgressIndicator(
             value: (value / 100).clamp(0.0, 1.0),
-            minHeight: 7,
+            minHeight: 5,
             backgroundColor: t.borderColor,
             valueColor: AlwaysStoppedAnimation(color),
           ),
         ),
       ),
-      const SizedBox(width: 8),
+      const SizedBox(width: 6),
       SizedBox(
-        width: 40,
+        width: 30,
         child: Text('${value.toStringAsFixed(0)}%',
-            style: t.smallText.override(fontWeight: FontWeight.w600),
+            style: t.smallText.override(fontWeight: FontWeight.w600, fontSize: 10),
             textAlign: TextAlign.end),
       ),
     ]);
