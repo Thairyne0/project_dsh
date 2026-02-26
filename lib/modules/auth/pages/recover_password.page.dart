@@ -10,7 +10,6 @@ import '../../../ui/layout/constants/sizes.constant.dart';
 import '../../../ui/widgets/buttons/cl_button.widget.dart';
 import '../../../ui/widgets/cl_container.widget.dart';
 import '../../../ui/widgets/cl_text_field.widget.dart';
-import '../../../ui/widgets/logo.widget.dart';
 import '../../../ui/widgets/textfield_validator.dart';
 import '../../../utils/base.viewmodel.dart';
 import '../constants/auth_routes.constants.dart';
@@ -52,9 +51,13 @@ class _RecoverPasswordPageState extends State<RecoverPasswordPage> {
                               height: 30,
                             )),
                         SizedBox(height: Sizes.padding),
-                        LogoWidget(
-                          dark: true,
-                          height: 120,
+                        Container(
+                          padding: const EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                            color: CLTheme.of(context).primary.withValues(alpha: 0.1),
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(Icons.dashboard_rounded, color: CLTheme.of(context).primary, size: 48),
                         ),
                         CLContainer(
                           contentMargin: EdgeInsets.all(Sizes.padding),

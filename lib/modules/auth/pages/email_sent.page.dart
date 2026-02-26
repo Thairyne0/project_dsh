@@ -5,7 +5,6 @@ import 'package:project_dsh/utils/extension.util.dart';
 import '../../../ui/cl_theme.dart';
 import '../../../ui/layout/constants/sizes.constant.dart';
 import '../../../ui/widgets/buttons/cl_button.widget.dart';
-import '../../../ui/widgets/logo.widget.dart';
 import '../../welcome/constants/welcome_routes.constants.dart';
 
 class EmailSent extends StatefulWidget {
@@ -44,7 +43,14 @@ class _EmailSentState extends State<EmailSent> {
                       },
                       context: context),
                   SizedBox(height: Sizes.padding * 2),
-                  LogoWidget(dark: true, height: 80),
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: CLTheme.of(context).primary.withValues(alpha: 0.15),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(Icons.dashboard_rounded, color: CLTheme.of(context).primary, size: 40),
+                  ),
                 ],
               ),
             ),

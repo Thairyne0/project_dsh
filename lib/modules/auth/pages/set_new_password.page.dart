@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
+import '../../../ui/cl_theme.dart';
 import '../../../ui/layout/constants/sizes.constant.dart';
 import '../../../ui/widgets/alertmanager/alert_manager.dart';
 import '../../../ui/widgets/buttons/cl_button.widget.dart';
 import '../../../ui/widgets/cl_text_field.widget.dart';
 import '../../../ui/widgets/loading.widget.dart';
-import '../../../ui/widgets/logo.widget.dart';
+
 import '../../../ui/widgets/textfield_validator.dart';
 import '../../../utils/base.viewmodel.dart';
 import '../viewmodels/password.viewmodel.dart';
@@ -45,9 +46,13 @@ class _SetNewPasswordPageState extends State<SetNewPasswordPage> {
                               children: [
                                 GestureDetector(
                                     onTap: () => Navigator.pop(context),
-                                    child: LogoWidget(
-                                      dark: true,
-                                      height: 120,
+                                    child: Container(
+                                      padding: const EdgeInsets.all(20),
+                                      decoration: BoxDecoration(
+                                        color: CLTheme.of(context).primary.withValues(alpha: 0.1),
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: Icon(Icons.dashboard_rounded, color: CLTheme.of(context).primary, size: 48),
                                     )),
                                 SizedBox(height: Sizes.padding),
                                 CLTextField.password(controller: vm.newPasswordTEC, labelText: 'Nuova password', validators: [Validators.required]),
