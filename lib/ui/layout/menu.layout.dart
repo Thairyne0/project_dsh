@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:project_dsh/ui/widgets/customexpansiontile.widget.dart';
 import 'package:project_dsh/ui/widgets/logo.widget.dart';
 import 'package:project_dsh/utils/extension.util.dart';
+import 'package:project_dsh/utils/providers/service_state.util.provider.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -14,6 +15,7 @@ import '../../utils/go_router_modular/routes/module_route.dart';
 import '../../utils/go_router_modular/routes/shell_modular_route.dart';
 import 'package:project_dsh/utils/providers/navigation.util.provider.dart';
 import '../../utils/constants/strings.constant.dart';
+import '../../modules/service_selector/constants/service_selector_routes.constants.dart';
 import '../cl_theme.dart';
 
 const double _kMenuHPad = 10.0;
@@ -97,6 +99,24 @@ class _MenuLayoutState extends State<MenuLayout> {
                   for (var route in widget.routes)
                     if (route is ChildRoute && route.isVisible)
                       _buildChildRoute(navigationState, route, 0)
+                    else if (route is ModuleRoute && route.isVisible)
+                      if (route.module.routes.where((r) => (r is ChildRoute && r.isVisible)).isNotEmpty)
+                        if (route.module.routes
+                                .where((r) => ((r is ChildRoute && r.isVisible || r is ModuleRoute && r.isVisible)))
+                                .length ==
+                            1)
+                          _buildChildRoute(
+                            navigationState,
+                            (route.module.routes.where((r) => (r is ChildRoute && r.isVisible)).first as ChildRoute)
+                              ..icon = route.icon
+                              ..hugeIcon = route.hugeIcon
+                              ..path = route.module.moduleRoute.path,
+                            0,
+                          )
+                        else
+                          _buildGroupRoute(navigationState, route)
+                      else
+                        _buildGroupRoute(navigationState, route)
                     else if (route is ShellModularRoute)
                       for (var subRoute in route.routes)
                         if (subRoute is ChildRoute && subRoute.isVisible)
@@ -127,7 +147,22 @@ class _MenuLayoutState extends State<MenuLayout> {
 
           // ── Footer ────────────────────────────────────────────────────
           Divider(height: 0, thickness: 1, color: theme.borderColor),
-          const SizedBox(height: Sizes.padding),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: _kMenuHPad, vertical: 8),
+            child: _MenuItemTile(
+              selected: false,
+              theme: theme,
+              label: 'Cambia Servizio',
+              icon: Icon(Icons.swap_horiz_rounded, size: 18, color: theme.secondaryText),
+              onTap: () {
+                if (!ResponsiveBreakpoints.of(context).isDesktop) {
+                  Scaffold.of(context).closeDrawer();
+                }
+                ServiceState().clear();
+                context.customGoNamed(ServiceSelectorRoutes.selector.name);
+              },
+            ),
+          ),
         ],
       ),
     );

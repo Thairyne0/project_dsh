@@ -24,7 +24,7 @@ class AppModule extends Module {
 
   @override
   List<Bind<Object>> get binds => [
-    Bind.factory<MenuLayout>((i) => MenuLayout(routes: routes)),
+    Bind.factory<MenuLayout>((i) => MenuLayout(routes: AppConstants.menuRoutesForCurrentService)),
     Bind.singleton<AuthState>((i) => AuthState()),
     Bind.singleton<AppState>((i) => AppState()),
   ];

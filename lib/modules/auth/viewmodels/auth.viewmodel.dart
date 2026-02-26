@@ -19,7 +19,7 @@ import '../../users/models/user.model.dart';
 import '../../users/models/user_data.model.dart';
 import '../../../utils/providers/authstate.util.provider.dart';
 import '../../../utils/providers/navigation.util.provider.dart';
-import '../../dashboard/constants/dashboard_routes.constants.dart';
+import '../../service_selector/constants/service_selector_routes.constants.dart';
 import '../../users/modules/role_permission/models/role.model.dart';
 import '../constants/auth_api_calls.costant.dart';
 
@@ -64,7 +64,7 @@ class AuthViewModel extends CLBaseViewModel {
     SharedManager.setBool(Strings.authenticated, true);
     await authState.saveCurrentUser(user);
     await NavigationState();
-    viewContext.customGoNamed(DashboardRoutes.dashboard.name);
+    viewContext.customGoNamed(ServiceSelectorRoutes.selector.name);
   }
 
   Future doLogin(AuthState authState) async {

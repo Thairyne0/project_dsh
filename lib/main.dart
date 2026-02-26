@@ -11,6 +11,7 @@ import 'package:project_dsh/utils/go_router_modular/go_router_modular_configure.
 import 'package:project_dsh/utils/providers/chat.util.provider.dart';
 import 'package:project_dsh/utils/providers/navigation.util.provider.dart';
 import 'package:project_dsh/utils/providers/theme.util.provider.dart';
+import 'package:project_dsh/utils/providers/service_state.util.provider.dart';
 import 'package:project_dsh/utils/shared_manager.util.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -37,6 +38,7 @@ void main() async {
           ChangeNotifierProvider<AuthState>(create: (context) => AuthState()),
           ChangeNotifierProvider<ChatState>(create: (context) => ChatState()),
           ChangeNotifierProvider<ThemeProvider>(create: (context) => ThemeProvider()),
+          ChangeNotifierProvider<ServiceState>(create: (context) => ServiceState()),
         ],
         child: MainApp()),
   );

@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../utils/shared_manager.util.dart';
+import '../utils/providers/service_state.util.provider.dart';
 
 const kThemeModeKey = '__theme_mode__';
 
@@ -57,7 +58,12 @@ abstract class CLTheme {
     );
   }
 
-  static CLTheme of(BuildContext context) => Theme.of(context).brightness == Brightness.dark ? dark : light;
+  static CLTheme of(BuildContext context) {
+    final base = Theme.of(context).brightness == Brightness.dark ? dark : light;
+    final service = ServiceState().selected;
+    if (service == null || service == ServiceType.vulcanobuono) return base;
+    return _ServiceOverrideCLTheme(base, service);
+  }
 
   // Singletons
   static const CLTheme light = LightModeTheme();
@@ -181,6 +187,37 @@ class DarkModeTheme extends CLTheme {
 
   @override
   Color get primaryLight => const Color(0xFF7DD3FC); // Azzurro chiaro per gradient in dark mode
+}
+
+/// --- Service color override ----------------------------------------------
+/// Sovrascrive primary/secondary/gradient con i colori del servizio attivo
+/// senza toccare il resto del tema (background, text, success, danger, ecc.).
+
+class _ServiceOverrideCLTheme extends CLTheme {
+  final CLTheme _base;
+  final ServiceType _service;
+
+  _ServiceOverrideCLTheme(this._base, this._service)
+      : super(
+          primary: _service.serviceColor,
+          secondary: _service.serviceSecondary,
+          alternate: _base.alternate,
+          primaryText: _base.primaryText,
+          secondaryText: _base.secondaryText,
+          primaryBackground: _base.primaryBackground,
+          secondaryBackground: _base.secondaryBackground,
+          tertiaryBackground: _base.tertiaryBackground,
+          success: _base.success,
+          warning: _base.warning,
+          danger: _base.danger,
+          info: _service.serviceColor,
+          borderColor: _base.borderColor,
+          background: _base.background,
+          fillColor: _base.fillColor,
+        );
+
+  @override
+  Color get primaryLight => _service.serviceColorLight;
 }
 
 /// --- Typography ----------------------------------------------------------
