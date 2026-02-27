@@ -299,9 +299,7 @@ class _MenuItemTileState extends State<_MenuItemTile> {
         onExit: (_) => setState(() => _hovered = false),
         child: GestureDetector(
           onTap: widget.onTap,
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 150),
-            curve: Curves.easeOutCubic,
+          child: Container(
             decoration: BoxDecoration(
               color: active
                   ? t.primary.withValues(alpha: 0.08)
@@ -378,9 +376,7 @@ class _SubItemTileState extends State<_SubItemTile> {
       onExit: (_) => setState(() => _hovered = false),
       child: GestureDetector(
         onTap: widget.onTap,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 150),
-          curve: Curves.easeOutCubic,
+        child: Container(
           decoration: BoxDecoration(
             color: active
                 ? t.primary.withValues(alpha: 0.08)
@@ -393,8 +389,7 @@ class _SubItemTileState extends State<_SubItemTile> {
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
             child: Row(
               children: [
-                AnimatedContainer(
-                  duration: const Duration(milliseconds: 150),
+                Container(
                   width: active ? 3 : 2,
                   height: 14,
                   decoration: BoxDecoration(

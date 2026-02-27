@@ -420,14 +420,12 @@ class _CLMediaViewerItemState extends State<CLMediaViewerItem> {
       onExit: (_) => setState(() => hovered = false),
       child: GestureDetector(
         onTap: () => widget.onPreview(widget.media, mimeType),
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
+        child: Container(
           width: 280,
           decoration: BoxDecoration(
             border: Border.all(color: hovered ? CLTheme.of(context).primary.withAlpha(100) : CLTheme.of(context).borderColor, width: 1),
             borderRadius: BorderRadius.circular(Sizes.borderRadius),
             color: CLTheme.of(context).secondaryBackground,
-            boxShadow: hovered ? [BoxShadow(color: CLTheme.of(context).primary.withAlpha(20), blurRadius: 12, offset: const Offset(0, 4))] : [],
           ),
           child:
               widget.clMediaViewerMode == CLMediaViewerMode.previewMode

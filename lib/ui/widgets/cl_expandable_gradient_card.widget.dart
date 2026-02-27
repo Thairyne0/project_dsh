@@ -62,9 +62,8 @@ class _CLExpandableGradientCardState extends State<CLExpandableGradientCard> {
             borderRadius: BorderRadius.circular(Sizes.borderRadius + 4),
             boxShadow: [
               BoxShadow(
-                color:
-                    widget.color.withValues(alpha: _isHovered ? 0.35 : 0.15),
-                blurRadius: _isHovered ? 32 : 16,
+                color: widget.color.withValues(alpha: 0.2),
+                blurRadius: 20,
                 offset: const Offset(0, 8),
               ),
             ],
@@ -78,13 +77,7 @@ class _CLExpandableGradientCardState extends State<CLExpandableGradientCard> {
                 child: AnimatedOpacity(
                   duration: const Duration(milliseconds: 350),
                   opacity: _isHovered ? 0.18 : 0.10,
-                  child: AnimatedScale(
-                    duration: const Duration(milliseconds: 350),
-                    curve: Curves.easeOutCubic,
-                    scale: _isHovered ? 1.0 : 0.85,
-                    child:
-                        Icon(widget.icon, size: 200, color: Colors.white),
-                  ),
+                  child: Icon(widget.icon, size: 200, color: Colors.white),
                 ),
               ),
               // ── Contenuto ──

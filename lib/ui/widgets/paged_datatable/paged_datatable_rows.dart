@@ -187,10 +187,8 @@ class _HoverableRowState<TKey extends Comparable, TResultId extends Comparable, 
             },
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 2),
-              child: AnimatedContainer(
-              duration: const Duration(milliseconds: 150),
-              curve: Curves.easeOutCubic,
-              clipBehavior: Clip.antiAlias,
+              child: Container(
+              clipBehavior: Clip.none,
               constraints: const BoxConstraints(minHeight: 52),
               width: double.infinity,
               margin: const EdgeInsets.symmetric(horizontal: Sizes.padding / 2),
