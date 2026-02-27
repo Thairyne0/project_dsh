@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:project_dsh/ui/widgets/customexpansiontile.widget.dart';
 import 'package:project_dsh/ui/widgets/logo.widget.dart';
 import 'package:project_dsh/utils/extension.util.dart';
@@ -37,7 +35,8 @@ class _MenuLayoutState extends State<MenuLayout> {
     final navigationState = context.watch<NavigationState>();
     final theme = CLTheme.of(context);
 
-    return Container(
+    return RepaintBoundary(
+      child: Container(
       width: 260,
       decoration: BoxDecoration(
         color: theme.secondaryBackground,
@@ -164,6 +163,7 @@ class _MenuLayoutState extends State<MenuLayout> {
             ),
           ),
         ],
+      ),
       ),
     );
   }

@@ -1,11 +1,9 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import '../cl_theme.dart';
 import '../layout/constants/sizes.constant.dart';
 import 'buttons/cl_ghost_button.widget.dart';
 
-class CLContainer extends StatefulWidget {
+class CLContainer extends StatelessWidget {
   const CLContainer({
     super.key,
     required this.child,
@@ -48,32 +46,27 @@ class CLContainer extends StatefulWidget {
   final bool glassmorphism;
 
   @override
-  State<CLContainer> createState() => _CLContainerState();
-}
-
-class _CLContainerState extends State<CLContainer> {
-  @override
   Widget build(BuildContext context) {
     return Container(
-      height: widget.height,
-      width: widget.width,
-      clipBehavior: Clip.antiAliasWithSaveLayer,
-      margin: widget.contentMargin ?? EdgeInsets.zero,
-      constraints: widget.constraints,
+      height: height,
+      width: width,
+      clipBehavior: Clip.antiAlias,
+      margin: contentMargin ?? EdgeInsets.zero,
+      constraints: constraints,
       decoration: BoxDecoration(
-        border: widget.showBorder ? Border.all(color: CLTheme.of(context).borderColor, width: 1) : null,
-        color: widget.backgroundColor ?? CLTheme.of(context).secondaryBackground,
-        borderRadius: widget.borderRadius ?? BorderRadius.circular(Sizes.borderRadius),
-        boxShadow: widget.showShadow ? [BoxShadow(color: CLTheme.of(context).secondaryText.withValues(alpha: 0.1), blurRadius: 20, spreadRadius: 2)] : [],
+        border: showBorder ? Border.all(color: CLTheme.of(context).borderColor, width: 1) : null,
+        color: backgroundColor ?? CLTheme.of(context).secondaryBackground,
+        borderRadius: borderRadius ?? BorderRadius.circular(Sizes.borderRadius),
+        boxShadow: showShadow ? [BoxShadow(color: CLTheme.of(context).secondaryText.withValues(alpha: 0.1), blurRadius: 20, spreadRadius: 2)] : [],
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (widget.title != null || widget.titleWidget != null) ...[
+          if (title != null || titleWidget != null) ...[
             Container(
               decoration:
-                  widget.customHeader == null
+                  customHeader == null
                       ? BoxDecoration(border: Border(bottom: BorderSide(color: CLTheme.of(context).borderColor, width: 1)))
                       : null,
               child: Padding(
@@ -83,17 +76,17 @@ class _CLContainerState extends State<CLContainer> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Expanded(child: widget.titleWidget != null ? widget.titleWidget! : Text(widget.title!, style: CLTheme.of(context).bodyLabel)),
-                    if (widget.actionTitle != null && widget.onActionTap != null && widget.actionWidget == null)
-                      SizedBox(height: 20, child: CLGhostButton.primary(text: widget.actionTitle!, onTap: widget.onActionTap!, context: context)),
-                    if (widget.actionWidget != null) widget.actionWidget!,
+                    Expanded(child: titleWidget != null ? titleWidget! : Text(title!, style: CLTheme.of(context).bodyLabel)),
+                    if (actionTitle != null && onActionTap != null && actionWidget == null)
+                      SizedBox(height: 20, child: CLGhostButton.primary(text: actionTitle!, onTap: onActionTap!, context: context)),
+                    if (actionWidget != null) actionWidget!,
                   ],
                 ),
               ),
             ),
           ],
-          widget.customHeader ?? SizedBox.shrink(),
-          Flexible(child: Padding(padding: widget.contentPadding ?? EdgeInsets.zero, child: widget.child)),
+          customHeader ?? SizedBox.shrink(),
+          Flexible(child: Padding(padding: contentPadding ?? EdgeInsets.zero, child: child)),
         ],
       ),
     );

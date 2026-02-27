@@ -2,7 +2,60 @@ import 'package:flutter/material.dart';
 import '../cl_theme.dart';
 import '../layout/constants/sizes.constant.dart';
 
-/// Widget che mostra un effetto shimmer (loading skeleton)
+/// Provides a shared [AnimationController] to all descendant [CLShimmer] widgets
+/// so that only ONE animation loop drives every shimmer on screen.
+class CLShimmerScope extends StatefulWidget {
+  const CLShimmerScope({super.key, required this.child});
+  final Widget child;
+
+  @override
+  State<CLShimmerScope> createState() => _CLShimmerScopeState();
+}
+
+class _CLShimmerScopeState extends State<CLShimmerScope> with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+  late final Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 1500),
+      vsync: this,
+    )..repeat();
+    _animation = Tween<double>(begin: -2, end: 2).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _ShimmerAnimation(animation: _animation, child: widget.child);
+  }
+}
+
+class _ShimmerAnimation extends InheritedWidget {
+  const _ShimmerAnimation({required this.animation, required super.child});
+  final Animation<double> animation;
+
+  static Animation<double>? of(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<_ShimmerAnimation>()?.animation;
+  }
+
+  @override
+  bool updateShouldNotify(_ShimmerAnimation oldWidget) => animation != oldWidget.animation;
+}
+
+/// Widget che mostra un effetto shimmer (loading skeleton).
+///
+/// Se un [CLShimmerScope] è presente nell'albero, riusa la sua animazione
+/// condivisa; altrimenti crea un proprio [AnimationController] come fallback.
 class CLShimmer extends StatefulWidget {
   final double width;
   final double height;
@@ -54,25 +107,33 @@ class CLShimmer extends StatefulWidget {
 }
 
 class _CLShimmerState extends State<CLShimmer> with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
+  AnimationController? _ownController;
   late Animation<double> _animation;
 
   @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      duration: const Duration(milliseconds: 1500),
-      vsync: this,
-    )..repeat();
-
-    _animation = Tween<double>(begin: -2, end: 2).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final shared = _ShimmerAnimation.of(context);
+    if (shared != null) {
+      // Dispose own controller if we previously created one
+      _ownController?.dispose();
+      _ownController = null;
+      _animation = shared;
+    } else if (_ownController == null) {
+      // Fallback: create own controller (single shimmer without scope)
+      _ownController = AnimationController(
+        duration: const Duration(milliseconds: 1500),
+        vsync: this,
+      )..repeat();
+      _animation = Tween<double>(begin: -2, end: 2).animate(
+        CurvedAnimation(parent: _ownController!, curve: Curves.easeInOut),
+      );
+    }
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    _ownController?.dispose();
     super.dispose();
   }
 
@@ -126,24 +187,26 @@ class CLShimmerTableRows extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.separated(
-      physics: const NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      padding: EdgeInsets.zero,
-      itemCount: rowCount,
-      separatorBuilder: (_, __) => Divider(
-        height: 0,
-        color: CLTheme.of(context).borderColor,
-        thickness: 1,
+    return RepaintBoundary(
+      child: ListView.separated(
+        physics: const NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        padding: EdgeInsets.zero,
+        itemCount: rowCount,
+        separatorBuilder: (_, __) => Divider(
+          height: 0,
+          color: CLTheme.of(context).borderColor,
+          thickness: 1,
+        ),
+        itemBuilder: (context, index) {
+          return _ShimmerRow(
+            height: rowHeight,
+            columnsCount: columnsCount,
+            columnWidths: columnWidths,
+            hasCheckboxColumn: hasCheckboxColumn,
+          );
+        },
       ),
-      itemBuilder: (context, index) {
-        return _ShimmerRow(
-          height: rowHeight,
-          columnsCount: columnsCount,
-          columnWidths: columnWidths,
-          hasCheckboxColumn: hasCheckboxColumn,
-        );
-      },
     );
   }
 }

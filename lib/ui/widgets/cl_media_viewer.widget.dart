@@ -207,7 +207,7 @@ class _CLMediaViewerState extends State<CLMediaViewer> {
     final fileName = media.fileUrl != null ? getFileName(media.fileUrl!) : getFileName(media.file!.name);
 
     return Container(
-      clipBehavior: Clip.antiAliasWithSaveLayer,
+      clipBehavior: Clip.antiAlias,
       width: MediaQuery.of(context).size.width * 0.6,
       constraints: BoxConstraints(maxWidth: 900),
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(Sizes.borderRadius), color: CLTheme.of(context).secondaryBackground),
@@ -503,7 +503,7 @@ class _CLMediaViewerItemState extends State<CLMediaViewerItem> {
         ),
         // Footer
         Container(
-          clipBehavior: Clip.antiAliasWithSaveLayer,
+          clipBehavior: Clip.antiAlias,
           padding: const EdgeInsets.all(Sizes.small),
           decoration: BoxDecoration(
             color: CLTheme.of(context).primaryBackground,

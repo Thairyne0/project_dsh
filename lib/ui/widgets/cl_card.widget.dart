@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../cl_theme.dart';
 import '../layout/constants/sizes.constant.dart';
 
-class CLCard extends StatefulWidget {
+class CLCard extends StatelessWidget {
   final Color color;
   final String title;
   final String subtitle;
@@ -14,22 +14,17 @@ class CLCard extends StatefulWidget {
   const CLCard({super.key, required this.color, required this.title, this.onTap, required this.icon, required this.vertical, required this.subtitle});
 
   @override
-  State<CLCard> createState() => _CLCardState();
-}
-
-class _CLCardState extends State<CLCard> {
-  @override
   Widget build(BuildContext context) {
-    return widget.vertical
+    return vertical
         ? Container(
-            clipBehavior: Clip.antiAliasWithSaveLayer,
+            clipBehavior: Clip.antiAlias,
             decoration: BoxDecoration(
               color: CLTheme.of(context).secondaryBackground,
               borderRadius: BorderRadius.circular(Sizes.borderRadius),
               //top border
               border: Border(
                 top: BorderSide(
-                  color: widget.color,
+                  color: color,
                   width: 8.0,
                 ),
               ),
@@ -43,9 +38,9 @@ class _CLCardState extends State<CLCard> {
                   children: [
                     Container(
                         padding: EdgeInsets.all(Sizes.padding),
-                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(Sizes.borderRadius), color: widget.color),
+                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(Sizes.borderRadius), color: color),
                         child: Icon(
-                          widget.icon,
+                          icon,
                           color: Colors.white,
                           size: Sizes.large,
                         )),
@@ -57,13 +52,13 @@ class _CLCardState extends State<CLCard> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          widget.title,
+                          title,
                           style: CLTheme.of(context).title,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 2,
                         ),
                         Text(
-                          widget.subtitle,
+                          subtitle,
                           style: CLTheme.of(context).bodyLabel,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 2,
@@ -75,7 +70,7 @@ class _CLCardState extends State<CLCard> {
               ),
             ))
         : Container(
-            clipBehavior: Clip.antiAliasWithSaveLayer,
+            clipBehavior: Clip.antiAlias,
             padding: EdgeInsets.all(Sizes.padding),
             decoration: BoxDecoration(
               color: CLTheme.of(context).secondaryBackground,
@@ -83,7 +78,7 @@ class _CLCardState extends State<CLCard> {
               //top border
               border: Border(
                 left: BorderSide(
-                  color: widget.color,
+                  color: color,
                   width: 8.0,
                 ),
               ),
@@ -96,9 +91,9 @@ class _CLCardState extends State<CLCard> {
                 children: [
                   Container(
                       padding: EdgeInsets.all(Sizes.padding),
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(Sizes.borderRadius), color: widget.color),
+                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(Sizes.borderRadius), color: color),
                       child: Icon(
-                        widget.icon,
+                        icon,
                         color: Colors.white,
                         size: Sizes.large,
                       )),
@@ -110,10 +105,10 @@ class _CLCardState extends State<CLCard> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            widget.title, style: CLTheme.of(context).title, overflow: TextOverflow.ellipsis, // Anche qui per evitare overflow
+                            title, style: CLTheme.of(context).title, overflow: TextOverflow.ellipsis, // Anche qui per evitare overflow
                           ),
                           Text(
-                            widget.subtitle, style: CLTheme.of(context).bodyLabel, overflow: TextOverflow.ellipsis, // Anche qui per evitare overflow
+                            subtitle, style: CLTheme.of(context).bodyLabel, overflow: TextOverflow.ellipsis, // Anche qui per evitare overflow
                           ),
                         ],
                       ),

@@ -59,7 +59,9 @@ class _PagedDataTableRows<TKey extends Comparable, TResultId extends Comparable,
   Widget _buildShimmerRows(BuildContext context, _PagedDataTableState<TKey, TResultId, TResult> state) {
     // Calcola il numero di colonne includendo la checkbox se rowsSelectable è true
     final columnsCount = state.columns.length + (rowsSelectable ? 1 : 0);
-    return CLShimmerTableRows(rowCount: initialPageSize, rowHeight: 48, columnsCount: columnsCount > 0 ? columnsCount : 4, hasCheckboxColumn: rowsSelectable);
+    return CLShimmerScope(
+      child: CLShimmerTableRows(rowCount: initialPageSize, rowHeight: 48, columnsCount: columnsCount > 0 ? columnsCount : 4, hasCheckboxColumn: rowsSelectable),
+    );
   }
 
   Widget _build(BuildContext context, _PagedDataTableState<TKey, TResultId, TResult> state, PagedDataTableThemeData theme) {

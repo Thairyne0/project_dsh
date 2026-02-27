@@ -26,11 +26,7 @@ class _StatsWidgetState extends State<StatsWidget> {
       cursor: widget.onTap != null ? SystemMouseCursors.click : MouseCursor.defer,
       onEnter: (_) => setState(() => _isHovered = true),
       onExit: (_) => setState(() => _isHovered = false),
-      child: AnimatedScale(
-        scale: _isHovered ? 1.025 : 1.0,
-        duration: const Duration(milliseconds: 180),
-        curve: Curves.easeOutCubic,
-        child: GestureDetector(
+      child: GestureDetector(
           onTap: widget.onTap,
           behavior: HitTestBehavior.translucent,
           child: AnimatedContainer(
@@ -45,16 +41,6 @@ class _StatsWidgetState extends State<StatsWidget> {
                     : CLTheme.of(context).borderColor,
                 width: 1.5,
               ),
-              boxShadow: _isHovered
-                  ? [
-                      BoxShadow(
-                        color: widget.color.withValues(alpha: 0.18),
-                        blurRadius: 16,
-                        spreadRadius: 0,
-                        offset: const Offset(0, 6),
-                      ),
-                    ]
-                  : [],
             ),
             child: CLContainer(
               showShadow: false,
@@ -69,13 +55,10 @@ class _StatsWidgetState extends State<StatsWidget> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        AnimatedContainer(
-                          duration: const Duration(milliseconds: 180),
+                        Container(
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: _isHovered
-                                ? widget.color.withValues(alpha: 0.2)
-                                : widget.color.withValues(alpha: 0.1),
+                            color: widget.color.withValues(alpha: 0.1),
                           ),
                           child: CircleAvatar(
                             radius: Sizes.padding * 1.5,
@@ -102,7 +85,6 @@ class _StatsWidgetState extends State<StatsWidget> {
               ),
             ),
           ),
-        ),
       ),
     );
   }

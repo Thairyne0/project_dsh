@@ -63,13 +63,9 @@ class MainApp extends StatelessWidget {
       title: Strings.appName,
       debugShowCheckedModeBanner: false,
       builder: (context, child) => ResponsiveBreakpoints.builder(
-        child: Navigator(
-          onGenerateRoute: (_) => MaterialPageRoute(
-            builder: (context) => Material(
-              type: MaterialType.transparency,
-              child: DefaultAlertListener(child: child!),
-            ),
-          ),
+        child: Material(
+          type: MaterialType.transparency,
+          child: DefaultAlertListener(child: child!),
         ),
         breakpoints: [
           const Breakpoint(start: 0, end: 1079, name: MOBILE),

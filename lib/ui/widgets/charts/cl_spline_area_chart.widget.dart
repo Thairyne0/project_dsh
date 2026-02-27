@@ -15,7 +15,8 @@ class CLSplineAreaChart extends StatefulWidget {
 class _CLSplineAreaChartState extends State<CLSplineAreaChart> {
   @override
   Widget build(BuildContext context) {
-    return SfCartesianChart(
+    return RepaintBoundary(
+      child: SfCartesianChart(
         tooltipBehavior: TooltipBehavior(enable: true),
         primaryXAxis: CategoryAxis(labelPlacement: LabelPlacement.onTicks),
 
@@ -40,6 +41,7 @@ class _CLSplineAreaChartState extends State<CLSplineAreaChart> {
               dataSource: widget.userChartData,
               xValueMapper: (UserGraphData data, _) => data.key,
               yValueMapper: (UserGraphData data, _) => data.value),
-        ]);
+        ]),
+    );
   }
 }

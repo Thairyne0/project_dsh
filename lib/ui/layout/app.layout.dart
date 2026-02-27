@@ -85,15 +85,17 @@ class _AppLayoutState extends State<AppLayout> with WidgetsBindingObserver, Tick
           child: Stack(
             children: [
               // Contenuto della pagina con padding per l'header
-              Positioned.fill(child: widget.shellChild),
-              // Header con blur - sovrapposto in alto, crea effetto glass morphism
+              Positioned.fill(child: RepaintBoundary(child: widget.shellChild)),
+              // Header sovrapposto in alto
               Positioned(
                 top: 0,
                 left: 0,
                 right: 0,
-                child: HeaderLayout(
-                  headerColor: CLTheme.of(context).secondaryBackground,
-                  headerHeight: Sizes.headerOffset / 2,
+                child: RepaintBoundary(
+                  child: HeaderLayout(
+                    headerColor: CLTheme.of(context).secondaryBackground,
+                    headerHeight: Sizes.headerOffset / 2,
+                  ),
                 ),
               ),
             ],
@@ -107,15 +109,17 @@ class _AppLayoutState extends State<AppLayout> with WidgetsBindingObserver, Tick
     return Stack(
       children: [
         // Contenuto della pagina con padding per l'header
-        Positioned.fill(child: Padding(padding: const EdgeInsets.only(top: Sizes.headerOffset), child: widget.shellChild)),
-        // Header con blur - sovrapposto in alto
+        Positioned.fill(child: RepaintBoundary(child: Padding(padding: const EdgeInsets.only(top: Sizes.headerOffset), child: widget.shellChild))),
+        // Header sovrapposto in alto
         Positioned(
           top: 0,
           left: 0,
           right: 0,
-          child: HeaderLayout(
-            headerColor: CLTheme.of(context).primaryBackground,
-            headerHeight: Sizes.headerOffset / 2,
+          child: RepaintBoundary(
+            child: HeaderLayout(
+              headerColor: CLTheme.of(context).primaryBackground,
+              headerHeight: Sizes.headerOffset / 2,
+            ),
           ),
         ),
       ],

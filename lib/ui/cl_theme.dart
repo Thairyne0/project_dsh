@@ -256,6 +256,9 @@ class ThemeTypography extends Typography {
   final CLTheme theme;
   static const _family = 'Inter';
 
+  /// Cached base font – resolved once per ThemeTypography instance.
+  static final TextStyle _baseFont = GoogleFonts.getFont(_family);
+
   TextStyle _text(
     double size, {
     FontWeight? weight,
@@ -265,8 +268,7 @@ class ThemeTypography extends Typography {
     TextDecoration? decoration,
     double? lineHeight,
   }) {
-    return GoogleFonts.getFont(
-      _family,
+    return _baseFont.copyWith(
       color: color ?? theme.primaryText,
       fontSize: size,
       letterSpacing: 0.01,
@@ -331,9 +333,10 @@ extension TextStyleHelper on TextStyle {
     TextDecoration? decoration,
     double? lineHeight,
   }) {
-    if (useGoogleFonts) {
+    // Only call GoogleFonts.getFont when a DIFFERENT font family is requested.
+    if (useGoogleFonts && fontFamily != null && fontFamily != 'Inter') {
       return GoogleFonts.getFont(
-        fontFamily ?? 'Inter',
+        fontFamily,
         color: color ?? this.color,
         fontSize: fontSize ?? this.fontSize,
         letterSpacing: letterSpacing ?? this.letterSpacing,
@@ -348,7 +351,7 @@ extension TextStyleHelper on TextStyle {
       color: color,
       fontSize: fontSize,
       letterSpacing: letterSpacing,
-      fontWeight: FontWeight.w300,
+      fontWeight: fontWeight ?? (useGoogleFonts ? this.fontWeight : FontWeight.w300),
       fontStyle: fontStyle,
       decoration: decoration,
       height: lineHeight,

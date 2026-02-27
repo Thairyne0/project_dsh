@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:provider/provider.dart';
@@ -191,12 +190,12 @@ class _HeaderLayoutState extends State<HeaderLayout> {
         ),
 
         ResponsiveBreakpoints.of(context).isDesktop
-            ? ClipRect(
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 2.0, sigmaY: 2.0),
-                child: Container(
+            ? Container(
                   height: Sizes.headerOffset/2,
-                  decoration: BoxDecoration(color: CLTheme.of(context).primaryBackground.withValues(alpha: 0.2)),
+                  decoration: BoxDecoration(
+                    color: CLTheme.of(context).primaryBackground.withValues(alpha: 0.85),
+                    border: Border(bottom: BorderSide(color: CLTheme.of(context).borderColor.withValues(alpha: 0.3), width: 0.5)),
+                  ),
                   child: Padding(
                     padding: const EdgeInsets.only(left: Sizes.padding, right: Sizes.padding, bottom: Sizes.padding, top: Sizes.padding),
                     child: Row(
@@ -292,15 +291,13 @@ class _HeaderLayoutState extends State<HeaderLayout> {
                       ],
                     ),
                   ),
-                ),
-              ),
-            )
-            : ClipRect(
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
-                child: Container(
+                )
+            : Container(
                   height: widget.headerHeight,
-                  decoration: BoxDecoration(color: CLTheme.of(context).primaryBackground.withValues(alpha: 0.7)),
+                  decoration: BoxDecoration(
+                    color: CLTheme.of(context).primaryBackground.withValues(alpha: 0.92),
+                    border: Border(bottom: BorderSide(color: CLTheme.of(context).borderColor.withValues(alpha: 0.3), width: 0.5)),
+                  ),
                   padding: const EdgeInsets.symmetric(horizontal: Sizes.padding, vertical: Sizes.padding),
                   child: Row(
                     children: [
@@ -335,8 +332,6 @@ class _HeaderLayoutState extends State<HeaderLayout> {
                     ],
                   ),
                 ),
-              ),
-            ),
       ],
     );
   }

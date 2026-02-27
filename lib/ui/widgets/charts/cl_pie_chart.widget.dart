@@ -25,7 +25,8 @@ class CLPieChartState extends State<CLPieChart> {
 
   @override
   Widget build(BuildContext context) {
-    return SfCircularChart(
+    return RepaintBoundary(
+      child: SfCircularChart(
       legend: Legend(
         isVisible: true,
         overflowMode: LegendItemOverflowMode.wrap,
@@ -46,6 +47,7 @@ class CLPieChartState extends State<CLPieChart> {
           radius: '70%',
         ),
       ],
+      ),
     );
   }
 }
